@@ -2,8 +2,7 @@
 	import BubbleCloud from './BubbleCloud.svelte';
 	import ExerciseTimer from './ExerciseTimer.svelte';
 	import GuilfordCard from './GuilfordCard.svelte';
-	import { createBubbleSimulation } from './bubbleSimulation.svelte.ts';
-	import type { ExerciseResult, GuilfordEvaluation, SubmissionResponse } from './types.ts';
+	import type { BubbleData, ExerciseResult, GuilfordEvaluation, SubmissionResponse } from './types.ts';
 
 	let {
 		prompt = 'Paperclip',
@@ -26,25 +25,13 @@
 		'var(--color-secondary-100)'
 	];
 
-	const CLOUD_CENTER_X = 300;
-	const CLOUD_CENTER_Y = 180;
-	const INPUT_Y = 340;
-
-	const sim = createBubbleSimulation(CLOUD_CENTER_X, CLOUD_CENTER_Y, prompt);
-
-	// Seed initial ideas (snapshot the prop once at init)
-	const seedIdeas = initialIdeas;
-	for (let i = 0; i < seedIdeas.length; i++) {
-		sim.addBubble(
-			crypto.randomUUID(),
-			seedIdeas[i],
-			COLORS[i % COLORS.length],
-			CLOUD_CENTER_X,
-			INPUT_Y
-		);
-	}
-
-	$effect(() => () => sim.destroy());
+	let bubbles: BubbleData[] = $state(
+		initialIdeas.map((text, i) => ({
+			id: crypto.randomUUID(),
+			text,
+			color: COLORS[i % COLORS.length]
+		}))
+	);
 
 	let phase: 'input' | 'reflecting' | 'evaluating' | 'results' = $state('input');
 	let inputText = $state('');
@@ -59,13 +46,11 @@
 		if (!text) return;
 		inputText = '';
 
-		sim.addBubble(
-			crypto.randomUUID(),
+		bubbles.push({
+			id: crypto.randomUUID(),
 			text,
-			COLORS[sim.nodes.length % COLORS.length],
-			CLOUD_CENTER_X,
-			INPUT_Y
-		);
+			color: COLORS[bubbles.length % COLORS.length]
+		});
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
@@ -77,7 +62,6 @@
 
 	function finish() {
 		phase = 'reflecting';
-		sim.settle();
 	}
 
 	function handleTimerExpire() {
@@ -85,7 +69,7 @@
 	}
 
 	async function submitReflection() {
-		const ideas = sim.nodes.map((b) => b.text);
+		const ideas = bubbles.map((b) => b.text);
 		const timeSpentSeconds = Math.round((Date.now() - startTime) / 1000);
 		const reflections = { surprisingIdea, patterns };
 
@@ -107,15 +91,12 @@
 			// Add community ideas as secondary-colored bubbles
 			if (data.communityIdeas.length > 0) {
 				for (let i = 0; i < data.communityIdeas.length; i++) {
-					sim.addBubble(
-						crypto.randomUUID(),
-						data.communityIdeas[i],
-						COMMUNITY_COLORS[i % COMMUNITY_COLORS.length],
-						CLOUD_CENTER_X,
-						CLOUD_CENTER_Y
-					);
+					bubbles.push({
+						id: crypto.randomUUID(),
+						text: data.communityIdeas[i],
+						color: COMMUNITY_COLORS[i % COMMUNITY_COLORS.length]
+					});
 				}
-				sim.settle();
 			}
 
 			phase = 'results';
@@ -133,7 +114,7 @@
 
 	function tryAgain() {
 		phase = 'input';
-		sim.reset();
+		bubbles = [];
 		inputText = '';
 		surprisingIdea = '';
 		patterns = '';
@@ -146,7 +127,7 @@
 <div class="exercise">
 	<p class="instruction">{instruction}</p>
 
-	<BubbleCloud {prompt} bubbles={sim.nodes} settled={phase !== 'input'} />
+	<BubbleCloud {prompt} {bubbles} settled={phase !== 'input'} />
 
 	{#if phase === 'input'}
 		<div class="controls">
@@ -165,7 +146,7 @@
 				{#if timerDuration > 0}
 					<ExerciseTimer duration={timerDuration} onexpire={handleTimerExpire} />
 				{/if}
-				<button class="done-btn" onclick={finish} disabled={sim.nodes.length === 0}>
+				<button class="done-btn" onclick={finish} disabled={bubbles.length === 0}>
 					I'm Done
 				</button>
 			</div>
@@ -173,7 +154,7 @@
 	{:else if phase === 'reflecting'}
 		<div class="done-screen">
 			<div class="summary">
-				<span class="count">{sim.nodes.length}</span> ideas generated
+				<span class="count">{bubbles.length}</span> ideas generated
 			</div>
 
 			<div class="reflection">

@@ -22,38 +22,43 @@ function estimateRadius(text: string): number {
 	return Math.max(30, text.length * 4.5 + 14);
 }
 
-export function createBubbleSimulation(centerX: number, centerY: number, promptText: string, containerWidth = 600, containerHeight = 360) {
-	// Invisible fixed node at center — participates in collision so bubbles orbit around it.
+export function createBubbleSimulation(promptText: string, containerHeight = 360) {
+	let cWidth = 600;
+	let cHeight = containerHeight;
+
+	// Invisible fixed node at center — participates in collision so bubbles keep distance.
 	const centerNode: SimBubble = {
 		id: '__center__',
 		text: '',
 		color: '',
-		radius: estimateRadius(promptText) + 10,
-		fx: centerX,
-		fy: centerY,
+		radius: promptText.length * 16 + 20,
+		fx: cWidth / 2,
+		fy: cHeight / 2,
 		_isCenter: true
 	};
 
 	let allNodes: SimBubble[] = $state([centerNode]);
 	let tickVersion = $state(0);
 
+	const getCx = () => cWidth / 2;
+	const getCy = () => cHeight / 2;
+
 	const simulation = forceSimulation<SimBubble>(allNodes)
-		.force('x', forceX<SimBubble>(centerX).strength(0.03))
-		.force('y', forceY<SimBubble>(centerY).strength(0.03))
-		.force('charge', forceManyBody<SimBubble>().strength(-20))
+		.force('x', forceX<SimBubble>(getCx).strength(0.06))
+		.force('y', forceY<SimBubble>(getCy).strength(0.06))
+		.force('charge', forceManyBody<SimBubble>().strength(-30))
 		.force(
 			'collide',
-			forceCollide<SimBubble>((d) => d.radius + 4).strength(0.5)
+			forceCollide<SimBubble>((d) => d.radius + 4).strength(0.7)
 		)
-		.alphaDecay(0.005)
-		.velocityDecay(0.15)
+		.alphaDecay(0.02)
+		.velocityDecay(0.3)
 		.on('tick', () => {
-			// Boundary clamping (skip the fixed center node)
 			for (const n of allNodes) {
 				if (n._isCenter) continue;
 				const r = n.radius;
-				n.x = Math.max(r, Math.min(containerWidth - r, n.x!));
-				n.y = Math.max(r, Math.min(containerHeight - r, n.y!));
+				n.x = Math.max(r, Math.min(cWidth - r, n.x!));
+				n.y = Math.max(r, Math.min(cHeight - r, n.y!));
 			}
 			tickVersion++;
 		});
@@ -76,16 +81,16 @@ export function createBubbleSimulation(centerX: number, centerY: number, promptT
 		simulation.nodes(allNodes);
 
 		if (prefersReducedMotion.current) {
-			simulation.alpha(0.5).stop();
+			simulation.alpha(0.8).stop();
 			for (let i = 0; i < 300; i++) simulation.tick();
 			tickVersion++;
 		} else {
-			simulation.alpha(0.5).restart();
+			simulation.alpha(0.8).restart();
 		}
 	}
 
 	function settle() {
-		simulation.alphaDecay(0.1);
+		simulation.alphaDecay(0.05);
 		if (prefersReducedMotion.current) {
 			simulation.alpha(0.3).stop();
 			for (let i = 0; i < 300; i++) simulation.tick();
@@ -97,11 +102,21 @@ export function createBubbleSimulation(centerX: number, centerY: number, promptT
 
 	function reset() {
 		simulation.stop();
-		// Keep only the center anchor
 		allNodes.length = 0;
 		allNodes.push(centerNode);
 		simulation.nodes(allNodes);
+		simulation.alphaDecay(0.02);
 		tickVersion++;
+	}
+
+	function resize(width: number, height: number) {
+		cWidth = width;
+		cHeight = height;
+		centerNode.fx = width / 2;
+		centerNode.fy = height / 2;
+		if (allNodes.length > 1) {
+			simulation.alpha(0.3).restart();
+		}
 	}
 
 	function destroy() {
@@ -110,13 +125,15 @@ export function createBubbleSimulation(centerX: number, centerY: number, promptT
 
 	return {
 		get nodes() {
-			// Reading tickVersion makes this reactive — filter out the center anchor
 			void tickVersion;
 			return allNodes.filter((n) => !n._isCenter);
 		},
+		get centerX() { return cWidth / 2; },
+		get centerY() { return cHeight / 2; },
 		addBubble,
 		settle,
 		reset,
+		resize,
 		destroy
 	};
 }
