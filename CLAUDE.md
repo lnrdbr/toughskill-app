@@ -1,23 +1,141 @@
-You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively:
+# CLAUDE.md
 
-## Available MCP Tools:
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-### 1. list-sections
+## Overview
 
-Use this FIRST to discover all available documentation sections. Returns a structured list with titles, use_cases, and paths.
-When asked about Svelte or SvelteKit topics, ALWAYS use this tool at the start of the chat to find relevant sections.
+SvelteKit 2 + Svelte 5 e-learning platform ("TOUGHSKILL"). Uses Tailwind CSS v4, Better Auth, Drizzle ORM with SQLite, and Storybook.
 
-### 2. get-documentation
+## Workflow Rules
 
-Retrieves full documentation content for specific sections. Accepts single or multiple sections.
-After calling the list-sections tool, you MUST analyze the returned documentation sections (especially the use_cases field) and then use the get-documentation tool to fetch ALL documentation sections that are relevant for the user's task.
+**HARD LIMITS — always follow these:**
 
-### 3. svelte-autofixer
+1. **One component at a time.** Never create or modify more than one component per task. Finish it completely (implementation, story, test) before moving on.
+2. **Never assume — always ask.** If requirements are ambiguous, unclear, or missing, stop and ask before writing code. This includes: visual design, prop interfaces, behaviour, naming, and where a component lives.
+3. **No invented features.** Only build exactly what was requested. Do not add props, variants, states, or functionality the user did not ask for.
+4. **Confirm before creating files.** Ask before creating any new file. Never silently generate helpers, utils, or types files.
+5. **Show the plan first.** For any non-trivial component, enter plan mode and get approval before writing code.
+6. **No bulk refactors.** Do not refactor, rename, or reorganise existing code unless explicitly asked.
 
-Analyzes Svelte code and returns issues and suggestions.
-You MUST use this tool whenever writing Svelte code before sending it to the user. Keep calling it until no issues or suggestions are returned.
+## Commands
 
-### 4. playground-link
+```bash
+yarn dev              # Dev server (Vite)
+yarn build            # Production build
+yarn check            # Svelte type checking
+yarn lint             # Prettier + ESLint
+yarn format           # Auto-format with Prettier
+yarn test             # Run all tests once
+yarn test:unit        # Run tests in watch mode (vitest)
+yarn storybook        # Storybook dev on port 6006
+yarn db:push          # Push schema to SQLite DB
+yarn db:studio        # Drizzle Studio (DB browser)
+yarn auth:schema      # Regenerate Better Auth schema from auth config
+```
 
-Generates a Svelte Playground link with the provided code.
-After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.
+Run a single test file: `npx vitest run src/path/to/file.test.ts`
+Run tests for a specific project: `npx vitest --project client` (or `server`, `storybook`)
+
+## Project Requirements
+
+Gamified soft skills learning web app for three skill areas: **Communication**, **Creativity**, and **Work Ethic**. Grounded in Self-Determination Theory (SDT) and ethical gamification.
+
+### Core Design Principles
+
+- **SDT-aligned motivation**: Design for autonomy, competence, and relatedness — not extrinsic reward dependency
+- **Content gamification**: The learning content itself should be interactive and gamified (Kapp 2012), not just points/badges layered on top
+- **Informational feedback**: Verbal praise, progress awareness, and constructive feedback — not tangible rewards that shift motivation externally
+- **Flow-oriented task design**: Clear goals, immediate feedback, progressive challenge-skill balance
+- **Ethical persuasive technology**: Encourage consistent learning habits while respecting user autonomy and transparency
+
+### Features (from Proposed Solution)
+
+- **Personal city progression**: Point system to level up a personal city as a narrative/visual metaphor for growth
+- **Real-life tasks**: Learners apply skills in real life, then self-evaluate — engagement through application, not just course completion
+- **Autonomy support**: Choices in learning path and assisted reflection
+- **Progress tracking**: Skill modules with self-evaluation, adaptive content based on learning patterns
+- **Immediate feedback**: Constructive, celebrating genuine progress and supporting metacognitive development
+
+### Explicitly Avoid (Dark Patterns)
+
+- Streaks, FOMO, artificial urgency
+- Leaderboards as primary motivation (creates social comparison dependency)
+- Variable reward schedules (slot machine mechanics)
+- Points/badges/leaderboards (PBL) as sole engagement strategy
+- Any pattern where the user works for the reward system rather than the learning task itself
+
+## Architecture
+
+### Svelte 5 Conventions
+
+- Components use `$props()` rune: `let { children, variant = 'primary' } = $props()`
+- Snippet-based children: `{@render children()}` (not slot)
+- State managed with `$state()` rune
+
+### Testing (3 Vitest Projects)
+
+Configured in `vite.config.ts` with `requireAssertions: true` — every test must have at least one assertion.
+
+| Project | Environment | File pattern | Purpose |
+|---------|------------|--------------|---------|
+| `client` | Playwright browser | `*.svelte.{test,spec}.*` | Component tests |
+| `server` | Node | `*.{test,spec}.*` (non-svelte) | Server/unit tests |
+| `storybook` | Playwright browser | Stories via `.storybook/` | Story integration tests |
+
+### Tailwind v4
+
+Configured via CSS in `src/routes/layout.css` (not a JS config file). Uses `@theme` block for custom design tokens:
+- **Primary**: teal palette (`--color-primary-*`)
+- **Secondary**: warm neutral palette (`--color-secondary-*`)
+- **Semantic**: `--color-background`, `--color-foreground`, `--color-muted`, `--color-border`, `--color-accent`, `--color-success/warning/error/info`
+- **Custom**: `--radius-button: 20px`, `--font-display: 'Gurajada'`, `--main-drop-shadow: 5px 5px 0px`
+- Plugins loaded via `@plugin` syntax: `@tailwindcss/forms`, `@tailwindcss/typography`
+
+### Auth
+
+Better Auth with email/password + GitHub OAuth. Config in `src/lib/server/auth.ts`. Session/user injected into `event.locals` via `src/hooks.server.ts`. Protected routes check `event.locals.user` in load functions.
+
+### Database
+
+Drizzle ORM + better-sqlite3. Schema in `src/lib/server/db/schema.ts` (app tables). Auth schema auto-generated in `src/lib/server/db/auth.schema.ts` — regenerate with `npm run auth:schema`, never edit manually. UUID primary keys via `crypto.randomUUID()`.
+
+### Storybook
+
+Stories use **Svelte CSF format** (`.stories.svelte` files) co-located with components in `src/lib/components/`. Pattern:
+
+```svelte
+<script module>
+  import { defineMeta } from '@storybook/addon-svelte-csf';
+  const { Story } = defineMeta({ title: 'Components/X', component: X, tags: ['autodocs'] });
+</script>
+<Story name="Default">
+  {#snippet template()}
+    <X>content</X>
+  {/snippet}
+</Story>
+```
+
+### Component Style Convention
+
+Components combine scoped `<style>` blocks using CSS custom properties from the theme (e.g., `var(--color-foreground)`, `var(--main-drop-shadow)`) with Tailwind utility classes. Drop-shadow-based visual style with transform interactions (translate on hover/active).
+
+### Key Files
+
+- `src/lib/components/` — Reusable components (Button, CourseCard, ListItem, LessonItem) with co-located stories
+- `src/lib/server/auth.ts` — Better Auth configuration
+- `src/lib/server/db/schema.ts` — Application database schema
+- `src/lib/server/db/index.ts` — Drizzle client initialization
+- `src/hooks.server.ts` — Auth middleware
+- `src/routes/layout.css` — Tailwind theme and design tokens
+- `src/lib/index.ts` — Barrel exports for components
+
+### Key Routes
+
+- `/` — Landing page
+- `/me` — User dashboard (sidebar layout with course list + lesson view)
+- `/learn` — Lesson path (in development)
+- `/demo/better-auth` — Auth demo pages
+
+### Environment
+
+Copy `.env.example` to `.env`. Required: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `ORIGIN`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`.
