@@ -8,6 +8,7 @@
 		type SimulationNodeDatum
 	} from 'd3-force';
 	import { prefersReducedMotion } from 'svelte/motion';
+	import { SvelteSet } from 'svelte/reactivity';
 	import Bubble from './Bubble.svelte';
 	import type { BubbleData } from './types.ts';
 
@@ -43,8 +44,8 @@
 		text: '',
 		color: '',
 		radius: FORCE_FIELD_RADIUS,
-		fx: cWidth / 2,
-		fy: cHeight / 2,
+		fx: 300,
+		fy: CLOUD_HEIGHT / 2,
 		_isCenter: true
 	};
 
@@ -108,7 +109,7 @@
 	}
 
 	// --- bubble tracking ---
-	const knownIds = new Set<string>();
+	const knownIds = new SvelteSet<string>();
 
 	$effect(() => {
 		if (cWidth > 0) {
