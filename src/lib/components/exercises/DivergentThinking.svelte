@@ -226,13 +226,10 @@
 
 <style>
 	.exercise {
-		max-width: 640px;
+		max-width: 1080px;
+		width: 100%;
 		margin: 0 auto;
 		padding: 24px;
-		border: 2px solid var(--color-foreground);
-		border-radius: 16px;
-		background: var(--color-background);
-		filter: drop-shadow(4px 4px 0px var(--color-foreground));
 	}
 
 	.instruction {
