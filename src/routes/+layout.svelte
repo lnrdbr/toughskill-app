@@ -1,7 +1,16 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
-	let { children } = $props();
+	import { invalidateAll } from '$app/navigation';
+	import { authClient } from '$lib/auth-client';
+
+	let { data, children } = $props();
+
+	$effect(() => {
+		if (!data.user) {
+			authClient.signIn.anonymous().then(() => invalidateAll());
+		}
+	});
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>

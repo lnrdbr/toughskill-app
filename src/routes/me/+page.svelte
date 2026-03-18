@@ -29,6 +29,6 @@
 
 <div class="flex-col flex gap-10 h-10 col-start-2">
 
-		<LessonItem number="1" title="Preparation" description="You will lean how to bring your mind into the right setting, to have creative ideas!"/>
+		<LessonItem number="1" href="/lesson" title="Preparation" description="You will lean how to bring your mind into the right setting, to have creative ideas!"/>
 </div>
 </div>
