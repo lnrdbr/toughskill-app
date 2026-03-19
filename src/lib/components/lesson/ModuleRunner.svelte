@@ -35,7 +35,9 @@
 		oncomplete?.({
 			moduleId: module.id,
 			completedAt: new Date().toISOString(),
-	$effect(() => {
+			data
+		});
+	}
 		let cancelled = false;
 
 		async function load(mod: Module) {
