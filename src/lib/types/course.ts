@@ -1,5 +1,4 @@
-export interface ExerciseModule {
-	type: 'exercise';
+export interface BaseModule {
 	id: string;
 	title: string;
 	componentId: string;
@@ -7,13 +6,12 @@ export interface ExerciseModule {
 	config: Record<string, unknown>;
 }
 
-export interface LearningModule {
+export interface ExerciseModule extends BaseModule {
+	type: 'exercise';
+}
+
+export interface LearningModule extends BaseModule {
 	type: 'learning';
-	id: string;
-	title: string;
-	componentId: string;
-	estimatedMinutes: number;
-	config: Record<string, unknown>;
 }
 
 export type Module = ExerciseModule | LearningModule;
