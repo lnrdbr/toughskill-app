@@ -47,6 +47,8 @@
 		load(module);
 		return () => {
 			cancelled = true;
+			resolved = null;
+			error = null;
 		};
 	});
 </script>
