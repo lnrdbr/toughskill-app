@@ -7,9 +7,9 @@ const registry = {
 export type RegisteredModuleId = keyof typeof registry;
 
 export function getModuleComponent(
-	componentId: RegisteredModuleId
+	componentId: string
 ): (() => Promise<{ default: Component }>) | undefined {
-	return registry[componentId];
+	return (registry as Record<string, () => Promise<{ default: Component }>>)[componentId];
 }
 
 export function getRegisteredIds(): RegisteredModuleId[] {
