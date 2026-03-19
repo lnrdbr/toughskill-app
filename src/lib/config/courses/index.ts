@@ -14,5 +14,5 @@ export function getLessonBySlug(courseId: string, lessonSlug: string): Lesson | 
 }
 
 export function getAllCourses(): Course[] {
-	return courses;
+	return [...courses];
 }
