@@ -8,8 +8,12 @@ export type RegisteredModuleId = keyof typeof registry;
 
 export function getModuleComponent(
 	componentId: string
+export function getModuleComponent(
+	componentId: string
 ): (() => Promise<{ default: Component }>) | undefined {
-	return (registry as Record<string, () => Promise<{ default: Component }>>)[componentId];
+	if (!Object.hasOwn(registry, componentId)) return undefined;
+	return registry[componentId as RegisteredModuleId];
+}
 }
 
 export function getRegisteredIds(): RegisteredModuleId[] {
