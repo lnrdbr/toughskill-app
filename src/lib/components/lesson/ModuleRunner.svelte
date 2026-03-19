@@ -25,7 +25,8 @@
 		try {
 			const imported = await loader();
 			resolved = imported.default;
-		} catch {
+		} catch (err) {
+			console.error('Failed to load module component', mod.componentId, err);
 			error = `Failed to load module: "${mod.componentId}"`;
 		}
 		loading = false;
