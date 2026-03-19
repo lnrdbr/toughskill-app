@@ -35,9 +35,37 @@
 		oncomplete?.({
 			moduleId: module.id,
 			completedAt: new Date().toISOString(),
-			data
-		});
-	}
+	$effect(() => {
+		let cancelled = false;
+
+		async function load(mod: Module) {
+			resolved = null;
+			error = null;
+			loading = true;
+
+			const loader = getModuleComponent(mod.componentId);
+			if (!loader) {
+				if (!cancelled) {
+					error = `Unknown module: "${mod.componentId}"`;
+					loading = false;
+				}
+				return;
+			}
+
+			try {
+				const imported = await loader();
+				if (!cancelled) resolved = imported.default;
+			} catch {
+				if (!cancelled) error = `Failed to load module: "${mod.componentId}"`;
+			}
+			if (!cancelled) loading = false;
+		}
+
+		load(module);
+		return () => {
+			cancelled = true;
+		};
+	});
 
 	$effect(() => {
 		loadComponent(module);
