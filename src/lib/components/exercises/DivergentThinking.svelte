@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import BubbleCloud from './BubbleCloud.svelte';
 	import ExerciseTimer from './ExerciseTimer.svelte';
 	import GuilfordCard from './GuilfordCard.svelte';
@@ -26,7 +27,7 @@
 	];
 
 	let bubbles: BubbleData[] = $state(
-		initialIdeas.map((text, i) => ({
+		untrack(() => initialIdeas).map((text, i) => ({
 			id: crypto.randomUUID(),
 			text,
 			color: COLORS[i % COLORS.length]
