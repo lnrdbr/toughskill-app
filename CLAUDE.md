@@ -36,6 +36,7 @@ yarn auth:schema      # Regenerate Better Auth schema from auth config
 Run a single test file: `npx vitest run src/path/to/file.test.ts`
 Run tests for a specific project: `npx vitest --project client` (or `server`, `storybook`)
 
+
 ## Project Requirements
 
 Gamified soft skills learning web app for three skill areas: **Communication**, **Creativity**, and **Work Ethic**. Grounded in Self-Determination Theory (SDT) and ethical gamification.

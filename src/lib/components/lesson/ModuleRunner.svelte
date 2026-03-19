@@ -10,28 +10,6 @@
 	let error: string | null = $state(null);
 	let loading = $state(true);
 
-	async function loadComponent(mod: Module) {
-		resolved = null;
-		error = null;
-		loading = true;
-
-		const loader = getModuleComponent(mod.componentId);
-		if (!loader) {
-			error = `Unknown module: "${mod.componentId}"`;
-			loading = false;
-			return;
-		}
-
-		try {
-			const imported = await loader();
-			resolved = imported.default;
-		} catch (err) {
-			console.error('Failed to load module component', mod.componentId, err);
-			error = `Failed to load module: "${mod.componentId}"`;
-		}
-		loading = false;
-	}
-
 	function handleComplete(data: Record<string, unknown>) {
 		oncomplete?.({
 			moduleId: module.id,
@@ -39,6 +17,8 @@
 			data
 		});
 	}
+
+	$effect(() => {
 		let cancelled = false;
 
 		async function load(mod: Module) {
@@ -68,10 +48,6 @@
 		return () => {
 			cancelled = true;
 		};
-	});
-
-	$effect(() => {
-		loadComponent(module);
 	});
 </script>
 
