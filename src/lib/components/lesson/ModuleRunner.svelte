@@ -29,17 +29,19 @@
 			const loader = getModuleComponent(mod.componentId);
 			if (!loader) {
 				if (!cancelled) {
-					error = `Unknown module: "${mod.componentId}"`;
+					console.error(`[ModuleRunner] Unknown module: "${mod.componentId}"`);
+					error = "This exercise couldn't be loaded. Please try again later.";
 					loading = false;
 				}
 				return;
 			}
 
 			try {
+				const imported = await loader();
+				if (!cancelled) resolved = imported.default;
 			} catch (err) {
 				console.error(`[ModuleRunner] Failed to load module "${mod.componentId}":`, err);
-				if (!cancelled) error = `Failed to load module: "${mod.componentId}"`;
-			}
+				if (!cancelled) error = "This exercise couldn't be loaded. Please try again later.";
 			}
 			if (!cancelled) loading = false;
 		}
