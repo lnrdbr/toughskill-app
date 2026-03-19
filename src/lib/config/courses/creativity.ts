@@ -21,10 +21,10 @@ export const creativity: Course = {
 					title: 'Paperclip Challenge',
 					componentId: 'DivergentThinking',
 					estimatedMinutes: 5,
-					config: {
+				config: {
 						prompt: 'Paperclip',
 						instruction: 'How many uses can you think of for a paperclip?',
-						timerDuration: 0
+						timerDuration: null
 					}
 				},
 				{
