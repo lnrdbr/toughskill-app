@@ -36,10 +36,10 @@
 			}
 
 			try {
-				const imported = await loader();
-				if (!cancelled) resolved = imported.default;
-			} catch {
+			} catch (err) {
+				console.error(`[ModuleRunner] Failed to load module "${mod.componentId}":`, err);
 				if (!cancelled) error = `Failed to load module: "${mod.componentId}"`;
+			}
 			}
 			if (!cancelled) loading = false;
 		}
