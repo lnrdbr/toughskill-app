@@ -25,6 +25,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	};
 
 	if (
+		typeof moduleId !== 'string' ||
+		typeof courseId !== 'string' ||
+		typeof lessonSlug !== 'string' ||
 		!moduleId ||
 		!courseId ||
 		!lessonSlug ||
@@ -32,6 +35,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		timeSpentSeconds < 0
 	) {
 		error(400, 'Missing required fields');
+	}
+
+	if (data != null && (typeof data !== 'object' || Array.isArray(data))) {
+		error(400, 'Invalid data field');
 	}
 
 	const userId = locals.user?.id;
