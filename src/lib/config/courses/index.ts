@@ -1,4 +1,4 @@
-import type { Course, Lesson } from '$lib/types/course';
+import type { Course, Lesson, Module } from '$lib/types/course';
 import { creativity } from './creativity';
 
 const courses: Course[] = [creativity];
@@ -11,6 +11,16 @@ export function getLessonBySlug(courseId: string, lessonSlug: string): Lesson | 
 	const course = getCourse(courseId);
 	if (!course) return undefined;
 	return course.lessons.find((l) => l.slug === lessonSlug);
+}
+
+export function getModule(
+	courseId: string,
+	lessonSlug: string,
+	moduleId: string
+): Module | undefined {
+	const lesson = getLessonBySlug(courseId, lessonSlug);
+	if (!lesson) return undefined;
+	return lesson.modules.find((m) => m.id === moduleId);
 }
 
 export function getAllCourses(): Course[] {
