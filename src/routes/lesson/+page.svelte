@@ -1,11 +1,233 @@
-<script>
-	import DivergentThinking from '$lib/components/exercises/DivergentThinking.svelte';
+<script lang="ts">
+	import type { PageData, ActionData } from './$types';
+	import ModuleRunner from '$lib/components/lesson/ModuleRunner.svelte';
+	import type { ModuleCompletionResult, Module } from '$lib/types/course';
+
+	let { data, form }: { data: PageData; form: ActionData } = $props();
+
+	let currentIndex = $state(0);
+	let completionResults: ModuleCompletionResult[] = $state([]);
+
+	// Resolve which session to use: form (POST) takes priority over data (load)
+	let session = $derived(form && !('error' in form) ? form : data);
+	let modules: Module[] = $derived((session as { modules: Module[] }).modules ?? []);
+	let sessionType = $derived((session as { sessionType: string }).sessionType ?? 'empty');
+	let courseId = $derived((session as { courseId?: string }).courseId ?? '');
+	let lessonSlug = $derived((session as { lessonSlug?: string }).lessonSlug ?? '');
+	let lessonTitle = $derived((session as { lessonTitle?: string }).lessonTitle ?? '');
+	let courseTitle = $derived((session as { courseTitle?: string }).courseTitle ?? '');
+	let allCompleted = $derived((session as { allCompleted?: boolean }).allCompleted ?? false);
+
+	let pendingResult: ModuleCompletionResult | null = $state(null);
+	let sessionDone = $derived(modules.length > 0 && currentIndex >= modules.length);
+
+	// Reset state when session identity changes
+	let sessionKey = $derived(`${sessionType}-${courseId}-${lessonSlug}`);
+	let prevSessionKey = $state('');
+	$effect(() => {
+		if (sessionKey !== prevSessionKey) {
+			prevSessionKey = sessionKey;
+			currentIndex = 0;
+			completionResults = [];
+			pendingResult = null;
+		}
+	});
+
+	function handleModuleComplete(result: ModuleCompletionResult) {
+		pendingResult = result;
+
+		// Non-blocking progress POST
+		fetch('/api/progress', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				moduleId: result.moduleId,
+				courseId,
+				lessonSlug,
+				timeSpentSeconds: (result.data?.timeSpentSeconds as number) ?? 0,
+				data: result.data
+			})
+		}).catch((err) => {
+			console.error('[lesson] Failed to save progress:', err);
+		});
+	}
+
+	function advanceModule() {
+		if (pendingResult) {
+			completionResults = [...completionResults, pendingResult];
+			pendingResult = null;
+		}
+		currentIndex++;
+	}
 </script>
 
-<div class="bg-blue-100 min-h-full flex flex-col">
-<DivergentThinking />
-<hr/>
-		<div class="border-t-2">
+{#if form && 'error' in form}
+	<div class="session-empty">
+		<p class="error-text">{form.error}</p>
+		<a href="/learn" class="back-link">Back to courses</a>
+	</div>
+{:else if sessionType === 'empty'}
+	<div class="session-empty">
+		<h2>No lesson selected</h2>
+		<p>Pick a lesson to get started.</p>
+		<a href="/learn" class="back-link">Browse courses</a>
+	</div>
+{:else if sessionDone}
+	<div class="session-done">
+		<h2>Session complete!</h2>
+		<p>You completed {completionResults.length} module{completionResults.length === 1 ? '' : 's'}. Great work!</p>
+		<a href="/learn" class="back-link">Continue learning</a>
+	</div>
+{:else if modules.length > 0}
+	<div class="lesson-container">
+		<header class="lesson-header">
+			<div class="lesson-context">
+				<span class="course-label">{courseTitle}</span>
+				<span class="separator">/</span>
+				<span class="lesson-label">{lessonTitle}</span>
+			</div>
+			<div class="progress-indicator">
+				{currentIndex + 1} / {modules.length}
+			</div>
+			{#if allCompleted}
+				<p class="revision-note">You've completed this lesson before — reviewing all modules.</p>
+			{/if}
+			{#if sessionType === 'revision'}
+				<p class="revision-note">Revision session — practising your most recent lesson.</p>
+			{/if}
+		</header>
 
-		</div>
-</div>
+		{#key modules[currentIndex].id}
+			<ModuleRunner module={modules[currentIndex]} oncomplete={handleModuleComplete} />
+		{/key}
+
+		{#if pendingResult}
+			<div class="next-bar">
+				<button class="next-btn" onclick={advanceModule}>
+					{currentIndex + 1 < modules.length ? 'Next module' : 'Finish session'}
+				</button>
+			</div>
+		{/if}
+	</div>
+{/if}
+
+<style>
+	.session-empty,
+	.session-done {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+		padding: 64px 24px;
+		text-align: center;
+	}
+
+	.session-empty h2,
+	.session-done h2 {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--color-foreground);
+	}
+
+	.session-empty p,
+	.session-done p {
+		color: var(--color-muted-foreground);
+	}
+
+	.error-text {
+		color: var(--color-error);
+		font-weight: 600;
+	}
+
+	.back-link {
+		margin-top: 8px;
+		color: var(--color-primary-600);
+		font-weight: 600;
+		text-decoration: underline;
+	}
+
+	.lesson-container {
+		min-height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.lesson-header {
+		padding: 16px 24px;
+		border-bottom: 1px solid var(--color-border);
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		flex-wrap: wrap;
+	}
+
+	.lesson-context {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 0.9rem;
+	}
+
+	.course-label {
+		color: var(--color-muted-foreground);
+	}
+
+	.separator {
+		color: var(--color-border);
+	}
+
+	.lesson-label {
+		font-weight: 600;
+		color: var(--color-foreground);
+	}
+
+	.progress-indicator {
+		margin-left: auto;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--color-primary-600);
+		background: var(--color-primary-50);
+		padding: 4px 12px;
+		border-radius: 12px;
+	}
+
+	.revision-note {
+		width: 100%;
+		font-size: 0.8rem;
+		color: var(--color-muted-foreground);
+		font-style: italic;
+	}
+
+	.next-bar {
+		display: flex;
+		justify-content: center;
+		padding: 24px;
+		border-top: 1px solid var(--color-border);
+	}
+
+	.next-btn {
+		padding: 10px 32px;
+		background: var(--color-primary-500);
+		color: white;
+		border: 2px solid var(--color-primary-700);
+		border-radius: var(--radius-button);
+		font-weight: 600;
+		font-size: 0.95rem;
+		cursor: pointer;
+		filter: drop-shadow(2px 2px 0px var(--color-primary-700));
+		transition: all 0.3s;
+	}
+
+	.next-btn:hover {
+		background: var(--color-primary-400);
+		transform: translate(1px, 1px);
+		filter: drop-shadow(1px 1px 0px var(--color-primary-600));
+	}
+
+	.next-btn:active {
+		background: var(--color-primary-600);
+		transform: translate(2px, 2px);
+		filter: drop-shadow(0px 0px 0px var(--color-primary-700));
+	}
+</style>
