@@ -30,15 +30,17 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		typeof lessonSlug !== 'string' ||
 		!moduleId ||
 		!courseId ||
-		!lessonSlug ||
-		!Number.isInteger(timeSpentSeconds) ||
-		timeSpentSeconds < 0
+		!lessonSlug
 	) {
-		error(400, 'Missing required fields');
+		error(400, 'Missing required fields: moduleId, courseId, and lessonSlug must be non-empty strings');
+	}
+
+	if (!Number.isInteger(timeSpentSeconds) || timeSpentSeconds < 0 || timeSpentSeconds > 86400) {
+		error(400, 'timeSpentSeconds must be an integer between 0 and 86400');
 	}
 
 	if (data != null && (typeof data !== 'object' || Array.isArray(data))) {
-		error(400, 'Invalid data field');
+		error(400, 'data must be a plain object or null');
 	}
 
 	const userId = locals.user?.id;
@@ -51,17 +53,23 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		error(404, 'Module not found');
 	}
 
-	const [{ id }] = await db
-		.insert(moduleCompletion)
-		.values({
-			userId,
-			moduleId,
-			courseId,
-			lessonSlug,
-			timeSpentSeconds,
-			data: data ?? null
-		})
-		.returning({ id: moduleCompletion.id });
+	let id: string;
+	try {
+		const [row] = await db
+			.insert(moduleCompletion)
+			.values({
+				userId,
+				moduleId,
+				courseId,
+				lessonSlug,
+				timeSpentSeconds,
+				data: data ?? null
+			})
+			.returning({ id: moduleCompletion.id });
+		id = row.id;
+	} catch {
+		error(500, 'Failed to record completion');
+	}
 
 	return json({ id });
 };
