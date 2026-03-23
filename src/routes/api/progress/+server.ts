@@ -12,6 +12,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		error(400, 'Invalid JSON body');
 	}
 
+	if (typeof body !== 'object' || body === null) {
+		error(400, 'Invalid JSON body');
+	}
+
 	const { moduleId, courseId, lessonSlug, timeSpentSeconds, data } = body as {
 		moduleId: string;
 		courseId: string;
@@ -24,7 +28,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		!moduleId ||
 		!courseId ||
 		!lessonSlug ||
-		typeof timeSpentSeconds !== 'number' ||
+		!Number.isInteger(timeSpentSeconds) ||
 		timeSpentSeconds < 0
 	) {
 		error(400, 'Missing required fields');
