@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getCourse, getLessonBySlug, getAllCourses } from './index';
+import { getCourse, getLessonBySlug, getModule, getAllCourses } from './index';
 
 describe('getCourse', () => {
 	it('returns the Creativity course by id', () => {
@@ -28,6 +28,27 @@ describe('getLessonBySlug', () => {
 
 	it('returns undefined for an unknown course id', () => {
 		expect(getLessonBySlug('nonexistent', 'preparation')).toBeUndefined();
+	});
+});
+
+describe('getModule', () => {
+	it('returns a module by courseId, lessonSlug and moduleId', () => {
+		const mod = getModule('creativity', 'preparation', 'paperclip-challenge');
+		expect(mod).toBeDefined();
+		expect(mod!.id).toBe('paperclip-challenge');
+		expect(mod!.title).toBe('Paperclip Challenge');
+	});
+
+	it('returns undefined for an unknown moduleId', () => {
+		expect(getModule('creativity', 'preparation', 'nonexistent')).toBeUndefined();
+	});
+
+	it('returns undefined for an unknown lessonSlug', () => {
+		expect(getModule('creativity', 'nonexistent', 'paperclip-challenge')).toBeUndefined();
+	});
+
+	it('returns undefined for an unknown courseId', () => {
+		expect(getModule('nonexistent', 'preparation', 'paperclip-challenge')).toBeUndefined();
 	});
 });
 
