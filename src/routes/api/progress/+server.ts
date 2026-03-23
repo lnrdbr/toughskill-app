@@ -5,7 +5,13 @@ import { moduleCompletion } from '$lib/server/db/schema';
 import { getModule } from '$lib/config/courses';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
-	const body = await request.json();
+	let body: unknown;
+	try {
+		body = await request.json();
+	} catch {
+		error(400, 'Invalid JSON body');
+	}
+
 	const { moduleId, courseId, lessonSlug, timeSpentSeconds, data } = body as {
 		moduleId: string;
 		courseId: string;
@@ -14,7 +20,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		data?: Record<string, unknown>;
 	};
 
-	if (!moduleId || !courseId || !lessonSlug || timeSpentSeconds == null) {
+	if (
+		!moduleId ||
+		!courseId ||
+		!lessonSlug ||
+		typeof timeSpentSeconds !== 'number' ||
+		timeSpentSeconds < 0
+	) {
 		error(400, 'Missing required fields');
 	}
 
@@ -37,6 +49,19 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			lessonSlug,
 			timeSpentSeconds,
 			data: data ?? null
+		})
+		.onConflictDoUpdate({
+			target: [
+				moduleCompletion.userId,
+				moduleCompletion.courseId,
+				moduleCompletion.lessonSlug,
+				moduleCompletion.moduleId
+			],
+			set: {
+				timeSpentSeconds,
+				data: data ?? null,
+				completedAt: new Date()
+			}
 		})
 		.returning({ id: moduleCompletion.id });
 
