@@ -61,19 +61,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			timeSpentSeconds,
 			data: data ?? null
 		})
-		.onConflictDoUpdate({
-			target: [
-				moduleCompletion.userId,
-				moduleCompletion.courseId,
-				moduleCompletion.lessonSlug,
-				moduleCompletion.moduleId
-			],
-			set: {
-				timeSpentSeconds,
-				data: data ?? null,
-				completedAt: new Date()
-			}
-		})
 		.returning({ id: moduleCompletion.id });
 
 	return json({ id });
