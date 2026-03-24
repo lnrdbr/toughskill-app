@@ -4,6 +4,9 @@
 	import ExerciseTimer from './ExerciseTimer.svelte';
 	import GuilfordCard from './GuilfordCard.svelte';
 	import type { BubbleData, ExerciseResult, GuilfordEvaluation, SubmissionResponse } from './types.ts';
+	import enterSoundUrl from '$lib/assets/enterSound.wav';
+
+	const enterSound = typeof Audio !== 'undefined' ? new Audio(enterSoundUrl) : null;
 
 	let {
 		prompt = 'Paperclip',
@@ -46,6 +49,11 @@
 		const text = inputText.trim();
 		if (!text) return;
 		inputText = '';
+
+		if (enterSound) {
+			enterSound.currentTime = 0;
+			enterSound.play().catch(() => {});
+		}
 
 		bubbles.push({
 			id: crypto.randomUUID(),
