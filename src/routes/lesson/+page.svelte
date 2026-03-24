@@ -20,21 +20,13 @@
 
 	let pendingResult: ModuleCompletionResult | null = $state(null);
 	let sessionDone = $derived(modules.length > 0 && currentIndex >= modules.length);
-
-	// Reset state when session identity changes
 	let sessionKey = $derived(`${sessionType}-${courseId}-${lessonSlug}`);
-	let prevSessionKey = $state('');
-	$effect(() => {
-		if (sessionKey !== prevSessionKey) {
-			prevSessionKey = sessionKey;
-			currentIndex = 0;
-			completionResults = [];
-			pendingResult = null;
-		}
-	});
 
 	function handleModuleComplete(result: ModuleCompletionResult) {
 		pendingResult = result;
+
+		const timeRaw = result.data?.timeSpentSeconds;
+		const timeSpentSeconds = typeof timeRaw === 'number' ? Math.round(Math.max(0, timeRaw)) : 0;
 
 		// Non-blocking progress POST
 		fetch('/api/progress', {
@@ -44,19 +36,24 @@
 				moduleId: result.moduleId,
 				courseId,
 				lessonSlug,
-				timeSpentSeconds: (result.data?.timeSpentSeconds as number) ?? 0,
+				timeSpentSeconds,
 				data: result.data
 			})
-		}).catch((err) => {
-			console.error('[lesson] Failed to save progress:', err);
-		});
+		})
+			.then((res) => {
+				if (!res.ok) {
+					console.error('[lesson] Failed to save progress:', res.status, res.statusText);
+				}
+			})
+			.catch((err) => {
+				console.error('[lesson] Failed to save progress:', err);
+			});
 	}
 
 	function advanceModule() {
-		if (pendingResult) {
-			completionResults = [...completionResults, pendingResult];
-			pendingResult = null;
-		}
+		if (!pendingResult) return;
+		completionResults = [...completionResults, pendingResult];
+		pendingResult = null;
 		currentIndex++;
 	}
 </script>
@@ -72,43 +69,46 @@
 		<p>Pick a lesson to get started.</p>
 		<a href="/learn" class="back-link">Browse courses</a>
 	</div>
-{:else if sessionDone}
-	<div class="session-done">
-		<h2>Session complete!</h2>
-		<p>You completed {completionResults.length} module{completionResults.length === 1 ? '' : 's'}. Great work!</p>
-		<a href="/learn" class="back-link">Continue learning</a>
-	</div>
-{:else if modules.length > 0}
-	<div class="lesson-container">
-		<header class="lesson-header">
-			<div class="lesson-context">
-				<span class="course-label">{courseTitle}</span>
-				<span class="separator">/</span>
-				<span class="lesson-label">{lessonTitle}</span>
+{:else}
+	{#key sessionKey}
+		{#if sessionDone}
+			<div class="session-done">
+				<h2>Session complete!</h2>
+				<p>You completed {completionResults.length} module{completionResults.length === 1 ? '' : 's'}. Great work!</p>
+				<a href="/learn" class="back-link">Continue learning</a>
 			</div>
-			<div class="progress-indicator">
-				{currentIndex + 1} / {modules.length}
-			</div>
-			{#if allCompleted}
-				<p class="revision-note">You've completed this lesson before — reviewing all modules.</p>
-			{/if}
-			{#if sessionType === 'revision'}
-				<p class="revision-note">Revision session — practising your most recent lesson.</p>
-			{/if}
-		</header>
+		{:else if modules.length > 0}
+			<div class="lesson-container">
+				<header class="lesson-header">
+					<div class="lesson-context">
+						<span class="course-label">{courseTitle}</span>
+						<span class="separator">/</span>
+						<span class="lesson-label">{lessonTitle}</span>
+					</div>
+					<div class="progress-indicator">
+						{currentIndex + 1} / {modules.length}
+					</div>
+					{#if allCompleted}
+						<p class="revision-note">You've completed this lesson before — reviewing all modules.</p>
+					{:else if sessionType === 'revision'}
+						<p class="revision-note">Revision session — practising your most recent lesson.</p>
+					{/if}
+				</header>
 
-		{#key modules[currentIndex].id}
-			<ModuleRunner module={modules[currentIndex]} oncomplete={handleModuleComplete} />
-		{/key}
+				{#key modules[currentIndex].id}
+					<ModuleRunner module={modules[currentIndex]} oncomplete={handleModuleComplete} />
+				{/key}
 
-		{#if pendingResult}
-			<div class="next-bar">
-				<button class="next-btn" onclick={advanceModule}>
-					{currentIndex + 1 < modules.length ? 'Next module' : 'Finish session'}
-				</button>
+				{#if pendingResult}
+					<div class="next-bar">
+						<button class="next-btn" onclick={advanceModule}>
+							{currentIndex + 1 < modules.length ? 'Next module' : 'Finish session'}
+						</button>
+					</div>
+				{/if}
 			</div>
 		{/if}
-	</div>
+	{/key}
 {/if}
 
 <style>

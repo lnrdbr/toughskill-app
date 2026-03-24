@@ -31,13 +31,31 @@ export const load: PageServerLoad = async ({ locals }) => {
 		return { sessionType: 'empty' as const, modules: [] };
 	}
 
+	const completions = await db
+		.select({ moduleId: moduleCompletion.moduleId })
+		.from(moduleCompletion)
+		.where(
+			and(
+				eq(moduleCompletion.userId, locals.user.id),
+				eq(moduleCompletion.courseId, latest.courseId),
+				eq(moduleCompletion.lessonSlug, latest.lessonSlug)
+			)
+		);
+
+	const completedIds = new Set(completions.map((c) => c.moduleId));
+	const completedModules = lesson.modules.filter((m) => completedIds.has(m.id));
+
+	if (completedModules.length === 0) {
+		return { sessionType: 'empty' as const, modules: [] };
+	}
+
 	return {
 		sessionType: 'revision' as const,
 		courseId: latest.courseId,
 		lessonSlug: latest.lessonSlug,
 		lessonTitle: lesson.title,
 		courseTitle: course.title,
-		modules: lesson.modules
+		modules: completedModules
 	};
 };
 
