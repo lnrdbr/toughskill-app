@@ -52,7 +52,7 @@
 
 		if (enterSound) {
 			enterSound.currentTime = 0;
-			enterSound.play();
+			enterSound.play().catch(() => {});
 		}
 
 		bubbles.push({
