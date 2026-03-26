@@ -36,7 +36,16 @@ yarn auth:schema      # Regenerate Better Auth schema from auth config
 Run a single test file: `npx vitest run src/path/to/file.test.ts`
 Run tests for a specific project: `npx vitest --project client` (or `server`, `storybook`)
 
-Comoponent Heavy application abstract as much as possible
+Component-heavy application — abstract as much as possible.
+
+## Component Placement
+
+- **`$lib/components/`** — Reusable components shared across multiple routes (Button, CourseCard, ListItem, etc.)
+- **`src/routes/<route>/`** — Route-specific components co-located with their page (per SvelteKit convention). Stories and tests live alongside them.
+
+## Icons
+
+Uses `@iconify/svelte` for icons. Course `icon` fields store Iconify icon IDs (e.g. `'mdi:lightbulb'`), rendered via `<Icon icon={...} />`.
 
 ## Project Requirements
 
@@ -73,6 +82,7 @@ Gamified soft skills learning web app for three skill areas: **Communication**, 
 - Components use `$props()` rune: `let { children, variant = 'primary' } = $props()`
 - Snippet-based children: `{@render children()}` (not slot)
 - State managed with `$state()` rune
+- Pass-through HTML attributes via rest props: `let { children, ...rest }: HTMLButtonAttributes & { children: Snippet } = $props()` then `{...rest}` on the element
 
 ### Testing (3 Vitest Projects)
 
@@ -103,7 +113,7 @@ Drizzle ORM + better-sqlite3. Schema in `src/lib/server/db/schema.ts` (app table
 
 ### Storybook
 
-Stories use **Svelte CSF format** (`.stories.svelte` files) co-located with components in `src/lib/components/`. Pattern:
+Stories use **Svelte CSF format** (`.stories.svelte` files) co-located with components. The glob `src/**/*.stories.svelte` picks up stories from both `$lib/components/` and route directories. Pattern:
 
 ```svelte
 <script module>
@@ -121,9 +131,14 @@ Stories use **Svelte CSF format** (`.stories.svelte` files) co-located with comp
 
 Components combine scoped `<style>` blocks using CSS custom properties from the theme (e.g., `var(--color-foreground)`, `var(--main-drop-shadow)`) with Tailwind utility classes. Drop-shadow-based visual style with transform interactions (translate on hover/active).
 
+**Important:** `@apply` does not work inside Svelte scoped `<style>` blocks with Tailwind v4. Use Tailwind classes directly in markup or CSS custom properties in `<style>`.
+
+**Scoped CSS limitation:** Svelte scoped styles cannot target elements inside child components. If using a shared component (e.g. `<Button>`), style it within that component — parent CSS won't reach it.
+
 ### Key Files
 
-- `src/lib/components/` — Reusable components (Button, CourseCard, ListItem, LessonItem) with co-located stories
+- `src/lib/components/` — Reusable shared components (Button, CourseCard, ListItem, LessonItem) with co-located stories
+- `src/routes/learn/` — Learn page with route-specific components (DotPath, DotPathNode, LessonDetailCard)
 - `src/lib/server/auth.ts` — Better Auth configuration
 - `src/lib/server/db/schema.ts` — Application database schema
 - `src/lib/server/db/index.ts` — Drizzle client initialization
@@ -135,7 +150,8 @@ Components combine scoped `<style>` blocks using CSS custom properties from the 
 
 - `/` — Landing page
 - `/me` — User dashboard (sidebar layout with course list + lesson view)
-- `/learn` — Lesson path (in development)
+- `/learn` — Dot-path lesson overview (auth-gated, loads completion from DB)
+- `/lesson` — Interactive lesson player (form POST with courseId + lessonSlug)
 - `/demo/better-auth` — Auth demo pages
 
 ### Environment
