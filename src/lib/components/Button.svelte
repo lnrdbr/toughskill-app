@@ -1,9 +1,12 @@
-<script>
-	let { children } = $props();
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+
+	let { children, ...rest }: HTMLButtonAttributes & { children: Snippet } = $props();
 </script>
 
-<button class="button py-2 px-4 border-2 rounded-lg ">
-		{@render children()}
+<button class="button py-2 px-4 border-2 rounded-lg" {...rest}>
+	{@render children()}
 </button>
 
 

@@ -66,6 +66,7 @@
 	},
 	"dependencies": {
 		"@anthropic-ai/sdk": "^0.79.0",
+		"@iconify/svelte": "^5.2.1",
 		"better-sqlite3": "^12.6.2",
 		"d3-force": "^3.0.0"
 	}
