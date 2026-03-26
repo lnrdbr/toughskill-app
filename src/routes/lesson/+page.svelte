@@ -107,13 +107,13 @@
 					{/key}
 				</div>
 
-				<div class="next-bar">
-					{#if pendingResult}
+				{#if pendingResult}
+					<div class="next-bar">
 						<button class="next-btn" onclick={advanceModule}>
 							{currentIndex + 1 < modules.length ? 'Next module' : 'Finish session'}
 						</button>
-					{/if}
-				</div>
+					</div>
+				{/if}
 			</div>
 		{/if}
 	{/key}
@@ -175,7 +175,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		overflow: hidden;
+		min-height: 0;
+		overflow-y: auto;
 	}
 
 	.lesson-context {

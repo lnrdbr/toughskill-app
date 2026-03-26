@@ -116,7 +116,7 @@
 			phase = 'results';
 			oncomplete?.({ ideas, timeSpentSeconds, reflections });
 		} catch {
-			errorMessage = 'Could not evaluate your ideas. You can still try again.';
+			errorMessage = 'Could not evaluate your ideas. Your responses have been saved.';
 			phase = 'results';
 			oncomplete?.({
 				ideas,

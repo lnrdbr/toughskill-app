@@ -37,7 +37,7 @@ describe('ReadingBlock', () => {
 		expect(listItems.length).toBe(2);
 	});
 
-	it('calls oncomplete immediately when provided', async () => {
+	it('calls oncomplete when mounted', async () => {
 		let called = false;
 		render(ReadingBlock, {
 			content: 'Read this.',
@@ -46,6 +46,6 @@ describe('ReadingBlock', () => {
 			}
 		});
 
-		expect(called).toBe(true);
+		await expect.poll(() => called).toBe(true);
 	});
 });

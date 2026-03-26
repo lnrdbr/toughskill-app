@@ -9,6 +9,9 @@
 		oncomplete?: (data: Record<string, unknown>) => void;
 	} = $props();
 
+	// SAFETY: content must come from trusted static sources (course config).
+	// marked does not sanitise output — if content ever originates from user
+	// input or a CMS, add DOMPurify before rendering.
 	const html = $derived(marked.parse(content, { async: false }) as string);
 
 	$effect(() => {
