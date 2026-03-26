@@ -35,7 +35,7 @@
 		align-items: center;
 		justify-content: center;
 		transition: all 0.2s ease;
-		transform: skew(20%);
+		// transform: skew(20deg);
 		filter: drop-shadow(0px 8px 0px var(--color-primary-100));
 	}
 	.dot-button:hover {
