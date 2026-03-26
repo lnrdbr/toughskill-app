@@ -7,13 +7,15 @@
 
 <div class="mx-auto max-w-lg px-6 py-12">
 	<div class="flex">
-		<h1 class="text-2xl mb-2 text-left font-bold">
-			{#if data.course?.icon}
-				<Icon icon={data.course.icon} width="32" height="32" />
-			{/if}
-		</h1>
+	<div class="flex items-center gap-2 mb-2">
+		{#if data.course?.icon}
+			<Icon icon={data.course.icon} width="32" height="32" />
+		{/if}
 		<div>
 			<h1 class="mb-2 text-left text-3xl font-bold">{data.course?.title ?? 'Course'}</h1>
+			<p class="mb-12 text-left text-gray-500">{data.course?.description ?? ''}</p>
+		</div>
+	</div>
 			<p class="mb-12 text-left text-gray-500">{data.course?.description ?? ''}</p>
 		</div>
 	</div>
