@@ -74,7 +74,11 @@
 		{#if sessionDone}
 			<div class="session-done">
 				<h2>Session complete!</h2>
-				<p>You completed {completionResults.length} module{completionResults.length === 1 ? '' : 's'}. Great work!</p>
+				<p>
+					You completed {completionResults.length} module{completionResults.length === 1
+						? ''
+						: 's'}. Great work!
+				</p>
 				<a href="/learn" class="back-link">Continue learning</a>
 			</div>
 		{:else if modules.length > 0}
@@ -89,15 +93,19 @@
 						{currentIndex + 1} / {modules.length}
 					</div>
 					{#if allCompleted}
-						<p class="revision-note">You've completed this lesson before — reviewing all modules.</p>
+						<p class="revision-note">
+							You've completed this lesson before — reviewing all modules.
+						</p>
 					{:else if sessionType === 'revision'}
 						<p class="revision-note">Revision session — practising your most recent lesson.</p>
 					{/if}
 				</header>
 
-				{#key modules[currentIndex].id}
-					<ModuleRunner module={modules[currentIndex]} oncomplete={handleModuleComplete} />
-				{/key}
+				<div class="module-area">
+					{#key modules[currentIndex].id}
+						<ModuleRunner module={modules[currentIndex]} oncomplete={handleModuleComplete} />
+					{/key}
+				</div>
 
 				{#if pendingResult}
 					<div class="next-bar">
@@ -148,9 +156,9 @@
 	}
 
 	.lesson-container {
-		min-height: 100%;
-		display: flex;
-		flex-direction: column;
+		height: 100dvh;
+		display: grid;
+		grid-template-rows: auto 1fr auto;
 	}
 
 	.lesson-header {
@@ -160,6 +168,15 @@
 		align-items: center;
 		gap: 16px;
 		flex-wrap: wrap;
+		background: var(--color-background);
+	}
+
+	.module-area {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 0;
+		overflow-y: auto;
 	}
 
 	.lesson-context {
@@ -204,6 +221,7 @@
 		justify-content: center;
 		padding: 24px;
 		border-top: 1px solid var(--color-border);
+		background: var(--color-background);
 	}
 
 	.next-btn {
