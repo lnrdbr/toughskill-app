@@ -10,7 +10,7 @@ SvelteKit 2 + Svelte 5 e-learning platform ("TOUGHSKILL"). Uses Tailwind CSS v4,
 
 **HARD LIMITS — always follow these:**
 
-1. **One component at a time.** Never create or modify more than one component per task. Finish it completely (implementation, story, test) before moving on.
+1. **One component at a time.** Never create or modify more than one component per task. Finish it completely (implementation, story, test) before moving on. If there Are More component Needed Just tell the User WHat to do
 2. **Never assume — always ask.** If requirements are ambiguous, unclear, or missing, stop and ask before writing code. This includes: visual design, prop interfaces, behaviour, naming, and where a component lives.
 3. **No invented features.** Only build exactly what was requested. Do not add props, variants, states, or functionality the user did not ask for.
 4. **Confirm before creating files.** Ask before creating any new file. Never silently generate helpers, utils, or types files.
@@ -36,6 +36,7 @@ yarn auth:schema      # Regenerate Better Auth schema from auth config
 Run a single test file: `npx vitest run src/path/to/file.test.ts`
 Run tests for a specific project: `npx vitest --project client` (or `server`, `storybook`)
 
+Comoponent Heavy application abstract as much as possible
 
 ## Project Requirements
 

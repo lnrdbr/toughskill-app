@@ -6,7 +6,7 @@ export const creativity: Course = {
 	slug: 'creativity',
 	description:
 		'Develop your creative thinking through divergent thinking exercises and real-world challenges.',
-	icon: '💡',
+	icon: 'mdi:lightbulb',
 	color: 'primary',
 	lessons: [
 		{
