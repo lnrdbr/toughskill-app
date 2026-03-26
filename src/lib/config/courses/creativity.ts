@@ -16,15 +16,37 @@ export const creativity: Course = {
 			description: 'Warm up your creative muscles with classic divergent thinking challenges.',
 			modules: [
 				{
+					type: 'learning',
+					id: 'intro-reading',
+					title: 'Before You Begin',
+					componentId: 'ReadingBlock',
+					estimatedMinutes: 1,
+					config: {
+						content:
+							'Try this first challenge with no preparation. There are no wrong answers — just generate as many ideas as you can, as quickly as you can.'
+					}
+				},
+				{
 					type: 'exercise',
 					id: 'paperclip-challenge',
 					title: 'Paperclip Challenge',
 					componentId: 'DivergentThinking',
 					estimatedMinutes: 5,
-				config: {
+					config: {
 						prompt: 'Paperclip',
 						instruction: 'How many uses can you think of for a paperclip?',
 						timerDuration: null
+					}
+				},
+				{
+					type: 'learning',
+					id: 'divergent-thinking-reading',
+					title: 'What is Divergent Thinking?',
+					componentId: 'ReadingBlock',
+					estimatedMinutes: 1,
+					config: {
+						content:
+							'What you just did is called **divergent thinking** — generating many possible solutions to an open-ended problem. Researchers measure it across three dimensions: **fluency** (how many ideas), **flexibility** (how many different categories), and **originality** (how unusual each idea is).\n\nThe key to improving is to push past your first obvious answers. Most people stop after the easy ideas. Try to think across categories — what if the object were a different size? A different material? Used by someone in a completely different context?\n\nApply these strategies in the next challenge and see how your results compare.'
 					}
 				},
 				{
@@ -40,7 +62,7 @@ export const creativity: Course = {
 					}
 				}
 			],
-			estimatedMinutes: 10
+			estimatedMinutes: 12
 		}
 	]
 };

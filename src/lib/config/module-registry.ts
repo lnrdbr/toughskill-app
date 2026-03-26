@@ -1,7 +1,8 @@
 import type { Component } from 'svelte';
 
 const registry = {
-	DivergentThinking: () => import('$lib/components/exercises/DivergentThinking.svelte')
+	DivergentThinking: () => import('$lib/components/exercises/DivergentThinking.svelte'),
+	ReadingBlock: () => import('$lib/components/ReadingBlock.svelte')
 } satisfies Record<string, () => Promise<{ default: Component }>>;
 
 export type RegisteredModuleId = keyof typeof registry;

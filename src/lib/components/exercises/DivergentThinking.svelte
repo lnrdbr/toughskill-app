@@ -3,7 +3,12 @@
 	import BubbleCloud from './BubbleCloud.svelte';
 	import ExerciseTimer from './ExerciseTimer.svelte';
 	import GuilfordCard from './GuilfordCard.svelte';
-	import type { BubbleData, ExerciseResult, GuilfordEvaluation, SubmissionResponse } from './types.ts';
+	import type {
+		BubbleData,
+		ExerciseResult,
+		GuilfordEvaluation,
+		SubmissionResponse
+	} from './types.ts';
 	import enterSoundUrl from '$lib/assets/enterSound.wav';
 
 	const enterSound = typeof Audio !== 'undefined' ? new Audio(enterSoundUrl) : null;
@@ -120,17 +125,6 @@
 			});
 		}
 	}
-
-	function tryAgain() {
-		phase = 'input';
-		bubbles = [];
-		inputText = '';
-		surprisingIdea = '';
-		patterns = '';
-		evaluation = null;
-		errorMessage = '';
-		startTime = Date.now();
-	}
 </script>
 
 <div class="exercise">
@@ -180,7 +174,6 @@
 
 			<div class="done-actions">
 				<button class="submit-btn" onclick={submitReflection}>Submit</button>
-				<button class="retry-btn" onclick={tryAgain}>Try Again</button>
 			</div>
 		</div>
 	{:else if phase === 'evaluating'}
@@ -206,10 +199,6 @@
 			{#if errorMessage}
 				<p class="error">{errorMessage}</p>
 			{/if}
-
-			<div class="done-actions">
-				<button class="retry-btn" onclick={tryAgain}>Try Again</button>
-			</div>
 		</div>
 	{/if}
 </div>
@@ -260,8 +249,7 @@
 
 	.add-btn,
 	.done-btn,
-	.submit-btn,
-	.retry-btn {
+	.submit-btn {
 		padding: 8px 20px;
 		border: 2px solid var(--color-foreground);
 		border-radius: var(--radius-button);
@@ -276,8 +264,7 @@
 
 	.add-btn:hover,
 	.done-btn:hover,
-	.submit-btn:hover,
-	.retry-btn:hover {
+	.submit-btn:hover {
 		transform: translate(1px, 1px);
 		filter: drop-shadow(1px 1px 0px var(--color-primary-300));
 		border-color: var(--color-primary-300);
@@ -287,8 +274,7 @@
 
 	.add-btn:active,
 	.done-btn:active,
-	.submit-btn:active,
-	.retry-btn:active {
+	.submit-btn:active {
 		transform: translate(2px, 2px);
 		filter: drop-shadow(0px 0px 0px var(--color-primary-400));
 		background-color: var(--color-primary-200);
