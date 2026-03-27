@@ -7,16 +7,12 @@
 
 <div class="mx-auto max-w-lg px-6 py-12">
 	<div class="flex">
-	<div class="flex items-center gap-2 mb-2">
-		{#if data.course?.icon}
-			<Icon icon={data.course.icon} width="32" height="32" />
-		{/if}
-		<div>
+		<div class="mb-2 grid grid-cols-[min_1fr] items-center gap-2">
+			{#if data.course?.icon}
+				<Icon icon={data.course.icon} width="64" height="64" />
+			{/if}
 			<h1 class="mb-2 text-left text-3xl font-bold">{data.course?.title ?? 'Course'}</h1>
-			<p class="mb-12 text-left text-gray-500">{data.course?.description ?? ''}</p>
-		</div>
-	</div>
-			<p class="mb-12 text-left text-gray-500">{data.course?.description ?? ''}</p>
+			<p class="mb-12 text-left text-gray-500 row-start-2 col-start-2">{data.course?.description ?? ''}</p>
 		</div>
 	</div>
 	{#if data.course}
