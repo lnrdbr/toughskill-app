@@ -28,9 +28,11 @@ export interface SubmissionResponse {
 
 export interface PendingEvaluation {
 	promise: Promise<SubmissionResponse>;
-	status: 'pending' | 'resolved' | 'error';
 	result?: SubmissionResponse;
 	error?: string;
 	userIdeas: string[];
 	prompt: string;
 }
+
+/** Shared evaluation store — plain object, no proxy, no context */
+export const pendingEvaluations: Record<string, PendingEvaluation> = {};

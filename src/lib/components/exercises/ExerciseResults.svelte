@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
 	import BubbleCloud from './BubbleCloud.svelte';
 	import GuilfordCard from './GuilfordCard.svelte';
-	import type { BubbleData, SubmissionResponse, PendingEvaluation } from './types.ts';
+	import type { BubbleData, SubmissionResponse } from './types.ts';
+	import { pendingEvaluations } from './types.ts';
 
 	const COLORS = [
 		'var(--color-primary-100)',
@@ -22,8 +22,7 @@
 		oncomplete = undefined as ((data: Record<string, unknown>) => void) | undefined
 	} = $props();
 
-	const evaluations = getContext<Map<string, PendingEvaluation>>('evaluations');
-	const entry = evaluations?.get(sourceExerciseId);
+	const entry = pendingEvaluations[sourceExerciseId];
 
 	let resolved: SubmissionResponse | null = $state(null);
 	let errorMessage = $state('');

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 	import ModuleRunner from '$lib/components/lesson/ModuleRunner.svelte';
-	import { setContext } from 'svelte';
 	import type { ModuleCompletionResult, Module } from '$lib/types/course';
-	import type { SubmissionResponse, PendingEvaluation } from '$lib/components/exercises/types';
+	import type { SubmissionResponse } from '$lib/components/exercises/types';
+	import { pendingEvaluations } from '$lib/components/exercises/types';
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -37,27 +37,21 @@
 	let sessionDone = $derived(modules.length > 0 && currentIndex >= modules.length);
 	let sessionKey = $derived(`${sessionType}-${courseId}-${lessonSlug}`);
 
-	// Plain Map — not $state — so Promises are never wrapped in a Svelte proxy
-	const evaluations = new Map<string, PendingEvaluation>();
-	setContext('evaluations', evaluations);
-
 	function registerEvaluation(
 		exerciseModuleId: string,
 		promise: Promise<SubmissionResponse>,
 		userIdeas: string[],
 		prompt: string
 	) {
-		const entry: PendingEvaluation = { promise, status: 'pending', userIdeas, prompt };
+		const entry = { promise, userIdeas, prompt } as import('$lib/components/exercises/types').PendingEvaluation;
 		promise
 			.then((data) => {
-				entry.status = 'resolved';
 				entry.result = data;
 			})
 			.catch((err) => {
-				entry.status = 'error';
 				entry.error = String(err);
 			});
-		evaluations.set(exerciseModuleId, entry);
+		pendingEvaluations[exerciseModuleId] = entry;
 	}
 
 	$effect(() => {
