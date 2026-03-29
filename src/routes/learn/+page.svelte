@@ -7,7 +7,7 @@
 
 <div class="mx-auto max-w-lg px-6 py-12">
 	<div class="flex">
-		<div class="mb-2 grid grid-cols-[min_1fr] items-center gap-2">
+		<div class="mb-2 grid grid-cols-[min-content_1fr] items-center gap-2">
 			{#if data.course?.icon}
 				<Icon icon={data.course.icon} width="64" height="64" />
 			{/if}
