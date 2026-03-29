@@ -4,6 +4,7 @@
 	import type { ModuleCompletionResult, Module } from '$lib/types/course';
 	import type { SubmissionResponse } from '$lib/components/exercises/types';
 	import { pendingEvaluations } from '$lib/components/exercises/types';
+	import { getModuleComponent } from '$lib/config/module-registry';
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -53,6 +54,14 @@
 			});
 		pendingEvaluations[exerciseModuleId] = entry;
 	}
+
+	// Preload the next module's component while the user is on the current one
+	$effect(() => {
+		const next = modules[currentIndex + 1];
+		if (next) {
+			getModuleComponent(next.componentId)?.();
+		}
+	});
 
 	$effect(() => {
 		if (sessionDone) {
