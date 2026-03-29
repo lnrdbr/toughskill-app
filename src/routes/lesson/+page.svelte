@@ -37,7 +37,8 @@
 	let sessionDone = $derived(modules.length > 0 && currentIndex >= modules.length);
 	let sessionKey = $derived(`${sessionType}-${courseId}-${lessonSlug}`);
 
-	let evaluations = $state(new Map<string, PendingEvaluation>());
+	// Plain Map — not $state — so Promises are never wrapped in a Svelte proxy
+	const evaluations = new Map<string, PendingEvaluation>();
 	setContext('evaluations', evaluations);
 
 	function registerEvaluation(
@@ -46,20 +47,17 @@
 		userIdeas: string[],
 		prompt: string
 	) {
-		// Store first so Svelte wraps the entry in a reactive proxy
-		evaluations.set(exerciseModuleId, { promise, status: 'pending', userIdeas, prompt });
-
-		// Mutate via the proxy so Svelte tracks the status change
-		const proxied = evaluations.get(exerciseModuleId)!;
+		const entry: PendingEvaluation = { promise, status: 'pending', userIdeas, prompt };
 		promise
 			.then((data) => {
-				proxied.status = 'resolved';
-				proxied.result = data;
+				entry.status = 'resolved';
+				entry.result = data;
 			})
 			.catch((err) => {
-				proxied.status = 'error';
-				proxied.error = String(err);
+				entry.status = 'error';
+				entry.error = String(err);
 			});
+		evaluations.set(exerciseModuleId, entry);
 	}
 
 	$effect(() => {
