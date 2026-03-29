@@ -1,21 +1,10 @@
 <script lang="ts">
-	import BubbleCloud from './BubbleCloud.svelte';
 	import GuilfordCard from './GuilfordCard.svelte';
-	import type { BubbleData, SubmissionResponse } from './types.ts';
+	// TODO: Restore BubbleCloud by saving bubble positions from the exercise phase
+	// and displaying a static snapshot here instead of re-running the D3 simulation.
+	// import BubbleCloud from './BubbleCloud.svelte';
+	import type { SubmissionResponse } from './types.ts';
 	import { pendingEvaluations } from './types.ts';
-
-	const COLORS = [
-		'var(--color-primary-100)',
-		'var(--color-primary-200)',
-		'var(--color-primary-300)',
-		'var(--color-primary-50)'
-	];
-
-	const COMMUNITY_COLORS = [
-		'var(--color-secondary-200)',
-		'var(--color-secondary-300)',
-		'var(--color-secondary-100)'
-	];
 
 	let {
 		sourceExerciseId = '',
@@ -23,21 +12,6 @@
 	} = $props();
 
 	const entry = pendingEvaluations[sourceExerciseId];
-
-	function buildBubbles(userIdeas: string[], communityIdeas: string[] = []): BubbleData[] {
-		const items: BubbleData[] = [];
-		for (let i = 0; i < userIdeas.length; i++) {
-			items.push({ id: `user-${i}`, text: userIdeas[i], color: COLORS[i % COLORS.length] });
-		}
-		for (let i = 0; i < communityIdeas.length; i++) {
-			items.push({
-				id: `community-${i}`,
-				text: communityIdeas[i],
-				color: COMMUNITY_COLORS[i % COMMUNITY_COLORS.length]
-			});
-		}
-		return items;
-	}
 
 	// Signal completion from $effect (not template) to avoid state_unsafe_mutation
 	$effect(() => {
@@ -61,19 +35,7 @@
 				<p class="loading-text">Preparing your results...</p>
 			</div>
 		{:then data}
-			{@const bubbles = buildBubbles(entry.userIdeas, data.communityIdeas)}
-
-			<BubbleCloud prompt={entry.prompt} {bubbles} settled={true} />
 			<GuilfordCard evaluation={data.evaluation} />
-
-			<div class="legend">
-				<span class="legend-item">
-					<span class="dot dot-user"></span> Your ideas
-				</span>
-				<span class="legend-item">
-					<span class="dot dot-community"></span> Community ideas
-				</span>
-			</div>
 		{:catch}
 			<p class="error">Could not evaluate your ideas. Your responses have been saved.</p>
 		{/await}
@@ -114,35 +76,6 @@
 	.loading-text {
 		color: var(--color-muted-foreground);
 		font-size: 0.9rem;
-	}
-
-	.legend {
-		display: flex;
-		gap: 16px;
-		justify-content: center;
-		font-size: 0.8rem;
-		color: var(--color-muted-foreground);
-		margin-top: 16px;
-	}
-
-	.legend-item {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-	}
-
-	.dot {
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-	}
-
-	.dot-user {
-		background: var(--color-primary-200);
-	}
-
-	.dot-community {
-		background: var(--color-secondary-200);
 	}
 
 	.error {
