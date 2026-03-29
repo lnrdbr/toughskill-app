@@ -39,13 +39,16 @@
 		return items;
 	}
 
-	let completeCalled = false;
-	function signalComplete() {
-		if (completeCalled) return '';
-		completeCalled = true;
-		oncomplete?.({});
-		return '';
-	}
+	// Signal completion from $effect (not template) to avoid state_unsafe_mutation
+	$effect(() => {
+		if (!entry) {
+			oncomplete?.({});
+			return;
+		}
+		entry.promise
+			.then(() => oncomplete?.({}))
+			.catch(() => oncomplete?.({}));
+	});
 </script>
 
 <div class="exercise-results">
@@ -59,7 +62,6 @@
 			</div>
 		{:then data}
 			{@const bubbles = buildBubbles(entry.userIdeas, data.communityIdeas)}
-			{signalComplete()}
 
 			<BubbleCloud prompt={entry.prompt} {bubbles} settled={true} />
 			<GuilfordCard evaluation={data.evaluation} />
@@ -73,7 +75,6 @@
 				</span>
 			</div>
 		{:catch}
-			{signalComplete()}
 			<p class="error">Could not evaluate your ideas. Your responses have been saved.</p>
 		{/await}
 	{/if}
