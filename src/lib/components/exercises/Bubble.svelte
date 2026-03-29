@@ -15,7 +15,7 @@
 		background: var(--bubble-color);
 		color: var(--color-foreground);
 		border: 2px solid var(--color-foreground);
-		filter: drop-shadow(2px 2px 0px var(--color-foreground));
+		/* filter: drop-shadow(2px 2px 0px var(--color-foreground)); */
 		font-size: 0.875rem;
 		font-weight: 600;
 		white-space: nowrap;
