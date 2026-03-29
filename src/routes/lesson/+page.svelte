@@ -156,7 +156,7 @@
 	}
 
 	.lesson-container {
-		height: 100dvh;
+		height: 100%;
 		display: grid;
 		grid-template-rows: auto 1fr auto;
 	}
