@@ -3,6 +3,7 @@
 	import ModuleRunner from '$lib/components/lesson/ModuleRunner.svelte';
 	import type { ModuleCompletionResult, Module, ResultsModule } from '$lib/types/course';
 	import type { SubmissionResponse } from '$lib/components/exercises/types';
+	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
 
 	interface PendingEvaluation {
 		promise: Promise<SubmissionResponse>;
@@ -12,8 +13,6 @@
 		userIdeas: string[];
 		prompt: string;
 	}
-
-	import { untrack } from 'svelte';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -78,6 +77,12 @@
 			return { ...mod, config: { ...mod.config, evaluationEntry: entry } };
 		}
 		return mod;
+	});
+
+	$effect(() => {
+		if (sessionDone) {
+			new Audio(lessonFinisherSrc).play();
+		}
 	});
 
 	function handleModuleComplete(result: ModuleCompletionResult) {
@@ -226,7 +231,7 @@
 	}
 
 	.lesson-container {
-		height: 100dvh;
+		height: 100%;
 		display: grid;
 		grid-template-rows: auto 1fr auto;
 	}
