@@ -1,15 +1,39 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 	import ModuleRunner from '$lib/components/lesson/ModuleRunner.svelte';
-	import type { ModuleCompletionResult, Module } from '$lib/types/course';
+	import type { ModuleCompletionResult, Module, ResultsModule } from '$lib/types/course';
+	import type { SubmissionResponse } from '$lib/components/exercises/types';
+
+	interface PendingEvaluation {
+		promise: Promise<SubmissionResponse>;
+		status: 'pending' | 'resolved' | 'error';
+		result?: SubmissionResponse;
+		error?: string;
+		userIdeas: string[];
+		prompt: string;
+	}
+
+	import { untrack } from 'svelte';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	let currentIndex = $state(0);
 	let completionResults: ModuleCompletionResult[] = $state([]);
 
-	// Resolve which session to use: form (POST) takes priority over data (load)
-	let session = $derived(form && !('error' in form) ? form : data);
+	// Snapshot the session on mount/form change so load re-runs cannot reset mid-lesson
+	let session = $state(resolveSession());
+
+	function resolveSession() {
+		return form && !('error' in form) ? form : data;
+	}
+
+	// Only update session when form actually changes (new POST), not on load re-runs
+	$effect(() => {
+		if (form && !('error' in form)) {
+			session = form;
+		}
+	});
+
 	let modules: Module[] = $derived((session as { modules: Module[] }).modules ?? []);
 	let sessionType = $derived((session as { sessionType: string }).sessionType ?? 'empty');
 	let courseId = $derived((session as { courseId?: string }).courseId ?? '');
@@ -22,10 +46,56 @@
 	let sessionDone = $derived(modules.length > 0 && currentIndex >= modules.length);
 	let sessionKey = $derived(`${sessionType}-${courseId}-${lessonSlug}`);
 
+	let evaluations = $state(new Map<string, PendingEvaluation>());
+
+	function registerEvaluation(
+		exerciseModuleId: string,
+		promise: Promise<SubmissionResponse>,
+		userIdeas: string[],
+		prompt: string
+	) {
+		// Store first so Svelte wraps the entry in a reactive proxy
+		evaluations.set(exerciseModuleId, { promise, status: 'pending', userIdeas, prompt });
+
+		// Mutate via the proxy so Svelte tracks the status change
+		const proxied = evaluations.get(exerciseModuleId)!;
+		promise
+			.then((data) => {
+				proxied.status = 'resolved';
+				proxied.result = data;
+			})
+			.catch((err) => {
+				proxied.status = 'error';
+				proxied.error = String(err);
+			});
+	}
+
+	let activeModule: Module = $derived.by(() => {
+		const mod = modules[currentIndex];
+		if (!mod) return mod;
+		if (mod.type === 'results') {
+			const entry = evaluations.get((mod as ResultsModule).sourceExerciseId);
+			return { ...mod, config: { ...mod.config, evaluationEntry: entry } };
+		}
+		return mod;
+	});
+
 	function handleModuleComplete(result: ModuleCompletionResult) {
 		pendingResult = result;
 
-		const timeRaw = result.data?.timeSpentSeconds;
+		// Extract background evaluation promise before saving
+		if (result.data?._evaluationPromise) {
+			registerEvaluation(
+				result.moduleId,
+				result.data._evaluationPromise as Promise<SubmissionResponse>,
+				(result.data._userBubbles as string[]) ?? [],
+				(result.data._prompt as string) ?? ''
+			);
+		}
+
+		const { _evaluationPromise, _userBubbles, _prompt, ...savableData } = result.data ?? {};
+
+		const timeRaw = savableData?.timeSpentSeconds;
 		const timeSpentSeconds = typeof timeRaw === 'number' ? Math.round(Math.max(0, timeRaw)) : 0;
 
 		// Non-blocking progress POST
@@ -37,7 +107,7 @@
 				courseId,
 				lessonSlug,
 				timeSpentSeconds,
-				data: result.data
+				data: savableData
 			})
 		})
 			.then((res) => {
@@ -103,7 +173,7 @@
 
 				<div class="module-area">
 					{#key modules[currentIndex].id}
-						<ModuleRunner module={modules[currentIndex]} oncomplete={handleModuleComplete} />
+						<ModuleRunner module={activeModule} oncomplete={handleModuleComplete} />
 					{/key}
 				</div>
 

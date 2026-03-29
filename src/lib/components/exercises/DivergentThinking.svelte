@@ -2,13 +2,7 @@
 	import { untrack } from 'svelte';
 	import BubbleCloud from './BubbleCloud.svelte';
 	import ExerciseTimer from './ExerciseTimer.svelte';
-	import GuilfordCard from './GuilfordCard.svelte';
-	import type {
-		BubbleData,
-		ExerciseResult,
-		GuilfordEvaluation,
-		SubmissionResponse
-	} from './types.ts';
+	import type { BubbleData, SubmissionResponse } from './types.ts';
 	import enterSoundUrl from '$lib/assets/enterSound.wav';
 
 	const enterSound = typeof Audio !== 'undefined' ? new Audio(enterSoundUrl) : null;
@@ -18,7 +12,7 @@
 		instruction = 'How many uses can you think of?',
 		timerDuration = 0,
 		initialIdeas = [] as string[],
-		oncomplete = undefined as ((result: ExerciseResult) => void) | undefined
+		oncomplete = undefined as ((result: Record<string, unknown>) => void) | undefined
 	} = $props();
 
 	const COLORS = [
@@ -26,12 +20,6 @@
 		'var(--color-primary-200)',
 		'var(--color-primary-300)',
 		'var(--color-primary-50)'
-	];
-
-	const COMMUNITY_COLORS = [
-		'var(--color-secondary-200)',
-		'var(--color-secondary-300)',
-		'var(--color-secondary-100)'
 	];
 
 	let bubbles: BubbleData[] = $state(
@@ -42,13 +30,11 @@
 		}))
 	);
 
-	let phase: 'input' | 'reflecting' | 'evaluating' | 'results' = $state('input');
+	let phase: 'input' | 'reflecting' = $state('input');
 	let inputText = $state('');
 	let startTime = $state(Date.now());
 	let surprisingIdea = $state('');
 	let patterns = $state('');
-	let evaluation: GuilfordEvaluation | null = $state(null);
-	let errorMessage = $state('');
 
 	function addIdea() {
 		const text = inputText.trim();
@@ -82,48 +68,30 @@
 		finish();
 	}
 
-	async function submitReflection() {
+	function submitReflection() {
 		const ideas = bubbles.map((b) => b.text);
 		const timeSpentSeconds = Math.round((Date.now() - startTime) / 1000);
 		const reflections = { surprisingIdea, patterns };
 
-		phase = 'evaluating';
-		errorMessage = '';
-
-		try {
-			const res = await fetch('/api/exercises/divergent-thinking', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ ideas, reflections, timeSpentSeconds, prompt })
-			});
-
+		// Fire evaluation in background — do not await
+		const evaluationPromise = fetch('/api/exercises/divergent-thinking', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ ideas, reflections, timeSpentSeconds, prompt })
+		}).then(async (res) => {
 			if (!res.ok) throw new Error('Evaluation failed');
+			return res.json() as Promise<SubmissionResponse>;
+		});
 
-			const data: SubmissionResponse = await res.json();
-			evaluation = data.evaluation;
-
-			// Add community ideas as secondary-colored bubbles
-			if (data.communityIdeas.length > 0) {
-				for (let i = 0; i < data.communityIdeas.length; i++) {
-					bubbles.push({
-						id: crypto.randomUUID(),
-						text: data.communityIdeas[i],
-						color: COMMUNITY_COLORS[i % COMMUNITY_COLORS.length]
-					});
-				}
-			}
-
-			phase = 'results';
-			oncomplete?.({ ideas, timeSpentSeconds, reflections });
-		} catch {
-			errorMessage = 'Could not evaluate your ideas. Your responses have been saved.';
-			phase = 'results';
-			oncomplete?.({
-				ideas,
-				timeSpentSeconds,
-				reflections
-			});
-		}
+		// Complete immediately so user can advance
+		oncomplete?.({
+			ideas,
+			timeSpentSeconds,
+			reflections,
+			_evaluationPromise: evaluationPromise,
+			_userBubbles: ideas,
+			_prompt: prompt
+		});
 	}
 </script>
 
@@ -175,30 +143,6 @@
 			<div class="done-actions">
 				<button class="submit-btn" onclick={submitReflection}>Submit</button>
 			</div>
-		</div>
-	{:else if phase === 'evaluating'}
-		<div class="loading">
-			<div class="spinner"></div>
-			<p class="loading-text">Analysing your ideas...</p>
-		</div>
-	{:else if phase === 'results'}
-		<div class="results">
-			{#if evaluation}
-				<GuilfordCard {evaluation} />
-
-				<div class="legend">
-					<span class="legend-item">
-						<span class="dot dot-user"></span> Your ideas
-					</span>
-					<span class="legend-item">
-						<span class="dot dot-community"></span> Community ideas
-					</span>
-				</div>
-			{/if}
-
-			{#if errorMessage}
-				<p class="error">{errorMessage}</p>
-			{/if}
 		</div>
 	{/if}
 </div>
@@ -371,72 +315,4 @@
 		justify-content: center;
 	}
 
-	.loading {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 12px;
-		padding: 32px 0;
-	}
-
-	.spinner {
-		width: 32px;
-		height: 32px;
-		border: 3px solid var(--color-border);
-		border-top-color: var(--color-primary-500);
-		border-radius: 50%;
-		animation: spin 0.8s linear infinite;
-	}
-
-	@keyframes spin {
-		to {
-			transform: rotate(360deg);
-		}
-	}
-
-	.loading-text {
-		color: var(--color-muted-foreground);
-		font-size: 0.9rem;
-	}
-
-	.results {
-		margin-top: 16px;
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-	}
-
-	.legend {
-		display: flex;
-		gap: 16px;
-		justify-content: center;
-		font-size: 0.8rem;
-		color: var(--color-muted-foreground);
-	}
-
-	.legend-item {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-	}
-
-	.dot {
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-	}
-
-	.dot-user {
-		background: var(--color-primary-200);
-	}
-
-	.dot-community {
-		background: var(--color-secondary-200);
-	}
-
-	.error {
-		text-align: center;
-		color: var(--color-error);
-		font-size: 0.875rem;
-	}
 </style>
