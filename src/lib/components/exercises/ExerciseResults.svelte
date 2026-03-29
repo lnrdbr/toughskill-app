@@ -30,16 +30,9 @@
 		oncomplete = undefined as ((data: Record<string, unknown>) => void) | undefined
 	} = $props();
 
+	let resolved: SubmissionResponse | null = $state(null);
 	let errorMessage = $state('');
-	let completed = false;
-
-	let resolved: SubmissionResponse | undefined = $derived(
-		evaluationEntry?.status === 'resolved' ? evaluationEntry.result : undefined
-	);
-
-	let loading = $derived(
-		!!evaluationEntry && evaluationEntry.status === 'pending'
-	);
+	let loading = $state(true);
 
 	let bubbles: BubbleData[] = $derived.by(() => {
 		const items: BubbleData[] = [];
@@ -69,22 +62,35 @@
 
 	let prompt = $derived(evaluationEntry?.prompt ?? '');
 
-	// Signal completion once when results are ready (or on error/missing)
+	// Await the promise directly — don't rely on proxy reactivity across component boundaries
 	$effect(() => {
-		if (completed) return;
-
 		if (!evaluationEntry) {
 			errorMessage = 'No evaluation data available.';
-			completed = true;
+			loading = false;
 			oncomplete?.({});
-		} else if (evaluationEntry.status === 'resolved') {
-			completed = true;
-			oncomplete?.({});
-		} else if (evaluationEntry.status === 'error') {
-			errorMessage = 'Could not evaluate your ideas. Your responses have been saved.';
-			completed = true;
-			oncomplete?.({});
+			return;
 		}
+
+		// If already resolved before mount, use the result immediately
+		if (evaluationEntry.result) {
+			resolved = evaluationEntry.result;
+			loading = false;
+			oncomplete?.({});
+			return;
+		}
+
+		// Otherwise await the promise
+		evaluationEntry.promise
+			.then((data) => {
+				resolved = data;
+			})
+			.catch(() => {
+				errorMessage = 'Could not evaluate your ideas. Your responses have been saved.';
+			})
+			.finally(() => {
+				loading = false;
+				oncomplete?.({});
+			});
 	});
 </script>
 
