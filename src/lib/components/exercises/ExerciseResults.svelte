@@ -24,91 +24,58 @@
 
 	const entry = pendingEvaluations[sourceExerciseId];
 
-	let resolved: SubmissionResponse | null = $state(null);
-	let errorMessage = $state('');
-	let loading = $state(true);
-
-	let bubbles: BubbleData[] = $derived.by(() => {
+	function buildBubbles(userIdeas: string[], communityIdeas: string[] = []): BubbleData[] {
 		const items: BubbleData[] = [];
-
-		if (entry) {
-			for (let i = 0; i < entry.userIdeas.length; i++) {
-				items.push({
-					id: `user-${i}`,
-					text: entry.userIdeas[i],
-					color: COLORS[i % COLORS.length]
-				});
-			}
+		for (let i = 0; i < userIdeas.length; i++) {
+			items.push({ id: `user-${i}`, text: userIdeas[i], color: COLORS[i % COLORS.length] });
 		}
-
-		if (resolved?.communityIdeas) {
-			for (let i = 0; i < resolved.communityIdeas.length; i++) {
-				items.push({
-					id: `community-${i}`,
-					text: resolved.communityIdeas[i],
-					color: COMMUNITY_COLORS[i % COMMUNITY_COLORS.length]
-				});
-			}
-		}
-
-		return items;
-	});
-
-	let prompt = $derived(entry?.prompt ?? '');
-
-	// Await the promise directly at mount
-	$effect(() => {
-		if (!entry) {
-			errorMessage = 'No evaluation data available.';
-			loading = false;
-			oncomplete?.({});
-			return;
-		}
-
-		// If already resolved before mount, use the result immediately
-		if (entry.result) {
-			resolved = entry.result;
-			loading = false;
-			oncomplete?.({});
-			return;
-		}
-
-		// Otherwise await the promise
-		entry.promise
-			.then((data) => {
-				resolved = data;
-			})
-			.catch(() => {
-				errorMessage = 'Could not evaluate your ideas. Your responses have been saved.';
-			})
-			.finally(() => {
-				loading = false;
-				oncomplete?.({});
+		for (let i = 0; i < communityIdeas.length; i++) {
+			items.push({
+				id: `community-${i}`,
+				text: communityIdeas[i],
+				color: COMMUNITY_COLORS[i % COMMUNITY_COLORS.length]
 			});
-	});
+		}
+		return items;
+	}
+
+	let completeCalled = false;
+	function signalComplete() {
+		if (completeCalled) return '';
+		completeCalled = true;
+		oncomplete?.({});
+		return '';
+	}
 </script>
 
 <div class="exercise-results">
-	{#if loading}
-		<div class="loading">
-			<div class="spinner"></div>
-			<p class="loading-text">Preparing your results...</p>
-		</div>
-	{:else if resolved}
-		<BubbleCloud {prompt} {bubbles} settled={true} />
+	{#if !entry}
+		<p class="error">No evaluation data available.</p>
+	{:else}
+		{#await entry.promise}
+			<div class="loading">
+				<div class="spinner"></div>
+				<p class="loading-text">Preparing your results...</p>
+			</div>
+		{:then data}
+			{@const bubbles = buildBubbles(entry.userIdeas, data.communityIdeas)}
+			{signalComplete()}
 
-		<GuilfordCard evaluation={resolved.evaluation} />
+			<BubbleCloud prompt={entry.prompt} {bubbles} settled={true} />
+			<GuilfordCard evaluation={data.evaluation} />
 
-		<div class="legend">
-			<span class="legend-item">
-				<span class="dot dot-user"></span> Your ideas
-			</span>
-			<span class="legend-item">
-				<span class="dot dot-community"></span> Community ideas
-			</span>
-		</div>
-	{:else if errorMessage}
-		<p class="error">{errorMessage}</p>
+			<div class="legend">
+				<span class="legend-item">
+					<span class="dot dot-user"></span> Your ideas
+				</span>
+				<span class="legend-item">
+					<span class="dot dot-community"></span> Community ideas
+				</span>
+			</div>
+		{:catch}
+			{signalComplete()}
+			<p class="error">Could not evaluate your ideas. Your responses have been saved.</p>
+		{/await}
 	{/if}
 </div>
 
