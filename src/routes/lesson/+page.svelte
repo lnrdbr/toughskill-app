@@ -2,6 +2,7 @@
 	import type { PageData, ActionData } from './$types';
 	import ModuleRunner from '$lib/components/lesson/ModuleRunner.svelte';
 	import type { ModuleCompletionResult, Module } from '$lib/types/course';
+	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -21,6 +22,12 @@
 	let pendingResult: ModuleCompletionResult | null = $state(null);
 	let sessionDone = $derived(modules.length > 0 && currentIndex >= modules.length);
 	let sessionKey = $derived(`${sessionType}-${courseId}-${lessonSlug}`);
+
+	$effect(() => {
+		if (sessionDone) {
+			new Audio(lessonFinisherSrc).play();
+		}
+	});
 
 	function handleModuleComplete(result: ModuleCompletionResult) {
 		pendingResult = result;
