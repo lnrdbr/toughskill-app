@@ -25,3 +25,12 @@ export interface SubmissionResponse {
 	evaluation: GuilfordEvaluation;
 	communityIdeas: string[];
 }
+
+export interface PendingEvaluation {
+	promise: Promise<SubmissionResponse>;
+	status: 'pending' | 'resolved' | 'error';
+	result?: SubmissionResponse;
+	error?: string;
+	userIdeas: string[];
+	prompt: string;
+}

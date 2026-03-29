@@ -1,18 +1,10 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 	import ModuleRunner from '$lib/components/lesson/ModuleRunner.svelte';
-	import type { ModuleCompletionResult, Module, ResultsModule } from '$lib/types/course';
-	import type { SubmissionResponse } from '$lib/components/exercises/types';
+	import { setContext } from 'svelte';
+	import type { ModuleCompletionResult, Module } from '$lib/types/course';
+	import type { SubmissionResponse, PendingEvaluation } from '$lib/components/exercises/types';
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
-
-	interface PendingEvaluation {
-		promise: Promise<SubmissionResponse>;
-		status: 'pending' | 'resolved' | 'error';
-		result?: SubmissionResponse;
-		error?: string;
-		userIdeas: string[];
-		prompt: string;
-	}
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -46,6 +38,7 @@
 	let sessionKey = $derived(`${sessionType}-${courseId}-${lessonSlug}`);
 
 	let evaluations = $state(new Map<string, PendingEvaluation>());
+	setContext('evaluations', evaluations);
 
 	function registerEvaluation(
 		exerciseModuleId: string,
@@ -68,16 +61,6 @@
 				proxied.error = String(err);
 			});
 	}
-
-	let activeModule: Module = $derived.by(() => {
-		const mod = modules[currentIndex];
-		if (!mod) return mod;
-		if (mod.type === 'results') {
-			const entry = evaluations.get((mod as ResultsModule).sourceExerciseId);
-			return { ...mod, config: { ...mod.config, evaluationEntry: entry } };
-		}
-		return mod;
-	});
 
 	$effect(() => {
 		if (sessionDone) {
@@ -178,7 +161,7 @@
 
 				<div class="module-area">
 					{#key modules[currentIndex].id}
-						<ModuleRunner module={activeModule} oncomplete={handleModuleComplete} />
+						<ModuleRunner module={modules[currentIndex]} oncomplete={handleModuleComplete} />
 					{/key}
 				</div>
 

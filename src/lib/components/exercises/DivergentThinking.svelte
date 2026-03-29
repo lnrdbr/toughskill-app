@@ -30,7 +30,7 @@
 		}))
 	);
 
-	let phase: 'input' | 'reflecting' = $state('input');
+	let phase: 'input' | 'reflecting' | 'submitted' = $state('input');
 	let inputText = $state('');
 	let startTime = $state(Date.now());
 	let surprisingIdea = $state('');
@@ -72,6 +72,8 @@
 		const ideas = bubbles.map((b) => b.text);
 		const timeSpentSeconds = Math.round((Date.now() - startTime) / 1000);
 		const reflections = { surprisingIdea, patterns };
+
+		phase = 'submitted';
 
 		// Fire evaluation in background — do not await
 		const evaluationPromise = fetch('/api/exercises/divergent-thinking', {
@@ -142,6 +144,12 @@
 
 			<div class="done-actions">
 				<button class="submit-btn" onclick={submitReflection}>Submit</button>
+			</div>
+		</div>
+	{:else if phase === 'submitted'}
+		<div class="done-screen">
+			<div class="summary">
+				<span class="count">{bubbles.length}</span> ideas submitted
 			</div>
 		</div>
 	{/if}

@@ -1,16 +1,8 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
 	import BubbleCloud from './BubbleCloud.svelte';
 	import GuilfordCard from './GuilfordCard.svelte';
-	import type { BubbleData, SubmissionResponse } from './types.ts';
-
-	interface PendingEvaluation {
-		promise: Promise<SubmissionResponse>;
-		status: 'pending' | 'resolved' | 'error';
-		result?: SubmissionResponse;
-		error?: string;
-		userIdeas: string[];
-		prompt: string;
-	}
+	import type { BubbleData, SubmissionResponse, PendingEvaluation } from './types.ts';
 
 	const COLORS = [
 		'var(--color-primary-100)',
@@ -26,9 +18,12 @@
 	];
 
 	let {
-		evaluationEntry = undefined as PendingEvaluation | undefined,
+		sourceExerciseId = '',
 		oncomplete = undefined as ((data: Record<string, unknown>) => void) | undefined
 	} = $props();
+
+	const evaluations = getContext<Map<string, PendingEvaluation>>('evaluations');
+	const entry = evaluations?.get(sourceExerciseId);
 
 	let resolved: SubmissionResponse | null = $state(null);
 	let errorMessage = $state('');
@@ -37,11 +32,11 @@
 	let bubbles: BubbleData[] = $derived.by(() => {
 		const items: BubbleData[] = [];
 
-		if (evaluationEntry) {
-			for (let i = 0; i < evaluationEntry.userIdeas.length; i++) {
+		if (entry) {
+			for (let i = 0; i < entry.userIdeas.length; i++) {
 				items.push({
 					id: `user-${i}`,
-					text: evaluationEntry.userIdeas[i],
+					text: entry.userIdeas[i],
 					color: COLORS[i % COLORS.length]
 				});
 			}
@@ -60,11 +55,11 @@
 		return items;
 	});
 
-	let prompt = $derived(evaluationEntry?.prompt ?? '');
+	let prompt = $derived(entry?.prompt ?? '');
 
-	// Await the promise directly — don't rely on proxy reactivity across component boundaries
+	// Await the promise directly at mount
 	$effect(() => {
-		if (!evaluationEntry) {
+		if (!entry) {
 			errorMessage = 'No evaluation data available.';
 			loading = false;
 			oncomplete?.({});
@@ -72,15 +67,15 @@
 		}
 
 		// If already resolved before mount, use the result immediately
-		if (evaluationEntry.result) {
-			resolved = evaluationEntry.result;
+		if (entry.result) {
+			resolved = entry.result;
 			loading = false;
 			oncomplete?.({});
 			return;
 		}
 
 		// Otherwise await the promise
-		evaluationEntry.promise
+		entry.promise
 			.then((data) => {
 				resolved = data;
 			})

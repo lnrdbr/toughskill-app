@@ -56,7 +56,9 @@ export const creativity: Course = {
 					componentId: 'ExerciseResults',
 					estimatedMinutes: 1,
 					sourceExerciseId: 'paperclip-challenge',
-					config: {}
+					config: {
+						sourceExerciseId: 'paperclip-challenge'
+					}
 				},
 				{
 					type: 'exercise',
@@ -88,7 +90,9 @@ export const creativity: Course = {
 					componentId: 'ExerciseResults',
 					estimatedMinutes: 1,
 					sourceExerciseId: 'brick-challenge',
-					config: {}
+					config: {
+						sourceExerciseId: 'brick-challenge'
+					}
 				}
 			],
 			estimatedMinutes: 15
