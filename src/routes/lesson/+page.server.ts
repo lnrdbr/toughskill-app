@@ -4,7 +4,6 @@ import { db } from '$lib/server/db';
 import { moduleCompletion } from '$lib/server/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { getCourse, getLessonBySlug } from '$lib/config/courses';
-import { anthropic } from '$lib/server/llm';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
@@ -95,15 +94,6 @@ export const actions: Actions = {
 		const completedIds = new Set(completions.map((c) => c.moduleId));
 		const remaining = lesson.modules.filter((m) => !completedIds.has(m.id));
 		const allCompleted = remaining.length === 0;
-
-		// Warm the Anthropic connection so the first LLM call is fast
-		anthropic.messages
-			.create({
-				model: 'claude-haiku-4-5-20251001',
-				max_tokens: 1,
-				messages: [{ role: 'user', content: '.' }]
-			})
-			.catch(() => {});
 
 		return {
 			sessionType: 'new' as const,
