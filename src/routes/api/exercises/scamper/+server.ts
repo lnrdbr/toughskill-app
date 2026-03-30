@@ -15,14 +15,18 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		prompt: string;
 	};
 
+	if (!ideasByLens || typeof ideasByLens !== 'object' || Array.isArray(ideasByLens)) {
+		throw error(400, 'Missing required fields');
+	}
+
 	const allIdeas = Object.values(ideasByLens).flat();
 	if (!allIdeas.length || !prompt) {
-		error(400, 'Missing required fields');
+		throw error(400, 'Missing required fields');
 	}
 
 	const userId = locals.user?.id;
 	if (!userId) {
-		error(401, 'Not authenticated');
+		throw error(401, 'Not authenticated');
 	}
 
 	// Save to DB
@@ -115,7 +119,21 @@ Respond in JSON only: {"originality": number, "practicality": number, "lensAgili
 
 	const raw = message.content[0].type === 'text' ? message.content[0].text : '';
 	const text = raw.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
-	const parsed = JSON.parse(text);
+
+	let parsed: ScamperEvaluation;
+	try {
+		parsed = JSON.parse(text);
+	} catch {
+		return {
+			breadth,
+			depth,
+			originality: 5,
+			practicality: 5,
+			lensAgility: 5,
+			feedback: 'Great effort exploring different perspectives! Keep experimenting with SCAMPER to unlock new creative angles.',
+			lensHighlights: {}
+		};
+	}
 
 	return {
 		breadth,

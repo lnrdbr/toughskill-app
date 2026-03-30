@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ScamperEvaluation, ScamperLensConfig } from './types.ts';
+	import type { ScamperEvaluation } from './types.ts';
 
 	let { evaluation }: { evaluation: ScamperEvaluation } = $props();
 
@@ -39,10 +39,12 @@
 		<div class="highlights">
 			{#each highlightEntries as [key, text]}
 				{@const meta = LENS_META[key]}
+				{#if meta}
 				<div class="highlight-row">
 					<span class="highlight-letter">{meta.letter}</span>
 					<p class="highlight-text">{text}</p>
 				</div>
+				{/if}
 			{/each}
 		</div>
 	{/if}
