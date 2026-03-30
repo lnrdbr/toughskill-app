@@ -1,9 +1,10 @@
 <script lang="ts">
 	import GuilfordCard from './GuilfordCard.svelte';
+	import ScamperCard from './ScamperCard.svelte';
 	// TODO: Restore BubbleCloud by saving bubble positions from the exercise phase
 	// and displaying a static snapshot here instead of re-running the D3 simulation.
 	// import BubbleCloud from './BubbleCloud.svelte';
-	import type { SubmissionResponse } from './types.ts';
+	import type { ScamperEvaluation } from './types.ts';
 	import { pendingEvaluations } from './types.ts';
 
 	let {
@@ -12,6 +13,10 @@
 	} = $props();
 
 	const entry = pendingEvaluations[sourceExerciseId];
+
+	function isScamperEvaluation(evaluation: unknown): evaluation is ScamperEvaluation {
+		return typeof evaluation === 'object' && evaluation !== null && 'lensAgility' in evaluation;
+	}
 
 	// Signal completion from $effect (not template) to avoid state_unsafe_mutation
 	$effect(() => {
@@ -35,7 +40,11 @@
 				<p class="loading-text">Preparing your results...</p>
 			</div>
 		{:then data}
-			<GuilfordCard evaluation={data.evaluation} />
+			{#if isScamperEvaluation(data.evaluation)}
+				<ScamperCard evaluation={data.evaluation} />
+			{:else}
+				<GuilfordCard evaluation={data.evaluation} />
+			{/if}
 		{:catch}
 			<p class="error">Could not evaluate your ideas. Your responses have been saved.</p>
 		{/await}

@@ -2,7 +2,7 @@
 	import type { PageData, ActionData } from './$types';
 	import ModuleRunner from '$lib/components/lesson/ModuleRunner.svelte';
 	import type { ModuleCompletionResult, Module } from '$lib/types/course';
-	import type { SubmissionResponse } from '$lib/components/exercises/types';
+	import type { SubmissionResponse, ScamperSubmissionResponse } from '$lib/components/exercises/types';
 	import { pendingEvaluations } from '$lib/components/exercises/types';
 	import { getModuleComponent } from '$lib/config/module-registry';
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
@@ -40,8 +40,8 @@
 
 	function registerEvaluation(
 		exerciseModuleId: string,
-		promise: Promise<SubmissionResponse>,
-		userIdeas: string[],
+		promise: Promise<SubmissionResponse | ScamperSubmissionResponse>,
+		userIdeas: string[] | Record<string, string[]>,
 		prompt: string
 	) {
 		const entry = { promise, userIdeas, prompt } as import('$lib/components/exercises/types').PendingEvaluation;
@@ -76,7 +76,7 @@
 		if (result.data?._evaluationPromise) {
 			registerEvaluation(
 				result.moduleId,
-				result.data._evaluationPromise as Promise<SubmissionResponse>,
+				result.data._evaluationPromise as Promise<SubmissionResponse | ScamperSubmissionResponse>,
 				(result.data._userBubbles as string[]) ?? [],
 				(result.data._prompt as string) ?? ''
 			);
