@@ -14,7 +14,12 @@ export interface LearningModule extends BaseModule {
 	type: 'learning';
 }
 
-export type Module = ExerciseModule | LearningModule;
+export interface ResultsModule extends BaseModule {
+	type: 'results';
+	sourceExerciseId: string;
+}
+
+export type Module = ExerciseModule | LearningModule | ResultsModule;
 
 export interface Lesson {
 	id: string;

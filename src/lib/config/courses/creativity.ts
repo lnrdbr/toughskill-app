@@ -50,6 +50,17 @@ export const creativity: Course = {
 					}
 				},
 				{
+					type: 'results',
+					id: 'paperclip-results',
+					title: 'Paperclip Challenge Results',
+					componentId: 'ExerciseResults',
+					estimatedMinutes: 1,
+					sourceExerciseId: 'paperclip-challenge',
+					config: {
+						sourceExerciseId: 'paperclip-challenge'
+					}
+				},
+				{
 					type: 'exercise',
 					id: 'brick-challenge',
 					title: 'Brick Challenge',
@@ -60,9 +71,31 @@ export const creativity: Course = {
 						instruction: 'How many uses can you think of for a brick?',
 						timerDuration: 0
 					}
+				},
+				{
+					type: 'learning',
+					id: 'brick-reading',
+					title: 'Nice Work!',
+					componentId: 'ReadingBlock',
+					estimatedMinutes: 1,
+					config: {
+						content:
+							"Well done completing both challenges! Take a moment to reflect on how your approach changed between the two exercises. Did you find yourself thinking more broadly the second time around? That shift — from obvious answers to unexpected ones — is exactly what divergent thinking practice builds over time."
+					}
+				},
+				{
+					type: 'results',
+					id: 'brick-results',
+					title: 'Brick Challenge Results',
+					componentId: 'ExerciseResults',
+					estimatedMinutes: 1,
+					sourceExerciseId: 'brick-challenge',
+					config: {
+						sourceExerciseId: 'brick-challenge'
+					}
 				}
 			],
-			estimatedMinutes: 12
+			estimatedMinutes: 15
 		}
 	]
 };
