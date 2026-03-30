@@ -26,11 +26,33 @@ export interface SubmissionResponse {
 	communityIdeas: string[];
 }
 
+export interface ScamperLensConfig {
+	key: string;
+	letter: string;
+	label: string;
+	question: string;
+}
+
+export interface ScamperEvaluation {
+	breadth: number;
+	depth: number;
+	originality: number;
+	practicality: number;
+	lensAgility: number;
+	feedback: string;
+	lensHighlights: Record<string, string>;
+}
+
+export interface ScamperSubmissionResponse {
+	evaluation: ScamperEvaluation;
+	communityIdeas: string[];
+}
+
 export interface PendingEvaluation {
-	promise: Promise<SubmissionResponse>;
-	result?: SubmissionResponse;
+	promise: Promise<SubmissionResponse | ScamperSubmissionResponse>;
+	result?: SubmissionResponse | ScamperSubmissionResponse;
 	error?: string;
-	userIdeas: string[];
+	userIdeas: string[] | Record<string, string[]>;
 	prompt: string;
 }
 

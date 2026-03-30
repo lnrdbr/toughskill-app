@@ -96,6 +96,52 @@ export const creativity: Course = {
 				}
 			],
 			estimatedMinutes: 15
+		},
+		{
+			id: 'creativity-scamper',
+			title: 'SCAMPER',
+			slug: 'scamper',
+			description:
+				'Apply structured creative lenses to transform everyday objects into something new.',
+			modules: [
+				{
+					type: 'learning',
+					id: 'scamper-intro-reading',
+					title: 'Introducing SCAMPER',
+					componentId: 'ReadingBlock',
+					estimatedMinutes: 2,
+					config: {
+						content:
+							'**SCAMPER** is a structured creativity technique that guides you through seven different ways of thinking about an object or concept. Each letter stands for a different lens:\n\n- **S**ubstitute — What could you swap out?\n- **C**ombine — What could you merge together?\n- **A**dapt — What could you borrow from elsewhere?\n- **M**odify — What could you change, enlarge, or shrink?\n- **P**ut to Other Uses — What else could it be used for?\n- **E**liminate — What could you remove or simplify?\n- **R**everse — What could you flip or rearrange?\n\nUnlike free brainstorming, SCAMPER gives you a framework. Each lens forces your thinking in a different direction. You might find some lenses easier than others — that is part of the exercise.'
+					}
+				},
+				{
+					type: 'exercise',
+					id: 'scamper-paperclip',
+					title: 'SCAMPER: Paperclip',
+					componentId: 'Scamper',
+					estimatedMinutes: 10,
+					config: {
+						prompt: 'Paperclip',
+						instruction:
+							'Apply each SCAMPER lens to reimagine the humble paperclip. There are no wrong answers — explore freely.',
+						timerDuration: 0,
+						showIntro: true
+					}
+				},
+				{
+					type: 'results',
+					id: 'scamper-paperclip-results',
+					title: 'SCAMPER Results',
+					componentId: 'ExerciseResults',
+					estimatedMinutes: 1,
+					sourceExerciseId: 'scamper-paperclip',
+					config: {
+						sourceExerciseId: 'scamper-paperclip'
+					}
+				}
+			],
+			estimatedMinutes: 13
 		}
 	]
 };

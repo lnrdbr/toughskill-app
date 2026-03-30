@@ -2,6 +2,7 @@ import type { Component } from 'svelte';
 
 const registry = {
 	DivergentThinking: () => import('$lib/components/exercises/DivergentThinking.svelte'),
+	Scamper: () => import('$lib/components/exercises/Scamper.svelte'),
 	ReadingBlock: () => import('$lib/components/ReadingBlock.svelte'),
 	ExerciseResults: () => import('$lib/components/exercises/ExerciseResults.svelte')
 } satisfies Record<string, () => Promise<{ default: Component }>>;

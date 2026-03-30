@@ -18,18 +18,9 @@ export const exerciseSubmission = sqliteTable('exercise_submission', {
 		.references(() => user.id, { onDelete: 'cascade' }),
 	exerciseType: text('exercise_type').notNull(),
 	prompt: text('prompt').notNull(),
-	ideas: text('ideas', { mode: 'json' }).notNull().$type<string[]>(),
-	reflections: text('reflections', { mode: 'json' }).$type<{
-		surprisingIdea: string;
-		patterns: string;
-	}>(),
-	evaluation: text('evaluation', { mode: 'json' }).$type<{
-		fluency: number;
-		flexibility: number;
-		originality: number;
-		elaboration: number;
-		feedback: string;
-	}>(),
+	ideas: text('ideas', { mode: 'json' }).notNull().$type<string[] | Record<string, string[]>>(),
+	reflections: text('reflections', { mode: 'json' }).$type<Record<string, unknown>>(),
+	evaluation: text('evaluation', { mode: 'json' }).$type<Record<string, unknown>>(),
 	timeSpentSeconds: integer('time_spent_seconds').notNull(),
 	createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date())
 });
