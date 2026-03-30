@@ -5,9 +5,10 @@
 
 	let { children, onclick, ...rest }: HTMLButtonAttributes & { children: Snippet } = $props();
 
-	const audio = new Audio(clickSound);
+	let audio: HTMLAudioElement | undefined;
 
 	function handleClick(e: MouseEvent & { currentTarget: HTMLButtonElement }) {
+		if (!audio) audio = new Audio(clickSound);
 		audio.currentTime = 0;
 		audio.play();
 		if (typeof onclick === 'function') onclick.call(e.currentTarget, e);
