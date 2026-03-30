@@ -26,3 +26,27 @@
 		<Button>This is a button with longer text</Button>
 	{/snippet}
 </Story>
+
+<Story name="Primary">
+	{#snippet template()}
+		<Button variant="primary">Next module</Button>
+	{/snippet}
+</Story>
+
+<Story name="Primary Disabled">
+	{#snippet template()}
+		<Button variant="primary" disabled>Submit</Button>
+	{/snippet}
+</Story>
+
+<Story name="Disabled">
+	{#snippet template()}
+		<Button disabled>I'm Done</Button>
+	{/snippet}
+</Story>
+
+<Story name="Silent">
+	{#snippet template()}
+		<Button silent>Add</Button>
+	{/snippet}
+</Story>

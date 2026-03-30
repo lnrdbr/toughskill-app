@@ -5,6 +5,7 @@
 	import ScamperLensStrip from './ScamperLensStrip.svelte';
 	import type { BubbleData, ScamperLensConfig, ScamperSubmissionResponse } from './types.ts';
 	import enterSoundUrl from '$lib/assets/enterSound.wav';
+	import Button from '$lib/components/Button.svelte';
 
 	const enterSound = typeof Audio !== 'undefined' ? new Audio(enterSoundUrl) : null;
 
@@ -194,7 +195,7 @@
 				You'll apply 7 creative thinking lenses to: <strong>{prompt}</strong>
 			</p>
 			<p class="intro-desc">{instruction}</p>
-			<button class="begin-btn" onclick={beginExercise}>Begin</button>
+			<Button variant="primary" onclick={beginExercise}>Begin</Button>
 		</div>
 	{:else if phase === 'lensing'}
 		<ScamperLensStrip {lenses} currentIndex={currentLensIndex} {ideasByLens} />
@@ -220,7 +221,7 @@
 					bind:value={inputText}
 					onkeydown={handleKeydown}
 				/>
-				<button class="add-btn" onclick={addIdea}>Add</button>
+				<Button silent onclick={addIdea}>Add</Button>
 			</div>
 
 			<div class="actions">
@@ -230,11 +231,11 @@
 
 				<div class="nav-buttons">
 					{#if currentLensIndex > 0}
-						<button class="nav-btn" onclick={prevLens}>Back</button>
+						<Button onclick={prevLens}>Back</Button>
 					{/if}
-					<button class="nav-btn primary" onclick={nextLens}>
+					<Button variant="primary" onclick={nextLens}>
 						{currentLensIndex < lenses.length - 1 ? 'Next Lens' : 'Finish'}
-					</button>
+					</Button>
 				</div>
 			</div>
 		</div>
@@ -260,10 +261,10 @@
 			</div>
 
 			<div class="done-actions">
-				<button class="nav-btn" onclick={prevLens}>Back</button>
-				<button class="submit-btn" onclick={submitReflection} disabled={totalIdeas === 0}>
+				<Button onclick={prevLens}>Back</Button>
+				<Button variant="primary" onclick={submitReflection} disabled={totalIdeas === 0}>
 					Submit
-				</button>
+				</Button>
 			</div>
 		</div>
 	{:else if phase === 'submitted'}
@@ -308,33 +309,6 @@
 		color: var(--color-muted-foreground);
 		font-size: 0.95rem;
 		max-width: 480px;
-	}
-
-	.begin-btn {
-		margin-top: 8px;
-		padding: 10px 32px;
-		border: 2px solid var(--color-primary-700);
-		border-radius: var(--radius-button);
-		background: var(--color-primary-500);
-		color: white;
-		font-weight: 600;
-		font-size: 1rem;
-		cursor: pointer;
-		filter: drop-shadow(2px 2px 0px var(--color-primary-700));
-		transition: all 0.3s;
-	}
-
-	.begin-btn:hover {
-		background: var(--color-primary-400);
-		border-color: var(--color-primary-600);
-		transform: translate(1px, 1px);
-		filter: drop-shadow(1px 1px 0px var(--color-primary-600));
-	}
-
-	.begin-btn:active {
-		transform: translate(2px, 2px);
-		filter: drop-shadow(0px 0px 0px var(--color-primary-700));
-		background: var(--color-primary-600);
 	}
 
 	.lens-header {
@@ -388,83 +362,6 @@
 	.idea-input:focus {
 		border-color: var(--color-primary-400);
 		filter: drop-shadow(2px 2px 0px var(--color-primary-400));
-	}
-
-	.add-btn,
-	.nav-btn,
-	.submit-btn {
-		padding: 8px 20px;
-		border: 2px solid var(--color-foreground);
-		border-radius: var(--radius-button);
-		background: var(--color-background);
-		color: var(--color-foreground);
-		font-weight: 600;
-		font-size: 0.875rem;
-		cursor: pointer;
-		filter: drop-shadow(2px 2px 0px var(--color-foreground));
-		transition: all 0.3s;
-	}
-
-	.add-btn:hover,
-	.nav-btn:hover,
-	.submit-btn:hover {
-		transform: translate(1px, 1px);
-		filter: drop-shadow(1px 1px 0px var(--color-primary-300));
-		border-color: var(--color-primary-300);
-		background-color: var(--color-primary-50);
-		color: var(--color-primary-900);
-	}
-
-	.add-btn:active,
-	.nav-btn:active,
-	.submit-btn:active {
-		transform: translate(2px, 2px);
-		filter: drop-shadow(0px 0px 0px var(--color-primary-400));
-		background-color: var(--color-primary-200);
-		border-color: var(--color-primary-400);
-	}
-
-	.nav-btn.primary {
-		background: var(--color-primary-500);
-		color: white;
-		border-color: var(--color-primary-700);
-		filter: drop-shadow(2px 2px 0px var(--color-primary-700));
-	}
-
-	.nav-btn.primary:hover {
-		background: var(--color-primary-400);
-		border-color: var(--color-primary-600);
-		color: white;
-		filter: drop-shadow(1px 1px 0px var(--color-primary-600));
-	}
-
-	.submit-btn {
-		background: var(--color-primary-500);
-		color: white;
-		border-color: var(--color-primary-700);
-		filter: drop-shadow(2px 2px 0px var(--color-primary-700));
-	}
-
-	.submit-btn:hover {
-		background: var(--color-primary-400);
-		border-color: var(--color-primary-600);
-		color: white;
-		filter: drop-shadow(1px 1px 0px var(--color-primary-600));
-	}
-
-	.submit-btn:disabled {
-		opacity: 0.4;
-		cursor: not-allowed;
-		filter: none;
-		transform: none;
-	}
-
-	.submit-btn:disabled:hover {
-		background: var(--color-primary-500);
-		border-color: var(--color-primary-700);
-		color: white;
-		transform: none;
-		filter: none;
 	}
 
 	.actions {
