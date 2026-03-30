@@ -8,11 +8,13 @@
 		onclick,
 		variant = 'default',
 		silent = false,
+		rounded = 'full',
 		...rest
 	}: HTMLButtonAttributes & {
 		children: Snippet;
 		variant?: 'default' | 'primary';
 		silent?: boolean;
+		rounded?: 'default' | 'full';
 	} = $props();
 
 	let audio: HTMLAudioElement | undefined;
@@ -28,7 +30,7 @@
 </script>
 
 <button
-	class="button {variant}"
+	class="button {variant} rounded-{rounded}"
 	{...rest}
 	onclick={handleClick}
 >
@@ -39,7 +41,7 @@
 	.button {
 		padding: 8px 20px;
 		border: 2px solid var(--color-foreground);
-		border-radius: var(--radius-button);
+		border-radius: var(--radius-button); /* overridden by .rounded-default */
 		background: var(--color-background);
 		color: var(--color-foreground);
 		font-weight: 600;
@@ -77,6 +79,10 @@
 		color: var(--color-foreground);
 		transform: none;
 		filter: none;
+	}
+
+	.rounded-default {
+		border-radius: 0.5rem;
 	}
 
 	.primary {

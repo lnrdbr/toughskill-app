@@ -50,3 +50,15 @@
 		<Button silent>Add</Button>
 	{/snippet}
 </Story>
+
+<Story name="Rounded Default">
+	{#snippet template()}
+		<Button rounded="default">Rounded Default</Button>
+	{/snippet}
+</Story>
+
+<Story name="Primary Rounded Default">
+	{#snippet template()}
+		<Button variant="primary" rounded="default">Submit</Button>
+	{/snippet}
+</Story>
