@@ -1,11 +1,20 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import clickSound from '$lib/assets/clickSound.wav';
 
-	let { children, ...rest }: HTMLButtonAttributes & { children: Snippet } = $props();
+	let { children, onclick, ...rest }: HTMLButtonAttributes & { children: Snippet } = $props();
+
+	const audio = new Audio(clickSound);
+
+	function handleClick(e: MouseEvent & { currentTarget: HTMLButtonElement }) {
+		audio.currentTime = 0;
+		audio.play();
+		if (typeof onclick === 'function') onclick.call(e.currentTarget, e);
+	}
 </script>
 
-<button class="button py-2 px-4 border-2 rounded-lg" {...rest}>
+<button class="button py-2 px-4 border-2 rounded-lg" {...rest} onclick={handleClick}>
 	{@render children()}
 </button>
 
