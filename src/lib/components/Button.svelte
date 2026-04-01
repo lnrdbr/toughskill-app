@@ -30,7 +30,7 @@
 </script>
 
 <button
-	class="button {variant} rounded-{rounded}"
+	class="button {variant} {rounded === 'full' ? 'rounded-full' : 'rounded-default'}"
 	{...rest}
 	onclick={handleClick}
 >
