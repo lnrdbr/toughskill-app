@@ -4,6 +4,7 @@
 	import ExerciseTimer from './ExerciseTimer.svelte';
 	import type { BubbleData, SubmissionResponse } from './types.ts';
 	import enterSoundUrl from '$lib/assets/enterSound.wav';
+	import Button from '$lib/components/Button.svelte';
 
 	const enterSound = typeof Audio !== 'undefined' ? new Audio(enterSoundUrl) : null;
 
@@ -112,16 +113,16 @@
 					bind:value={inputText}
 					onkeydown={handleKeydown}
 				/>
-				<button class="add-btn" onclick={addIdea}>Add</button>
+				<Button silent onclick={addIdea}>Add</Button>
 			</div>
 
 			<div class="actions">
 				{#if timerDuration > 0}
 					<ExerciseTimer duration={timerDuration} onexpire={handleTimerExpire} />
 				{/if}
-				<button class="done-btn" onclick={finish} disabled={bubbles.length === 0}>
+				<Button onclick={finish} disabled={bubbles.length === 0}>
 					I'm Done
-				</button>
+				</Button>
 			</div>
 		</div>
 	{:else if phase === 'reflecting'}
@@ -143,7 +144,7 @@
 			</div>
 
 			<div class="done-actions">
-				<button class="submit-btn" onclick={submitReflection}>Submit</button>
+				<Button variant="primary" onclick={submitReflection}>Submit</Button>
 			</div>
 		</div>
 	{:else if phase === 'submitted'}
@@ -197,69 +198,6 @@
 	.idea-input:focus {
 		border-color: var(--color-primary-400);
 		filter: drop-shadow(2px 2px 0px var(--color-primary-400));
-	}
-
-	.add-btn,
-	.done-btn,
-	.submit-btn {
-		padding: 8px 20px;
-		border: 2px solid var(--color-foreground);
-		border-radius: var(--radius-button);
-		background: var(--color-background);
-		color: var(--color-foreground);
-		font-weight: 600;
-		font-size: 0.875rem;
-		cursor: pointer;
-		filter: drop-shadow(2px 2px 0px var(--color-foreground));
-		transition: all 0.3s;
-	}
-
-	.add-btn:hover,
-	.done-btn:hover,
-	.submit-btn:hover {
-		transform: translate(1px, 1px);
-		filter: drop-shadow(1px 1px 0px var(--color-primary-300));
-		border-color: var(--color-primary-300);
-		background-color: var(--color-primary-50);
-		color: var(--color-primary-900);
-	}
-
-	.add-btn:active,
-	.done-btn:active,
-	.submit-btn:active {
-		transform: translate(2px, 2px);
-		filter: drop-shadow(0px 0px 0px var(--color-primary-400));
-		background-color: var(--color-primary-200);
-		border-color: var(--color-primary-400);
-	}
-
-	.done-btn:disabled {
-		opacity: 0.4;
-		cursor: not-allowed;
-		filter: none;
-		transform: none;
-	}
-
-	.done-btn:disabled:hover {
-		background: var(--color-background);
-		border-color: var(--color-foreground);
-		color: var(--color-foreground);
-		transform: none;
-		filter: none;
-	}
-
-	.submit-btn {
-		background: var(--color-primary-500);
-		color: white;
-		border-color: var(--color-primary-700);
-		filter: drop-shadow(2px 2px 0px var(--color-primary-700));
-	}
-
-	.submit-btn:hover {
-		background: var(--color-primary-400);
-		border-color: var(--color-primary-600);
-		color: white;
-		filter: drop-shadow(1px 1px 0px var(--color-primary-600));
 	}
 
 	.actions {

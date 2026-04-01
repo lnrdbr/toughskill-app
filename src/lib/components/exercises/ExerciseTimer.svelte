@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Button from '$lib/components/Button.svelte';
+
 	let props: { duration: number; onexpire?: () => void } = $props();
 
 	let remaining = $state(props.duration);
@@ -47,9 +49,9 @@
 
 <div class="timer">
 	<span class="time">{formatTime(remaining)}</span>
-	<button class="timer-btn" onclick={toggle}>
+	<Button onclick={toggle}>
 		{running ? 'Pause' : 'Start'}
-	</button>
+	</Button>
 </div>
 
 <style>
@@ -67,30 +69,4 @@
 		min-width: 3.5rem;
 	}
 
-	.timer-btn {
-		padding: 4px 12px;
-		border-radius: var(--radius-button);
-		border: 2px solid var(--color-foreground);
-		background: var(--color-background);
-		color: var(--color-foreground);
-		font-weight: 600;
-		font-size: 0.75rem;
-		filter: drop-shadow(2px 2px 0px var(--color-foreground));
-		cursor: pointer;
-		transition: all 0.3s;
-	}
-
-	.timer-btn:hover {
-		transform: translate(1px, 1px);
-		filter: drop-shadow(1px 1px 0px var(--color-primary-300));
-		border-color: var(--color-primary-300);
-		background-color: var(--color-primary-50);
-	}
-
-	.timer-btn:active {
-		transform: translate(2px, 2px);
-		filter: drop-shadow(0px 0px 0px var(--color-primary-400));
-		background-color: var(--color-primary-200);
-		border-color: var(--color-primary-400);
-	}
 </style>

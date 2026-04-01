@@ -28,7 +28,7 @@ import Button from "$lib/components/Button.svelte";
 	<form method="POST" action="/lesson">
 		<input type="hidden" name="courseId" value={courseId} />
 		<input type="hidden" name="lessonSlug" value={lessonSlug} />
-		<Button type="submit" >
+		<Button type="submit" variant="primary">
 			{#if status === 'completed'}
 				Revise Lesson
 			{:else if status === 'in-progress'}

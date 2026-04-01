@@ -6,6 +6,7 @@
 	import { pendingEvaluations } from '$lib/components/exercises/types';
 	import { getModuleComponent } from '$lib/config/module-registry';
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
+	import Button from '$lib/components/Button.svelte';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -168,9 +169,9 @@
 
 				{#if pendingResult}
 					<div class="next-bar">
-						<button class="next-btn" onclick={advanceModule}>
+						<Button variant="primary" onclick={advanceModule}>
 							{currentIndex + 1 < modules.length ? 'Next module' : 'Finish session'}
-						</button>
+						</Button>
 					</div>
 				{/if}
 			</div>
@@ -283,28 +284,4 @@
 		background: var(--color-background);
 	}
 
-	.next-btn {
-		padding: 10px 32px;
-		background: var(--color-primary-500);
-		color: white;
-		border: 2px solid var(--color-primary-700);
-		border-radius: var(--radius-button);
-		font-weight: 600;
-		font-size: 0.95rem;
-		cursor: pointer;
-		filter: drop-shadow(2px 2px 0px var(--color-primary-700));
-		transition: all 0.3s;
-	}
-
-	.next-btn:hover {
-		background: var(--color-primary-400);
-		transform: translate(1px, 1px);
-		filter: drop-shadow(1px 1px 0px var(--color-primary-600));
-	}
-
-	.next-btn:active {
-		background: var(--color-primary-600);
-		transform: translate(2px, 2px);
-		filter: drop-shadow(0px 0px 0px var(--color-primary-700));
-	}
 </style>
