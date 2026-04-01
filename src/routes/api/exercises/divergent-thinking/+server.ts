@@ -2,7 +2,7 @@ import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import { exerciseSubmission } from '$lib/server/db/schema';
-import { anthropic } from '$lib/server/llm';
+import { mistral } from '$lib/server/llm';
 import { eq, ne, and } from 'drizzle-orm';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
@@ -79,19 +79,24 @@ async function evaluateWithLLM(
 	elaboration: number;
 	feedback: string;
 }> {
-	const message = await anthropic.messages.create({
-		model: 'claude-haiku-4-5-20251001',
-		max_tokens: 512,
-		system: `You evaluate divergent thinking exercises based on Guilford's model. Given a prompt and a list of ideas, score them on three dimensions (1-10 each): flexibility (variety of categories), originality (uncommonness/creativity), elaboration (detail/development). Also provide 2-3 sentences of constructive, encouraging feedback. Respond in JSON only with this exact shape: {"flexibility": number, "originality": number, "elaboration": number, "feedback": "string"}`,
+	const response = await mistral.chat.complete({
+		model: 'mistral-small-latest',
+		maxTokens: 512,
 		messages: [
+			{
+				role: 'system',
+				content: `You evaluate divergent thinking exercises based on Guilford's model. Given a prompt and a list of ideas, score them on three dimensions (1-10 each): flexibility (variety of categories), originality (uncommonness/creativity), elaboration (detail/development). Also provide 2-3 sentences of constructive, encouraging feedback. Respond in JSON only with this exact shape: {"flexibility": number, "originality": number, "elaboration": number, "feedback": "string"}`
+			},
 			{
 				role: 'user',
 				content: `Prompt: "${prompt}"\n\nIdeas (${ideas.length} total):\n${ideas.map((i, n) => `${n + 1}. ${i}`).join('\n')}`
 			}
-		]
+		],
+		responseFormat: { type: 'json_object' }
 	});
 
-	const raw = message.content[0].type === 'text' ? message.content[0].text : '';
+	const content = response.choices?.[0]?.message?.content;
+	const raw = typeof content === 'string' ? content : '';
 	const text = raw.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
 	const parsed = JSON.parse(text);
 

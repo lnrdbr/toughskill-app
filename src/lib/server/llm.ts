@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+import { Mistral } from '@mistralai/mistralai';
 import { env } from '$env/dynamic/private';
 
-export const anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
+export const mistral = new Mistral({ apiKey: env.MISTRAL_API_KEY });
