@@ -22,7 +22,7 @@
 	function handleClick(e: MouseEvent & { currentTarget: HTMLButtonElement }) {
 		if (!silent) {
 			if (!audio) audio = new Audio(clickSound);
-			audio.currentTime = 0;
+			audio.play().catch(() => {});
 			audio.play();
 		}
 		if (typeof onclick === 'function') onclick.call(e.currentTarget, e);
