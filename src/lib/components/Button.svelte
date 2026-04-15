@@ -29,11 +29,7 @@
 	}
 </script>
 
-<button
-	class="button {variant} rounded-{rounded}"
-	{...rest}
-	onclick={handleClick}
->
+<button class="button {variant} rounded-{rounded}" {...rest} onclick={handleClick}>
 	{@render children()}
 </button>
 

@@ -2,8 +2,12 @@
 	import type { PageData, ActionData } from './$types';
 	import ModuleRunner from '$lib/components/lesson/ModuleRunner.svelte';
 	import type { ModuleCompletionResult, Module } from '$lib/types/course';
-	import type { SubmissionResponse, ScamperSubmissionResponse } from '$lib/components/exercises/types';
+	import type {
+		SubmissionResponse,
+		ScamperSubmissionResponse
+	} from '$lib/components/exercises/types';
 	import { pendingEvaluations } from '$lib/components/exercises/types';
+	import { resolve } from '$app/paths';
 	import { getModuleComponent } from '$lib/config/module-registry';
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
 	import Button from '$lib/components/Button.svelte';
@@ -45,7 +49,11 @@
 		userIdeas: string[] | Record<string, string[]>,
 		prompt: string
 	) {
-		const entry = { promise, userIdeas, prompt } as import('$lib/components/exercises/types').PendingEvaluation;
+		const entry = {
+			promise,
+			userIdeas,
+			prompt
+		} as import('$lib/components/exercises/types').PendingEvaluation;
 		promise
 			.then((data) => {
 				entry.result = data;
@@ -83,6 +91,7 @@
 			);
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured to exclude from savableData
 		const { _evaluationPromise, _userBubbles, _prompt, ...savableData } = result.data ?? {};
 
 		const timeRaw = savableData?.timeSpentSeconds;
@@ -121,13 +130,13 @@
 {#if form && 'error' in form}
 	<div class="session-empty">
 		<p class="error-text">{form.error}</p>
-		<a href="/learn" class="back-link">Back to courses</a>
+		<a href={resolve('/learn')} class="back-link">Back to courses</a>
 	</div>
 {:else if sessionType === 'empty'}
 	<div class="session-empty">
 		<h2>No lesson selected</h2>
 		<p>Pick a lesson to get started.</p>
-		<a href="/learn" class="back-link">Browse courses</a>
+		<a href={resolve('/learn')} class="back-link">Browse courses</a>
 	</div>
 {:else}
 	{#key sessionKey}
@@ -139,7 +148,7 @@
 						? ''
 						: 's'}. Great work!
 				</p>
-				<a href="/learn" class="back-link">Continue learning</a>
+				<a href={resolve('/learn')} class="back-link">Continue learning</a>
 			</div>
 		{:else if modules.length > 0}
 			<div class="lesson-container">
@@ -283,5 +292,4 @@
 		border-top: 1px solid var(--color-border);
 		background: var(--color-background);
 	}
-
 </style>

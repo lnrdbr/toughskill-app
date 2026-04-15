@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ScamperEvaluation, ScamperLensConfig } from './types.ts';
+	import type { ScamperEvaluation } from './types.ts';
 
 	let { evaluation }: { evaluation: ScamperEvaluation } = $props();
 
@@ -25,7 +25,7 @@
 	<div class="coverage">
 		<p class="coverage-label">Lenses explored</p>
 		<div class="lens-dots">
-			{#each ALL_LENS_KEYS as key}
+			{#each ALL_LENS_KEYS as key (key)}
 				{@const meta = LENS_META[key]}
 				{@const explored = key in evaluation.lensHighlights}
 				<div class="lens-dot" class:explored>
@@ -37,7 +37,7 @@
 
 	{#if highlightEntries.length > 0}
 		<div class="highlights">
-			{#each highlightEntries as [key, text]}
+			{#each highlightEntries as [key, text] (key)}
 				{@const meta = LENS_META[key]}
 				<div class="highlight-row">
 					<span class="highlight-letter">{meta.letter}</span>

@@ -80,7 +80,7 @@ export const creativity: Course = {
 					estimatedMinutes: 1,
 					config: {
 						content:
-							"Well done completing both challenges! Take a moment to reflect on how your approach changed between the two exercises. Did you find yourself thinking more broadly the second time around? That shift — from obvious answers to unexpected ones — is exactly what divergent thinking practice builds over time."
+							'Well done completing both challenges! Take a moment to reflect on how your approach changed between the two exercises. Did you find yourself thinking more broadly the second time around? That shift — from obvious answers to unexpected ones — is exactly what divergent thinking practice builds over time.'
 					}
 				},
 				{

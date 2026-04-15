@@ -1,5 +1,5 @@
 <script lang="ts">
-import Button from "$lib/components/Button.svelte";
+	import Button from '$lib/components/Button.svelte';
 	let {
 		title,
 		description,
@@ -19,10 +19,10 @@ import Button from "$lib/components/Button.svelte";
 	} = $props();
 </script>
 
-<div class="detail-card border-2 rounded-xl p-5">
-	<h2 class="text-lg font-semibold mb-2">{title}</h2>
-	<p class="detail-description text-sm mb-3">{description}</p>
-	<p class="detail-progress text-sm font-medium mb-4">
+<div class="detail-card rounded-xl border-2 p-5">
+	<h2 class="mb-2 text-lg font-semibold">{title}</h2>
+	<p class="detail-description mb-3 text-sm">{description}</p>
+	<p class="detail-progress mb-4 text-sm font-medium">
 		{completed} / {total} modules completed
 	</p>
 	<form method="POST" action="/lesson">

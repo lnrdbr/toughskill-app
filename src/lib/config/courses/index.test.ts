@@ -19,7 +19,7 @@ describe('getLessonBySlug', () => {
 		const lesson = getLessonBySlug('creativity', 'preparation');
 		expect(lesson).toBeDefined();
 		expect(lesson!.title).toBe('Preparation');
-		expect(lesson!.modules.length).toBe(2);
+		expect(lesson!.modules.length).toBe(7);
 	});
 
 	it('returns undefined for an unknown lesson slug', () => {

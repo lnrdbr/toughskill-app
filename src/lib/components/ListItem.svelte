@@ -1,27 +1,29 @@
-
 <script>
-	let { children, icon= "", href = "" } = $props();
+	let { children, icon = '', href = '' } = $props();
 </script>
 
 {#if icon}
-	<a {href} class="listitem py-2 pl-2 text-secondary-700  bg-secondary-100 font-semibold flex flex-row gap-2 rounded-lg w-full h-10">
-		<div class="w-6"><img src={icon} alt="icon"/></div>
+	<!-- eslint-disable svelte/no-navigation-without-resolve -- href is caller-resolved -->
+	<a
+		{href}
+		class="listitem flex h-10 w-full flex-row gap-2 rounded-lg bg-secondary-100 py-2 pl-2 font-semibold text-secondary-700"
+	>
+		<div class="w-6"><img src={icon} alt="icon" /></div>
 		<div>{@render children()}</div>
 	</a>
 {:else}
-	<button class="listitem py-2 pl-2 text-secondary-700 bg-secondary-100 font-semibold flex justify-center flex-row gap-2 rounded-lg w-full h-10">
+	<button
+		class="listitem flex h-10 w-full flex-row justify-center gap-2 rounded-lg bg-secondary-100 py-2 pl-2 font-semibold text-secondary-700"
+	>
 		<div>{@render children()}</div>
 	</button>
 {/if}
 
 <style>
-
-.listitem{
-		filter:  drop-shadow(2px 2px 2px rgba(0,0,0,0.05 ));
-
-
-}
-/*
+	.listitem {
+		filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.05));
+	}
+	/*
 .button:hover{
 		transform:translate(2px,2px);
 		filter: drop-shadow(2px 2px 0px var(--color-primary-300));

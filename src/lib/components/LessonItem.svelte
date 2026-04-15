@@ -1,22 +1,24 @@
-
 <script>
-	let {number= "", href = "", title = "", description = "" } = $props();
+	let { number = '', href = '', title = '', description = '' } = $props();
 </script>
 
-	<a {href} class="lessonitem py-2 pl-10 text-secondary-700  bg-secondary-100 font-semibold flex flex-row gap-6 rounded-2xl w-full">
-		<div class="text-8xl">{number}</div>
-	<div class="py-2 ">
+<!-- eslint-disable svelte/no-navigation-without-resolve -- href is caller-resolved -->
+<a
+	{href}
+	class="lessonitem flex w-full flex-row gap-6 rounded-2xl bg-secondary-100 py-2 pl-10 font-semibold text-secondary-700"
+>
+	<div class="text-8xl">{number}</div>
+	<div class="py-2">
 		<div class="text-2xl">{title}</div>
 		<div>{description}</div>
-		</div>
-	</a>
+	</div>
+</a>
 
 <style>
-
-.lessonitem{
-		filter:  drop-shadow(2px 2px 2px rgba(0,0,0,0.1 ));
-}
-/*
+	.lessonitem {
+		filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.1));
+	}
+	/*
 .button:hover{
 		transform:translate(2px,2px);
 		filter: drop-shadow(2px 2px 0px var(--color-primary-300));

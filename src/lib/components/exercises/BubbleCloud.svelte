@@ -5,7 +5,8 @@
 		forceY,
 		forceManyBody,
 		forceCollide,
-		type SimulationNodeDatum
+		type SimulationNodeDatum,
+		type Force
 	} from 'd3-force';
 	import { prefersReducedMotion } from 'svelte/motion';
 	import { SvelteSet } from 'svelte/reactivity';
@@ -68,14 +69,17 @@
 				const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
 				if (dist < FORCE_FIELD_RADIUS + n.radius) {
-					const push = ((FORCE_FIELD_RADIUS + n.radius - dist) / dist) * FORCE_FIELD_STRENGTH * alpha;
+					const push =
+						((FORCE_FIELD_RADIUS + n.radius - dist) / dist) * FORCE_FIELD_STRENGTH * alpha;
 					n.vx! += dx * push;
 					n.vy! += dy * push;
 				}
 			}
 		}
 
-		force.initialize = (n: SimBubble[]) => { nodes = n; };
+		force.initialize = (n: SimBubble[]) => {
+			nodes = n;
+		};
 		return force;
 	}
 
@@ -83,11 +87,8 @@
 		.force('x', forceX<SimBubble>(getCx).strength(0.06))
 		.force('y', forceY<SimBubble>(getCy).strength(0.06))
 		.force('charge', forceManyBody<SimBubble>().strength(-30))
-		.force(
-			'collide',
-			forceCollide<SimBubble>((d) => d.radius + 4).strength(0.7)
-		)
-		.force('forceField', forceFieldFromCenter() as any)
+		.force('collide', forceCollide<SimBubble>((d) => d.radius + 4).strength(0.7))
+		.force('forceField', forceFieldFromCenter() as Force<SimBubble, undefined>)
 		.alphaDecay(0.02)
 		.velocityDecay(0.3)
 		.on('tick', () => {
@@ -188,12 +189,7 @@
 	</div>
 
 	{#each visibleNodes() as bubble (bubble.id)}
-		<Bubble
-			text={bubble.text}
-			x={bubble.x ?? 0}
-			y={bubble.y ?? 0}
-			color={bubble.color}
-		/>
+		<Bubble text={bubble.text} x={bubble.x ?? 0} y={bubble.y ?? 0} color={bubble.color} />
 	{/each}
 </div>
 

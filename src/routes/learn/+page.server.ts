@@ -12,7 +12,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	const course = getCourse('creativity');
 	if (!course) {
-		return { course: null, lessonProgress: {} as Record<string, { completed: number; total: number }> };
+		return {
+			course: null,
+			lessonProgress: {} as Record<string, { completed: number; total: number }>
+		};
 	}
 
 	const completions = await db
@@ -22,10 +25,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		})
 		.from(moduleCompletion)
 		.where(
-			and(
-				eq(moduleCompletion.userId, locals.user.id),
-				eq(moduleCompletion.courseId, 'creativity')
-			)
+			and(eq(moduleCompletion.userId, locals.user.id), eq(moduleCompletion.courseId, 'creativity'))
 		);
 
 	const lessonProgress: Record<string, { completed: number; total: number }> = {};

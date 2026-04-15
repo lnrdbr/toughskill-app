@@ -68,5 +68,4 @@
 		color: var(--color-foreground);
 		min-width: 3.5rem;
 	}
-
 </style>

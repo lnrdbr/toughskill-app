@@ -58,18 +58,16 @@
 	--color-error: #ef4444;
 	--color-info: #3b82f6;
 
-
-
 	/* Border radius */
 	--radius-button: 20px;
 
 	/* Font family */
 	--font-display: 'Gurajada', cursive;
 
-		--main-drop-shadow: 5px 5px 0px;
+	--main-drop-shadow: 5px 5px 0px;
 }
 
-h1{
-		font-weight: bold;
-		font-size: 5rem;
+h1 {
+	font-weight: bold;
+	font-size: 5rem;
 }

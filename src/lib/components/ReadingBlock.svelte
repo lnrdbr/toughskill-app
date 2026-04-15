@@ -21,6 +21,7 @@
 
 <div class="reading-wrapper">
 	<article class="reading-block prose rounded-lg border-2 p-6">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -- content is from trusted static course config, not user input -->
 		{@html html}
 	</article>
 </div>

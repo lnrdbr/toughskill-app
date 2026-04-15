@@ -32,7 +32,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		!courseId ||
 		!lessonSlug
 	) {
-		error(400, 'Missing required fields: moduleId, courseId, and lessonSlug must be non-empty strings');
+		error(
+			400,
+			'Missing required fields: moduleId, courseId, and lessonSlug must be non-empty strings'
+		);
 	}
 
 	if (!Number.isInteger(timeSpentSeconds) || timeSpentSeconds < 0 || timeSpentSeconds > 86400) {

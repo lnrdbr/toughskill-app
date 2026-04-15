@@ -11,8 +11,22 @@ const lessons: Lesson[] = [
 		slug: 'preparation',
 		description: 'Warm up your creative muscles.',
 		modules: [
-			{ type: 'exercise', id: 'mod-1', title: 'Paperclip', componentId: 'DivergentThinking', estimatedMinutes: 5, config: {} },
-			{ type: 'exercise', id: 'mod-2', title: 'Brick', componentId: 'DivergentThinking', estimatedMinutes: 5, config: {} }
+			{
+				type: 'exercise',
+				id: 'mod-1',
+				title: 'Paperclip',
+				componentId: 'DivergentThinking',
+				estimatedMinutes: 5,
+				config: {}
+			},
+			{
+				type: 'exercise',
+				id: 'mod-2',
+				title: 'Brick',
+				componentId: 'DivergentThinking',
+				estimatedMinutes: 5,
+				config: {}
+			}
 		],
 		estimatedMinutes: 10
 	},
@@ -22,7 +36,14 @@ const lessons: Lesson[] = [
 		slug: 'exploration',
 		description: 'Explore creative techniques.',
 		modules: [
-			{ type: 'exercise', id: 'mod-3', title: 'Brainstorm', componentId: 'DivergentThinking', estimatedMinutes: 5, config: {} }
+			{
+				type: 'exercise',
+				id: 'mod-3',
+				title: 'Brainstorm',
+				componentId: 'DivergentThinking',
+				estimatedMinutes: 5,
+				config: {}
+			}
 		],
 		estimatedMinutes: 5
 	}

@@ -30,7 +30,7 @@
 </script>
 
 <div class="dot-path flex flex-col items-center gap-7">
-	{#each lessons as lesson, i}
+	{#each lessons as lesson, i (lesson.slug)}
 		{@const status = getStatus(lesson.slug)}
 		{@const isSelected = selectedIndex === i}
 		{@const progress = lessonProgress[lesson.slug]}
@@ -43,7 +43,7 @@
 				onclick={() => (selectedIndex = selectedIndex === i ? null : i)}
 			/>
 
-				<span class="dot-label text-sm font-semibold">{lesson.title}</span>
+			<span class="dot-label text-sm font-semibold">{lesson.title}</span>
 		</div>
 
 		{#if isSelected}

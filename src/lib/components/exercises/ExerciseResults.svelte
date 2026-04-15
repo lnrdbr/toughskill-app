@@ -4,7 +4,7 @@
 	// TODO: Restore BubbleCloud by saving bubble positions from the exercise phase
 	// and displaying a static snapshot here instead of re-running the D3 simulation.
 	// import BubbleCloud from './BubbleCloud.svelte';
-	import type { SubmissionResponse, ScamperSubmissionResponse, ScamperEvaluation } from './types.ts';
+	import type { ScamperEvaluation } from './types.ts';
 	import { pendingEvaluations } from './types.ts';
 
 	let {
@@ -24,9 +24,7 @@
 			oncomplete?.({});
 			return;
 		}
-		entry.promise
-			.then(() => oncomplete?.({}))
-			.catch(() => oncomplete?.({}));
+		entry.promise.then(() => oncomplete?.({})).catch(() => oncomplete?.({}));
 	});
 </script>
 

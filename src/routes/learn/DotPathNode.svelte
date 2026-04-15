@@ -35,7 +35,7 @@
 		align-items: center;
 		justify-content: center;
 		transition: all 0.2s ease;
-		// transform: skew(20deg);
+		/* transform: skew(20deg); */
 		filter: drop-shadow(0px 8px 0px var(--color-primary-100));
 	}
 	.dot-button:hover {
@@ -52,7 +52,6 @@
 	.not-started:hover {
 		filter: drop-shadow(0px 2px 0px var(--color-secondary-100));
 	}
-
 
 	.in-progress {
 		background: var(--color-primary-200);
@@ -71,7 +70,7 @@
 			filter: drop-shadow(0px 4px 0px var(--color-primary-100));
 			transform: translateY(4px);
 		}
-			&.not-started {
+		&.not-started {
 			filter: drop-shadow(0px 4px 0px var(--color-secondary-100));
 			transform: translateY(4px);
 		}

@@ -13,7 +13,7 @@
 </script>
 
 <div class="strip">
-	{#each lenses as lens, i}
+	{#each lenses as lens, i (lens.key)}
 		<div
 			class="lens-step"
 			class:active={i === currentIndex}

@@ -120,9 +120,7 @@
 				{#if timerDuration > 0}
 					<ExerciseTimer duration={timerDuration} onexpire={handleTimerExpire} />
 				{/if}
-				<Button onclick={finish} disabled={bubbles.length === 0}>
-					I'm Done
-				</Button>
+				<Button onclick={finish} disabled={bubbles.length === 0}>I'm Done</Button>
 			</div>
 		</div>
 	{:else if phase === 'reflecting'}
@@ -260,5 +258,4 @@
 		gap: 8px;
 		justify-content: center;
 	}
-
 </style>

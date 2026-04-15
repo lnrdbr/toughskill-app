@@ -69,7 +69,12 @@ export const actions: Actions = {
 		const courseId = formData.get('courseId');
 		const lessonSlug = formData.get('lessonSlug');
 
-		if (typeof courseId !== 'string' || !courseId || typeof lessonSlug !== 'string' || !lessonSlug) {
+		if (
+			typeof courseId !== 'string' ||
+			!courseId ||
+			typeof lessonSlug !== 'string' ||
+			!lessonSlug
+		) {
 			return fail(400, { error: 'Missing courseId or lessonSlug' });
 		}
 

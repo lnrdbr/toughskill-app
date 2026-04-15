@@ -1,4 +1,3 @@
-
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import LessonItem from './LessonItem.svelte';
@@ -11,6 +10,6 @@
 
 <Story name="Default">
 	{#snippet template()}
-				<LessonItem href="/" title="Creativity" />
-		{/snippet}
+		<LessonItem href="/" title="Creativity" />
+	{/snippet}
 </Story>

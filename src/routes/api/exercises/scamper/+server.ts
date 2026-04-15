@@ -83,8 +83,7 @@ async function evaluateWithLLM(
 	const depth =
 		engagedLenses.length > 0
 			? Math.round(
-					(engagedLenses.reduce((sum, [, ideas]) => sum + ideas.length, 0) /
-						engagedLenses.length) *
+					(engagedLenses.reduce((sum, [, ideas]) => sum + ideas.length, 0) / engagedLenses.length) *
 						10
 				) / 10
 			: 0;

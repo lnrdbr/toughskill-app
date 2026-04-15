@@ -26,7 +26,9 @@ describe('ModuleRunner', () => {
 	it('shows error for unknown componentId', async () => {
 		render(ModuleRunner, { module: unknownModule });
 
-		await expect.element(page.getByText("This exercise couldn't be loaded. Please try again later.")).toBeVisible();
+		await expect
+			.element(page.getByText("This exercise couldn't be loaded. Please try again later."))
+			.toBeVisible();
 	});
 
 	it('shows loading state initially for a valid module', async () => {
@@ -52,7 +54,9 @@ describe('ModuleRunner', () => {
 		});
 
 		// oncomplete is not called for error states, so result stays undefined
-		await expect.element(page.getByText("This exercise couldn't be loaded. Please try again later.")).toBeVisible();
+		await expect
+			.element(page.getByText("This exercise couldn't be loaded. Please try again later."))
+			.toBeVisible();
 		expect(result).toBeUndefined();
 	});
 });

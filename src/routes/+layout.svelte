@@ -15,12 +15,11 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-
 <div class="layout">
-		<div class="w-full border-b-2 p-5 bg-white drop-shadow-md border-gray-400">5🔥</div>
-		<main class="content">
-			{@render children()}
-		</main>
+	<div class="w-full border-b-2 border-gray-400 bg-white p-5 drop-shadow-md">5🔥</div>
+	<main class="content">
+		{@render children()}
+	</main>
 </div>
 
 <style>
