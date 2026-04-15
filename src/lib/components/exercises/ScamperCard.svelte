@@ -39,10 +39,12 @@
 		<div class="highlights">
 			{#each highlightEntries as [key, text] (key)}
 				{@const meta = LENS_META[key]}
-				<div class="highlight-row">
-					<span class="highlight-letter">{meta.letter}</span>
-					<p class="highlight-text">{text}</p>
-				</div>
+				{#if meta}
+					<div class="highlight-row">
+						<span class="highlight-letter">{meta.letter}</span>
+						<p class="highlight-text">{text}</p>
+					</div>
+				{/if}
 			{/each}
 		</div>
 	{/if}

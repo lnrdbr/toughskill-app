@@ -65,8 +65,8 @@
 		"vitest-browser-svelte": "^2.0.2"
 	},
 	"dependencies": {
-		"@anthropic-ai/sdk": "^0.79.0",
 		"@iconify/svelte": "^5.2.1",
+		"@mistralai/mistralai": "^2.2.0",
 		"better-sqlite3": "^12.6.2",
 		"d3-force": "^3.0.0",
 		"marked": "^17.0.5"

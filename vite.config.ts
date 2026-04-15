@@ -11,9 +11,6 @@ const dirname =
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
-	ssr: {
-		external: ['@anthropic-ai/sdk']
-	},
 	test: {
 		expect: {
 			requireAssertions: true

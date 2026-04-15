@@ -22,14 +22,18 @@
 	function handleClick(e: MouseEvent & { currentTarget: HTMLButtonElement }) {
 		if (!silent) {
 			if (!audio) audio = new Audio(clickSound);
-			audio.currentTime = 0;
+			audio.play().catch(() => {});
 			audio.play();
 		}
 		if (typeof onclick === 'function') onclick.call(e.currentTarget, e);
 	}
 </script>
 
-<button class="button {variant} rounded-{rounded}" {...rest} onclick={handleClick}>
+<button
+	class="button {variant} {rounded === 'full' ? 'rounded-full' : 'rounded-default'}"
+	{...rest}
+	onclick={handleClick}
+>
 	{@render children()}
 </button>
 

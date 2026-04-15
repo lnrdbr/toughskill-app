@@ -2,7 +2,7 @@ import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import { exerciseSubmission } from '$lib/server/db/schema';
-import { anthropic } from '$lib/server/llm';
+import { mistral } from '$lib/server/llm';
 import { eq, ne, and } from 'drizzle-orm';
 import type { ScamperEvaluation } from '$lib/components/exercises/types';
 
@@ -15,14 +15,18 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		prompt: string;
 	};
 
+	if (!ideasByLens || typeof ideasByLens !== 'object' || Array.isArray(ideasByLens)) {
+		throw error(400, 'Missing required fields');
+	}
+
 	const allIdeas = Object.values(ideasByLens).flat();
 	if (!allIdeas.length || !prompt) {
-		error(400, 'Missing required fields');
+		throw error(400, 'Missing required fields');
 	}
 
 	const userId = locals.user?.id;
 	if (!userId) {
-		error(401, 'Not authenticated');
+		throw error(401, 'Not authenticated');
 	}
 
 	// Save to DB
@@ -93,28 +97,48 @@ async function evaluateWithLLM(
 		.map(([lens, ideas]) => `${lens}:\n${ideas.map((i, n) => `  ${n + 1}. ${i}`).join('\n')}`)
 		.join('\n\n');
 
-	const message = await anthropic.messages.create({
-		model: 'claude-haiku-4-5-20251001',
-		max_tokens: 768,
-		system: `You evaluate SCAMPER creativity exercises. Given a prompt and ideas grouped by SCAMPER lens, provide:
+	const response = await mistral.chat.complete({
+		model: 'mistral-small-latest',
+		maxTokens: 768,
+		messages: [
+			{
+				role: 'system',
+				content: `You evaluate SCAMPER creativity exercises. Given a prompt and ideas grouped by SCAMPER lens, provide:
 - originality (1-10): How unusual and creative are the ideas?
 - practicality (1-10): How actionable and feasible are the ideas?
 - lensAgility (1-10): How well did the thinker shift perspective between lenses? Low if ideas repeat themes across lenses; high if each lens produced distinct thinking.
 - lensHighlights: For each lens that has ideas, write one brief encouraging sentence highlighting what went well.
 - feedback: 2-3 sentences of overall constructive, positive feedback focused on growth and strengths.
 
-Respond in JSON only: {"originality": number, "practicality": number, "lensAgility": number, "lensHighlights": {"substitute": "...", ...}, "feedback": "..."}`,
-		messages: [
+Respond in JSON only: {"originality": number, "practicality": number, "lensAgility": number, "lensHighlights": {"substitute": "...", ...}, "feedback": "..."}`
+			},
 			{
 				role: 'user',
 				content: `Prompt: "${prompt}"\n\n${lensText}`
 			}
-		]
+		],
+		responseFormat: { type: 'json_object' }
 	});
 
-	const raw = message.content[0].type === 'text' ? message.content[0].text : '';
+	const content = response.choices?.[0]?.message?.content;
+	const raw = typeof content === 'string' ? content : '';
 	const text = raw.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
-	const parsed = JSON.parse(text);
+
+	let parsed: ScamperEvaluation;
+	try {
+		parsed = JSON.parse(text);
+	} catch {
+		return {
+			breadth,
+			depth,
+			originality: 5,
+			practicality: 5,
+			lensAgility: 5,
+			feedback:
+				'Great effort exploring different perspectives! Keep experimenting with SCAMPER to unlock new creative angles.',
+			lensHighlights: {}
+		};
+	}
 
 	return {
 		breadth,
