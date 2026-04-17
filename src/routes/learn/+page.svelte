@@ -33,8 +33,10 @@
 		return () => ro.disconnect();
 	});
 
-	// The DotPath's sticky act headings pin near the top of the scroll container.
-	const pathStickyTop = '1.5rem';
+	// The DotPath's sticky act headings pin at the very top of the scroll
+	// container; their own top padding provides the visible offset, and their
+	// opaque background extends up to the scroll edge to hide dots behind them.
+	const pathStickyTop = '0';
 
 	function startLesson(lesson: Lesson) {
 		if (!data.course) return;

@@ -63,12 +63,7 @@
 					</Button>
 				</a>
 			{:else}
-				<a
-					href="/auth"
-					class="avatar-link"
-					aria-label="Profile"
-					data-testid="profile-link"
-				>
+				<a href="/auth" class="avatar-link" aria-label="Profile" data-testid="profile-link">
 					<span class="avatar">{initial}</span>
 				</a>
 			{/if}
@@ -87,6 +82,10 @@
 		background: var(--color-background);
 		border-bottom: 2px solid var(--color-foreground);
 		filter: drop-shadow(0 2px 0 var(--color-foreground));
+		/* Paint above subsequent siblings (e.g. scrollable .content and the sticky
+		   headings inside it) so the navbar border + drop-shadow render on top. */
+		position: relative;
+		z-index: 20;
 	}
 
 	.brand {

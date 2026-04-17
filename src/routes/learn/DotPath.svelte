@@ -153,7 +153,7 @@
 	}
 
 	.act-section + .act-section {
-		margin-top: 1.75rem;
+		margin-top: 0.25rem;
 	}
 
 	.act-heading {
@@ -161,7 +161,10 @@
 		top: 0;
 		z-index: 5;
 		margin: 0 0 1.25rem;
-		padding: 0.75rem 0;
+		/* Top padding pushes the title text down while the heading's opaque
+		   background extends to the very top of the scroll container, hiding any
+		   dots that would otherwise scroll past above the pinned title. */
+		padding: 1.5rem 0 0.75rem;
 		font-size: 1.5rem;
 		font-weight: 700;
 		color: var(--color-foreground);
