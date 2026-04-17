@@ -9,8 +9,14 @@
 		instruction = '',
 		minWords = 80,
 		maxWords = 200,
+		compact = false,
+		photoDataUrl = '' as string,
 		oncomplete = undefined as ((result: Record<string, unknown>) => void) | undefined
 	} = $props();
+
+	// Compact mode tightens defaults if caller didn't override them.
+	const effectiveMinWords = $derived(compact && minWords === 80 ? 30 : minWords);
+	const effectiveMaxWords = $derived(compact && maxWords === 200 ? 80 : maxWords);
 
 	type Draft = {
 		story: string;
@@ -47,11 +53,15 @@
 			.split(/\s+/)
 			.filter((w) => w.length > 0).length
 	);
-	let withinRange = $derived(wordCount >= minWords && wordCount <= maxWords);
-	let overLimit = $derived(wordCount > maxWords);
+	let withinRange = $derived(wordCount >= effectiveMinWords && wordCount <= effectiveMaxWords);
+	let overLimit = $derived(wordCount > effectiveMaxWords);
 
 	function finish() {
-		phase = 'reflecting';
+		if (compact) {
+			submitReflection();
+		} else {
+			phase = 'reflecting';
+		}
 	}
 
 	function submitReflection() {
@@ -83,6 +93,9 @@
 
 <div class="exercise">
 	{#if phase === 'input'}
+		{#if photoDataUrl}
+			<img class="seed-photo" src={photoDataUrl} alt="" data-testid="seed-photo" />
+		{/if}
 		<div class="seed">
 			<p class="seed-text">{prompt}</p>
 		</div>
@@ -96,7 +109,7 @@
 				placeholder="Start writing..."
 			></textarea>
 			<div class="word-count" class:valid={withinRange} class:over={overLimit}>
-				{wordCount} / {minWords}–{maxWords} words
+				{wordCount} / {effectiveMinWords}–{effectiveMaxWords} words
 			</div>
 		</div>
 
@@ -148,6 +161,16 @@
 		padding: 20px;
 		margin-bottom: 12px;
 		filter: drop-shadow(3px 3px 0px var(--color-primary-200));
+	}
+
+	.seed-photo {
+		display: block;
+		max-width: 100%;
+		max-height: 320px;
+		margin: 0 auto 12px;
+		border-radius: 12px;
+		border: 2px solid var(--color-foreground);
+		filter: drop-shadow(3px 3px 0px var(--color-foreground));
 	}
 
 	.seed-text {
