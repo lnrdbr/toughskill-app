@@ -1,9 +1,15 @@
 services:
   app:
     build: .
+    container_name: toughskill-app
     restart: unless-stopped
     env_file: .env
-    ports:
-      - '172.17.0.1:3002:3000'
     volumes:
       - ./data:/data
+    networks:
+      - default
+      - web
+
+networks:
+  web:
+    external: true
