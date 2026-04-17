@@ -4,6 +4,7 @@
 	import { isComponentModule } from '$lib/types/course';
 	import { getModuleComponent } from '$lib/config/module-registry';
 	import ReflectionPrompt from './modules/ReflectionPrompt.svelte';
+	import MeditationTimer from './modules/MeditationTimer.svelte';
 
 	let {
 		module,
@@ -98,6 +99,15 @@
 		moduleId={module.id}
 		prompt={module.prompt}
 		minLength={module.minLength}
+		{courseId}
+		{lessonSlug}
+		oncomplete={handleComplete}
+	/>
+{:else if module.type === 'meditation'}
+	<MeditationTimer
+		moduleId={module.id}
+		durationSeconds={module.durationSeconds}
+		style={module.style}
 		{courseId}
 		{lessonSlug}
 		oncomplete={handleComplete}
