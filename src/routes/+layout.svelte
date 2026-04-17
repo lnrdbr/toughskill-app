@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { invalidateAll } from '$app/navigation';
 	import { authClient } from '$lib/auth-client';
+	import Navbar from '$lib/components/Navbar.svelte';
 
 	let { data, children } = $props();
 
@@ -16,7 +17,7 @@
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <div class="layout">
-	<div class="w-full border-b-2 border-gray-400 bg-white p-5 drop-shadow-md">5🔥</div>
+	<Navbar user={data.user} />
 	<main class="content">
 		{@render children()}
 	</main>
