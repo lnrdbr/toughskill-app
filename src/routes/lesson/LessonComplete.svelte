@@ -26,15 +26,23 @@
 		return rest === 0 ? `${hours} h` : `${hours} h ${rest} m`;
 	}
 
-	// Collect any evaluation feedback that landed on the client this session
-	let highlights = $derived(
+	// Which of this session's modules have an evaluation waiting on the client.
+	// `pendingEvaluations` is a plain object, so we can't read its mutations
+	// reactively — we snapshot the promises here and await them per-item in
+	// the template via {#await}, which gives us the loading + resolved states.
+	type Pending = { moduleId: string; promise: Promise<string | null> };
+
+	let pending: Pending[] = $derived(
 		completionResults
 			.map((r) => {
 				const entry = pendingEvaluations[r.moduleId];
-				const feedback = entry?.result?.evaluation?.feedback;
-				return feedback ? { moduleId: r.moduleId, feedback } : null;
+				if (!entry) return null;
+				const promise = entry.promise
+					.then((data) => data?.evaluation?.feedback ?? null)
+					.catch(() => null);
+				return { moduleId: r.moduleId, promise };
 			})
-			.filter((h): h is { moduleId: string; feedback: string } => h !== null)
+			.filter((p): p is Pending => p !== null)
 	);
 </script>
 
@@ -62,12 +70,31 @@
 		{/if}
 	</div>
 
-	{#if highlights.length > 0}
+	{#if pending.length > 0}
 		<div class="highlights">
 			<h2 class="highlights-heading">From your responses</h2>
 			<ul class="highlights-list">
-				{#each highlights as h (h.moduleId)}
-					<li class="highlight">{h.feedback}</li>
+				{#each pending as p (p.moduleId)}
+					<li class="highlight">
+						{#await p.promise}
+							<span class="highlight-loading">
+								<span class="highlight-spinner" aria-hidden="true"></span>
+								Reading your answer…
+							</span>
+						{:then feedback}
+							{#if feedback}
+								{feedback}
+							{:else}
+								<span class="highlight-muted">
+									Couldn't generate feedback this time — your answer is saved.
+								</span>
+							{/if}
+						{:catch}
+							<span class="highlight-muted">
+								Couldn't generate feedback this time — your answer is saved.
+							</span>
+						{/await}
+					</li>
 				{/each}
 			</ul>
 		</div>
@@ -173,6 +200,34 @@
 		color: var(--color-foreground);
 		padding-left: 12px;
 		border-left: 3px solid var(--color-primary-400);
+	}
+
+	.highlight-loading {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		color: var(--color-muted-foreground);
+		font-style: italic;
+	}
+
+	.highlight-spinner {
+		width: 12px;
+		height: 12px;
+		border: 2px solid var(--color-primary-200);
+		border-top-color: var(--color-primary-500);
+		border-radius: 50%;
+		animation: highlight-spin 0.8s linear infinite;
+	}
+
+	@keyframes highlight-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	.highlight-muted {
+		color: var(--color-muted-foreground);
+		font-style: italic;
 	}
 
 	.actions {
