@@ -5,6 +5,7 @@
 	import type { BubbleData, ScamperLensConfig, ScamperSubmissionResponse } from './types.ts';
 	import enterSoundUrl from '$lib/assets/enterSound.wav';
 	import Button from '$lib/components/Button.svelte';
+	import { readDraft, writeDraft, clearDraft, draftKey } from '$lib/client/draft';
 
 	const enterSound = typeof Audio !== 'undefined' ? new Audio(enterSoundUrl) : null;
 
@@ -61,6 +62,7 @@
 	];
 
 	let {
+		moduleId = '',
 		prompt = 'Paperclip',
 		instruction = 'Apply SCAMPER thinking to generate creative ideas.',
 		timerDuration = 0,
@@ -72,28 +74,59 @@
 
 	const lenses = lensDescriptions ?? DEFAULT_LENSES;
 
+	type Draft = {
+		bubblesByLens: Record<string, BubbleData[]>;
+		phase: 'intro' | 'lensing' | 'reflecting' | 'submitted';
+		currentLensIndex: number;
+		inputText: string;
+		mostProductiveLens: string;
+		surprises: string;
+	};
+
+	const storageKey = moduleId ? draftKey(moduleId) : '';
+	const initial: Draft | null = storageKey
+		? readDraft<Draft | null>(storageKey, null)
+		: null;
+
 	let phase: 'intro' | 'lensing' | 'reflecting' | 'submitted' = $state(
-		showIntro ? 'intro' : 'lensing'
+		initial?.phase ?? (showIntro ? 'intro' : 'lensing')
 	);
-	let currentLensIndex = $state(0);
-	let inputText = $state('');
+	let currentLensIndex = $state(initial?.currentLensIndex ?? 0);
+	let inputText = $state(initial?.inputText ?? '');
 	let startTime = $state(Date.now());
-	let mostProductiveLens = $state('');
-	let surprises = $state('');
+	let mostProductiveLens = $state(initial?.mostProductiveLens ?? '');
+	let surprises = $state(initial?.surprises ?? '');
 
 	// Bubbles per lens
 	let bubblesByLens: Record<string, BubbleData[]> = $state(
-		Object.fromEntries(
-			lenses.map((l) => [
-				l.key,
-				untrack(() => initialIdeasByLens[l.key] ?? []).map((text, i) => ({
-					id: crypto.randomUUID(),
-					text,
-					color: COLORS[i % COLORS.length]
-				}))
-			])
-		)
+		initial?.bubblesByLens ??
+			Object.fromEntries(
+				lenses.map((l) => [
+					l.key,
+					untrack(() => initialIdeasByLens[l.key] ?? []).map((text, i) => ({
+						id: crypto.randomUUID(),
+						text,
+						color: COLORS[i % COLORS.length]
+					}))
+				])
+			)
 	);
+
+	$effect(() => {
+		if (!storageKey) return;
+		if (phase === 'submitted') {
+			clearDraft(storageKey);
+			return;
+		}
+		writeDraft<Draft>(storageKey, {
+			bubblesByLens: $state.snapshot(bubblesByLens) as Record<string, BubbleData[]>,
+			phase,
+			currentLensIndex,
+			inputText,
+			mostProductiveLens,
+			surprises
+		});
+	});
 
 	let currentLens = $derived(lenses[currentLensIndex]);
 	let currentBubbles = $derived(bubblesByLens[currentLens.key] ?? []);

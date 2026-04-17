@@ -1,8 +1,10 @@
 <script lang="ts">
 	import type { StoryBuilderSubmissionResponse } from './types.ts';
 	import Button from '$lib/components/Button.svelte';
+	import { readDraft, writeDraft, clearDraft, draftKey } from '$lib/client/draft';
 
 	let {
+		moduleId = '',
 		prompt = '',
 		instruction = '',
 		minWords = 80,
@@ -10,10 +12,34 @@
 		oncomplete = undefined as ((result: Record<string, unknown>) => void) | undefined
 	} = $props();
 
-	let phase: 'input' | 'reflecting' | 'submitted' = $state('input');
-	let story = $state('');
+	type Draft = {
+		story: string;
+		phase: 'input' | 'reflecting' | 'submitted';
+		reflection: string;
+	};
+
+	const storageKey = moduleId ? draftKey(moduleId) : '';
+	const initial: Draft | null = storageKey
+		? readDraft<Draft | null>(storageKey, null)
+		: null;
+
+	let phase: 'input' | 'reflecting' | 'submitted' = $state(initial?.phase ?? 'input');
+	let story = $state(initial?.story ?? '');
 	let startTime = $state(Date.now());
-	let reflection = $state('');
+	let reflection = $state(initial?.reflection ?? '');
+
+	$effect(() => {
+		if (!storageKey) return;
+		if (phase === 'submitted') {
+			clearDraft(storageKey);
+			return;
+		}
+		writeDraft<Draft>(storageKey, {
+			story,
+			phase,
+			reflection
+		});
+	});
 
 	let wordCount = $derived(
 		story

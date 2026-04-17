@@ -2,8 +2,10 @@
 	import ExerciseTimer from './ExerciseTimer.svelte';
 	import type { AnalogySubmissionResponse } from './types.ts';
 	import Button from '$lib/components/Button.svelte';
+	import { readDraft, writeDraft, clearDraft, draftKey } from '$lib/client/draft';
 
 	let {
+		moduleId = '',
 		concept = '',
 		domains = [] as string[],
 		instruction = '',
@@ -11,13 +13,38 @@
 		oncomplete = undefined as ((result: Record<string, unknown>) => void) | undefined
 	} = $props();
 
-	let phase: 'input' | 'reflecting' | 'submitted' = $state('input');
+	type Draft = {
+		analogies: Record<string, { like: string; because: string }>;
+		phase: 'input' | 'reflecting' | 'submitted';
+		reflection: string;
+	};
+
+	const storageKey = moduleId ? draftKey(moduleId) : '';
+	const initial: Draft | null = storageKey
+		? readDraft<Draft | null>(storageKey, null)
+		: null;
+
+	let phase: 'input' | 'reflecting' | 'submitted' = $state(initial?.phase ?? 'input');
 	let startTime = $state(Date.now());
-	let reflection = $state('');
+	let reflection = $state(initial?.reflection ?? '');
 
 	let analogies: Record<string, { like: string; because: string }> = $state(
-		Object.fromEntries(domains.map((d) => [d, { like: '', because: '' }]))
+		initial?.analogies ??
+			Object.fromEntries(domains.map((d) => [d, { like: '', because: '' }]))
 	);
+
+	$effect(() => {
+		if (!storageKey) return;
+		if (phase === 'submitted') {
+			clearDraft(storageKey);
+			return;
+		}
+		writeDraft<Draft>(storageKey, {
+			analogies: $state.snapshot(analogies) as Record<string, { like: string; because: string }>,
+			phase,
+			reflection
+		});
+	});
 
 	let filledCount = $derived(
 		Object.values(analogies).filter((a) => a.like.trim() && a.because.trim()).length

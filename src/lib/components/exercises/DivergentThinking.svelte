@@ -5,16 +5,31 @@
 	import type { BubbleData, SubmissionResponse } from './types.ts';
 	import enterSoundUrl from '$lib/assets/enterSound.wav';
 	import Button from '$lib/components/Button.svelte';
+	import { readDraft, writeDraft, clearDraft, draftKey } from '$lib/client/draft';
 
 	const enterSound = typeof Audio !== 'undefined' ? new Audio(enterSoundUrl) : null;
 
 	let {
+		moduleId = '',
 		prompt = 'Paperclip',
 		instruction = 'How many uses can you think of?',
 		timerDuration = 0,
 		initialIdeas = [] as string[],
 		oncomplete = undefined as ((result: Record<string, unknown>) => void) | undefined
 	} = $props();
+
+	type Draft = {
+		bubbles: BubbleData[];
+		phase: 'input' | 'reflecting' | 'submitted';
+		inputText: string;
+		surprisingIdea: string;
+		patterns: string;
+	};
+
+	const storageKey = moduleId ? draftKey(moduleId) : '';
+	const initial: Draft | null = storageKey
+		? readDraft<Draft | null>(storageKey, null)
+		: null;
 
 	const COLORS = [
 		'var(--color-primary-100)',
@@ -24,18 +39,34 @@
 	];
 
 	let bubbles: BubbleData[] = $state(
-		untrack(() => initialIdeas).map((text, i) => ({
-			id: crypto.randomUUID(),
-			text,
-			color: COLORS[i % COLORS.length]
-		}))
+		initial?.bubbles ??
+			untrack(() => initialIdeas).map((text, i) => ({
+				id: crypto.randomUUID(),
+				text,
+				color: COLORS[i % COLORS.length]
+			}))
 	);
 
-	let phase: 'input' | 'reflecting' | 'submitted' = $state('input');
-	let inputText = $state('');
+	let phase: 'input' | 'reflecting' | 'submitted' = $state(initial?.phase ?? 'input');
+	let inputText = $state(initial?.inputText ?? '');
 	let startTime = $state(Date.now());
-	let surprisingIdea = $state('');
-	let patterns = $state('');
+	let surprisingIdea = $state(initial?.surprisingIdea ?? '');
+	let patterns = $state(initial?.patterns ?? '');
+
+	$effect(() => {
+		if (!storageKey) return;
+		if (phase === 'submitted') {
+			clearDraft(storageKey);
+			return;
+		}
+		writeDraft<Draft>(storageKey, {
+			bubbles: $state.snapshot(bubbles) as BubbleData[],
+			phase,
+			inputText,
+			surprisingIdea,
+			patterns
+		});
+	});
 
 	function addIdea() {
 		const text = inputText.trim();

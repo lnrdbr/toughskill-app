@@ -9,11 +9,9 @@
 	import { getModuleComponent } from '$lib/config/module-registry';
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
 	import Button from '$lib/components/Button.svelte';
+	import { readDraft, writeDraft, clearDraft } from '$lib/client/draft';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
-
-	let currentIndex = $state(0);
-	let completionResults: ModuleCompletionResult[] = $state([]);
 
 	// Snapshot the session on mount/form change so load re-runs cannot reset mid-lesson
 	let session = $state(resolveSession());
@@ -21,6 +19,24 @@
 	function resolveSession() {
 		return form && !('error' in form) ? form : data;
 	}
+
+	function lessonIndexKey(cid: string, slug: string): string {
+		return `ts:lesson-index:${cid}:${slug}`;
+	}
+
+	const initialCourseId = (session as { courseId?: string }).courseId ?? '';
+	const initialLessonSlug = (session as { lessonSlug?: string }).lessonSlug ?? '';
+	const initialModuleCount =
+		((session as { modules?: Module[] }).modules ?? []).length;
+	const savedIndex =
+		initialCourseId && initialLessonSlug
+			? readDraft<number>(lessonIndexKey(initialCourseId, initialLessonSlug), 0)
+			: 0;
+
+	let currentIndex = $state(
+		Math.min(Math.max(savedIndex, 0), Math.max(initialModuleCount - 1, 0))
+	);
+	let completionResults: ModuleCompletionResult[] = $state([]);
 
 	// Only update session when form actually changes (new POST), not on load re-runs
 	$effect(() => {
@@ -74,6 +90,17 @@
 		if (sessionDone) {
 			new Audio(lessonFinisherSrc).play();
 		}
+	});
+
+	// Persist (or clear) the in-session module index so a reload restores position
+	$effect(() => {
+		if (!courseId || !lessonSlug) return;
+		const key = lessonIndexKey(courseId, lessonSlug);
+		if (sessionDone) {
+			clearDraft(key);
+			return;
+		}
+		writeDraft<number>(key, currentIndex);
 	});
 
 	function handleModuleComplete(result: ModuleCompletionResult) {

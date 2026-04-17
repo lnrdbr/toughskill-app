@@ -1,19 +1,47 @@
 <script lang="ts">
 	import type { ConstraintSubmissionResponse } from './types.ts';
 	import Button from '$lib/components/Button.svelte';
+	import { readDraft, writeDraft, clearDraft, draftKey } from '$lib/client/draft';
 
 	let {
+		moduleId = '',
 		prompt = '',
 		constraints = [] as string[],
 		instruction = '',
 		oncomplete = undefined as ((result: Record<string, unknown>) => void) | undefined
 	} = $props();
 
-	let currentRound = $state(0);
-	let phase: 'rounds' | 'reflecting' | 'submitted' = $state('rounds');
-	let responses: string[] = $state(constraints.map(() => ''));
+	type Draft = {
+		responses: string[];
+		currentRound: number;
+		phase: 'rounds' | 'reflecting' | 'submitted';
+		reflection: string;
+	};
+
+	const storageKey = moduleId ? draftKey(moduleId) : '';
+	const initial: Draft | null = storageKey
+		? readDraft<Draft | null>(storageKey, null)
+		: null;
+
+	let currentRound = $state(initial?.currentRound ?? 0);
+	let phase: 'rounds' | 'reflecting' | 'submitted' = $state(initial?.phase ?? 'rounds');
+	let responses: string[] = $state(initial?.responses ?? constraints.map(() => ''));
 	let startTime = $state(Date.now());
-	let reflection = $state('');
+	let reflection = $state(initial?.reflection ?? '');
+
+	$effect(() => {
+		if (!storageKey) return;
+		if (phase === 'submitted') {
+			clearDraft(storageKey);
+			return;
+		}
+		writeDraft<Draft>(storageKey, {
+			responses: $state.snapshot(responses) as string[],
+			currentRound,
+			phase,
+			reflection
+		});
+	});
 
 	let totalRounds = $derived(constraints.length);
 	let currentResponse = $derived(responses[currentRound] ?? '');
