@@ -29,7 +29,7 @@
 		onStart
 	}: {
 		lessons: Lesson[];
-		lessonProgress: Record<string, { completed: number; total: number }>;
+		lessonProgress: Record<string, { completed: number; total: number; started?: boolean }>;
 		selectedSlug?: string | null;
 		onSelect?: (lesson: Lesson) => void;
 		onStart?: (lesson: Lesson) => void;
@@ -37,9 +37,10 @@
 
 	function getStatus(lessonSlug: string): 'completed' | 'in-progress' | 'not-started' {
 		const progress = lessonProgress[lessonSlug];
-		if (!progress || progress.completed === 0) return 'not-started';
-		if (progress.completed >= progress.total) return 'completed';
-		return 'in-progress';
+		if (!progress) return 'not-started';
+		if (progress.total > 0 && progress.completed >= progress.total) return 'completed';
+		if (progress.completed > 0 || progress.started) return 'in-progress';
+		return 'not-started';
 	}
 
 	function handleClick(lesson: Lesson) {

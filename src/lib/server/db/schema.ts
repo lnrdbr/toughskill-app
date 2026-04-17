@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { user } from './auth.schema';
 
 export const task = sqliteTable('task', {
@@ -59,5 +59,29 @@ export const moduleSubmission = sqliteTable('module_submission', {
 	payload: text('payload', { mode: 'json' }).notNull().$type<Record<string, unknown>>(),
 	createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date())
 });
+
+/**
+ * Records that a user has *seen* a module — i.e. the lesson runner rendered
+ * that module for them. Idempotent via the unique (user_id, module_id) index:
+ * re-viewing a module doesn't duplicate. Drives the "in-progress" state on
+ * the dot path so a lesson shows as started the moment the user opens it,
+ * not only once they submit.
+ */
+export const moduleView = sqliteTable(
+	'module_view',
+	{
+		id: text('id')
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		userId: text('user_id')
+			.notNull()
+			.references(() => user.id, { onDelete: 'cascade' }),
+		moduleId: text('module_id').notNull(),
+		courseId: text('course_id').notNull(),
+		lessonSlug: text('lesson_slug').notNull(),
+		viewedAt: integer('viewed_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date())
+	},
+	(t) => [uniqueIndex('module_view_user_module_uk').on(t.userId, t.moduleId)]
+);
 
 export * from './auth.schema';

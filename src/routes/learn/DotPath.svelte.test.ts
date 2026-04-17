@@ -117,4 +117,30 @@ describe('DotPath', () => {
 		await page.getByRole('button').first().click();
 		expect(container.querySelector('.detail-card')).toBeNull();
 	});
+
+	it('marks a lesson as in-progress when started but with zero completed modules', () => {
+		const progressWithStarted = {
+			preparation: { completed: 0, total: 2, started: true },
+			exploration: { completed: 0, total: 1, started: false }
+		};
+		const { container } = render(DotPath, {
+			lessons,
+			lessonProgress: progressWithStarted
+		});
+
+		const buttons = container.querySelectorAll('button.dot-button');
+		expect(buttons[0].classList.contains('in-progress')).toBe(true);
+		expect(buttons[1].classList.contains('not-started')).toBe(true);
+	});
+
+	it('still marks completed lessons as completed even when started is true', () => {
+		const progress = {
+			preparation: { completed: 2, total: 2, started: true },
+			exploration: { completed: 0, total: 1 }
+		};
+		const { container } = render(DotPath, { lessons, lessonProgress: progress });
+
+		const buttons = container.querySelectorAll('button.dot-button');
+		expect(buttons[0].classList.contains('completed')).toBe(true);
+	});
 });

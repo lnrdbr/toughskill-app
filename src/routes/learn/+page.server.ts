@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { moduleCompletion } from '$lib/server/db/schema';
+import { moduleCompletion, moduleView } from '$lib/server/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { getCourse } from '$lib/config/courses';
 
@@ -22,23 +22,40 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!course) {
 		return {
 			course: null,
-			lessonProgress: {} as Record<string, { completed: number; total: number }>,
+			lessonProgress: {} as Record<
+				string,
+				{ completed: number; total: number; started: boolean }
+			>,
 			journeyStats: null as JourneyStats | null
 		};
 	}
 
-	const completions = await db
-		.select({
-			lessonSlug: moduleCompletion.lessonSlug,
-			moduleId: moduleCompletion.moduleId,
-			timeSpentSeconds: moduleCompletion.timeSpentSeconds
-		})
-		.from(moduleCompletion)
-		.where(
-			and(eq(moduleCompletion.userId, locals.user.id), eq(moduleCompletion.courseId, 'creativity'))
-		);
+	const [completions, views] = await Promise.all([
+		db
+			.select({
+				lessonSlug: moduleCompletion.lessonSlug,
+				moduleId: moduleCompletion.moduleId,
+				timeSpentSeconds: moduleCompletion.timeSpentSeconds
+			})
+			.from(moduleCompletion)
+			.where(
+				and(
+					eq(moduleCompletion.userId, locals.user.id),
+					eq(moduleCompletion.courseId, 'creativity')
+				)
+			),
+		db
+			.select({ lessonSlug: moduleView.lessonSlug })
+			.from(moduleView)
+			.where(and(eq(moduleView.userId, locals.user.id), eq(moduleView.courseId, 'creativity')))
+	]);
 
-	const lessonProgress: Record<string, { completed: number; total: number }> = {};
+	const viewedLessonSlugs = new Set(views.map((v) => v.lessonSlug));
+
+	const lessonProgress: Record<
+		string,
+		{ completed: number; total: number; started: boolean }
+	> = {};
 	let completedLessons = 0;
 
 	for (const lesson of course.lessons) {
@@ -47,7 +64,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 		);
 		lessonProgress[lesson.slug] = {
 			completed: completedModuleIds.size,
-			total: lesson.modules.length
+			total: lesson.modules.length,
+			started: viewedLessonSlugs.has(lesson.slug) || completedModuleIds.size > 0
 		};
 		if (completedModuleIds.size >= lesson.modules.length && lesson.modules.length > 0) {
 			completedLessons += 1;

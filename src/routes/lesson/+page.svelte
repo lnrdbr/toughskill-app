@@ -118,6 +118,22 @@
 		}
 	});
 
+	// Register that the user opened this module. The endpoint is idempotent
+	// per (user, module) so firing on every index change is safe — re-views
+	// are silent no-ops. Non-blocking; a failed view write never blocks the UI.
+	$effect(() => {
+		const current = modules[currentIndex];
+		if (!current || !courseId || !lessonSlug) return;
+		fetch('/api/views', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			keepalive: true,
+			body: JSON.stringify({ moduleId: current.id, courseId, lessonSlug })
+		}).catch((err) => {
+			console.error('[lesson] Failed to record view:', err);
+		});
+	});
+
 	$effect(() => {
 		if (sessionDone) {
 			new Audio(lessonFinisherSrc).play();

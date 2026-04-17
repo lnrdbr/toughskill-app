@@ -6,7 +6,12 @@ import { env } from '$env/dynamic/private';
 import { getRequestEvent } from '$app/server';
 import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
-import { exerciseSubmission, moduleCompletion, moduleSubmission } from '$lib/server/db/schema';
+import {
+	exerciseSubmission,
+	moduleCompletion,
+	moduleSubmission,
+	moduleView
+} from '$lib/server/db/schema';
 
 export const auth = betterAuth({
 	baseURL: env.ORIGIN,
@@ -39,7 +44,8 @@ export const auth = betterAuth({
 					db
 						.update(moduleSubmission)
 						.set({ userId: realId })
-						.where(eq(moduleSubmission.userId, anonId))
+						.where(eq(moduleSubmission.userId, anonId)),
+					db.update(moduleView).set({ userId: realId }).where(eq(moduleView.userId, anonId))
 				]);
 			}
 		}),
