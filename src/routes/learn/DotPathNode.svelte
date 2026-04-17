@@ -92,7 +92,7 @@
 		stroke-linecap: round;
 	}
 	.progress-ring-track {
-		stroke: var(--color-primary-100);
+		stroke: var(--color-secondary-200);
 	}
 	.progress-ring-fill {
 		stroke: var(--color-primary-600);
