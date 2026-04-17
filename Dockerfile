@@ -3,7 +3,10 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 COPY . .
-RUN DATABASE_URL=/tmp/build.db yarn build
+RUN DATABASE_URL=/tmp/build.db \
+    BETTER_AUTH_SECRET=build-time-dummy-secret-not-used-at-runtime \
+    ORIGIN=http://localhost \
+    yarn build
 RUN yarn install --production --frozen-lockfile
 
 FROM node:22-slim
