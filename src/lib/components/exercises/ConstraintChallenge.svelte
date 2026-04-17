@@ -8,8 +8,12 @@
 		prompt = '',
 		constraints = [] as string[],
 		instruction = '',
+		compact = false,
 		oncomplete = undefined as ((result: Record<string, unknown>) => void) | undefined
 	} = $props();
+
+	// Compact mode only exposes the first constraint as a single round.
+	const effectiveConstraints = $derived(compact ? constraints.slice(0, 1) : constraints);
 
 	type Draft = {
 		responses: string[];
@@ -25,7 +29,9 @@
 
 	let currentRound = $state(initial?.currentRound ?? 0);
 	let phase: 'rounds' | 'reflecting' | 'submitted' = $state(initial?.phase ?? 'rounds');
-	let responses: string[] = $state(initial?.responses ?? constraints.map(() => ''));
+	let responses: string[] = $state(
+		initial?.responses ?? (compact ? constraints.slice(0, 1) : constraints).map(() => '')
+	);
 	let startTime = $state(Date.now());
 	let reflection = $state(initial?.reflection ?? '');
 
@@ -43,7 +49,7 @@
 		});
 	});
 
-	let totalRounds = $derived(constraints.length);
+	let totalRounds = $derived(effectiveConstraints.length);
 	let currentResponse = $derived(responses[currentRound] ?? '');
 	let canAdvance = $derived(currentResponse.trim().length > 0);
 
@@ -54,6 +60,8 @@
 	function nextRound() {
 		if (currentRound < totalRounds - 1) {
 			currentRound++;
+		} else if (compact) {
+			submitReflection();
 		} else {
 			phase = 'reflecting';
 		}
@@ -68,7 +76,13 @@
 		const evaluationPromise = fetch('/api/exercises/constraint-challenge', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ responses, constraints, reflections, timeSpentSeconds, prompt })
+			body: JSON.stringify({
+				responses,
+				constraints: effectiveConstraints,
+				reflections,
+				timeSpentSeconds,
+				prompt
+			})
 		}).then(async (res) => {
 			if (!res.ok) throw new Error('Evaluation failed');
 			return res.json() as Promise<ConstraintSubmissionResponse>;
@@ -95,7 +109,7 @@
 		</div>
 
 		<div class="constraints-stack">
-			{#each constraints.slice(0, currentRound + 1) as constraint, i (i)}
+			{#each effectiveConstraints.slice(0, currentRound + 1) as constraint, i (i)}
 				<div class="constraint-pill" class:active={i === currentRound}>
 					{constraint}
 				</div>
