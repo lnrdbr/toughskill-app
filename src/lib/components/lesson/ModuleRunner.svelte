@@ -9,6 +9,7 @@
 	import RealLifeTask from './modules/RealLifeTask.svelte';
 	import PhotoCapture from './modules/PhotoCapture.svelte';
 	import ChoiceBranch from './modules/ChoiceBranch.svelte';
+	import RecallPrompt from './modules/RecallPrompt.svelte';
 
 	let {
 		module,
@@ -149,6 +150,17 @@
 		prompt={module.prompt}
 		options={module.options}
 		allowMultiple={module.allowMultiple}
+		{courseId}
+		{lessonSlug}
+		oncomplete={handleComplete}
+	/>
+{:else if module.type === 'recall'}
+	<RecallPrompt
+		moduleId={module.id}
+		prompt={module.prompt}
+		mode={module.mode}
+		expected={module.expected}
+		options={module.options}
 		{courseId}
 		{lessonSlug}
 		oncomplete={handleComplete}
