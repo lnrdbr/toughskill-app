@@ -156,12 +156,36 @@
 			}
 			clearDraft(draftKey);
 			submitted = true;
+
+			// Background LLM feedback on the caption — the photo isn't sent
+			// to the LLM, the caption is the creative act we reflect on.
+			// Skipped in preview mode (no course/lesson) so Storybook and tests
+			// don't hit a real LLM endpoint.
+			const evaluationPromise =
+				courseId && lessonSlug
+					? fetch('/api/feedback/photo', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({ prompt, caption: captionText })
+						}).then(async (res) => {
+							if (!res.ok) throw new Error('Feedback failed');
+							return res.json();
+						})
+					: null;
+
 			oncomplete?.({
 				caption: captionText,
 				charCount: captionText.length,
 				width: photoWidth,
 				height: photoHeight,
-				timeSpentSeconds
+				timeSpentSeconds,
+				...(evaluationPromise
+					? {
+							_evaluationPromise: evaluationPromise,
+							_userBubbles: [captionText],
+							_prompt: prompt
+						}
+					: {})
 			});
 		} catch (err) {
 			submitError = err instanceof Error ? err.message : 'Something went wrong.';

@@ -168,13 +168,17 @@ describe('RealLifeTask', () => {
 
 		await expect.poll(() => oncomplete).toHaveBeenCalled();
 
-		expect(fetchSpy).toHaveBeenCalledTimes(1);
+		// Two fetches now fire on completion: the submission POST and the
+		// background LLM feedback POST. Submission goes first.
+		expect(fetchSpy).toHaveBeenCalledTimes(2);
+		expect(fetchSpy.mock.calls[0][0]).toBe('/api/submissions');
 		const body = JSON.parse((fetchSpy.mock.calls[0][1] as RequestInit).body as string);
 		expect(body.moduleId).toBe('mod-t');
 		expect(body.moduleType).toBe('real_life_task');
 		expect(body.payload.state).toBe('completed');
 		expect(body.payload.feedback).toBe('it was refreshing');
 		expect(typeof body.payload.timeSpentSeconds).toBe('number');
+		expect(fetchSpy.mock.calls[1][0]).toBe('/api/feedback/real-life-task');
 
 		// Draft cleared after successful submission.
 		expect(window.sessionStorage.getItem(key)).toBeNull();

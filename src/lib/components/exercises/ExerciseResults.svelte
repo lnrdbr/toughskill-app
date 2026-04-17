@@ -8,7 +8,8 @@
 		ScamperEvaluation,
 		StoryBuilderEvaluation,
 		ConstraintEvaluation,
-		AnalogyEvaluation
+		AnalogyEvaluation,
+		GuilfordEvaluation
 	} from './types.ts';
 	import { pendingEvaluations } from './types.ts';
 
@@ -40,6 +41,15 @@
 		);
 	}
 
+	function isGuilfordEvaluation(evaluation: unknown): evaluation is GuilfordEvaluation {
+		return (
+			typeof evaluation === 'object' &&
+			evaluation !== null &&
+			'fluency' in evaluation &&
+			'elaboration' in evaluation
+		);
+	}
+
 	// Signal completion from $effect (not template) to avoid state_unsafe_mutation
 	$effect(() => {
 		if (!entry) {
@@ -68,8 +78,10 @@
 				<StoryBuilderCard evaluation={data.evaluation} />
 			{:else if isScamperEvaluation(data.evaluation)}
 				<ScamperCard evaluation={data.evaluation} />
-			{:else}
+			{:else if isGuilfordEvaluation(data.evaluation)}
 				<GuilfordCard evaluation={data.evaluation} />
+			{:else}
+				<p class="error">Could not render evaluation.</p>
 			{/if}
 		{:catch}
 			<p class="error">Could not evaluate your ideas. Your responses have been saved.</p>

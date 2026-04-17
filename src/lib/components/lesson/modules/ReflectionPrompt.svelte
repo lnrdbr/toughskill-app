@@ -58,10 +58,34 @@
 			clearDraft(draftKey);
 			submitted = true;
 			const timeSpentSeconds = Math.round((Date.now() - startedAt) / 1000);
+
+			// Fire LLM feedback in the background. The lesson page picks this
+			// up via `_evaluationPromise` and renders it on the lesson-complete
+			// screen as the promise resolves. Skipped in preview mode (no
+			// course/lesson) so Storybook doesn't hit a real LLM endpoint.
+			const evaluationPromise =
+				courseId && lessonSlug
+					? fetch('/api/feedback/reflection', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({ prompt, response: trimmed })
+						}).then(async (res) => {
+							if (!res.ok) throw new Error('Feedback failed');
+							return res.json();
+						})
+					: null;
+
 			oncomplete?.({
 				text: trimmed,
 				charCount: trimmed.length,
-				timeSpentSeconds
+				timeSpentSeconds,
+				...(evaluationPromise
+					? {
+							_evaluationPromise: evaluationPromise,
+							_userBubbles: [trimmed],
+							_prompt: prompt
+						}
+					: {})
 			});
 		} catch (err) {
 			submitError = err instanceof Error ? err.message : 'Something went wrong.';

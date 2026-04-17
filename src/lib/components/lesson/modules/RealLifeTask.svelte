@@ -97,10 +97,37 @@
 			});
 			clearDraft(draftKey);
 			submitted = true;
+
+			// Background LLM feedback — surfaces on the lesson-complete screen.
+			// Skipped in preview mode (no course/lesson) so Storybook and tests
+			// don't hit a real LLM endpoint.
+			const evaluationPromise =
+				courseId && lessonSlug
+					? fetch('/api/feedback/real-life-task', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({
+								instruction,
+								feedbackPrompt,
+								feedbackText: feedback
+							})
+						}).then(async (res) => {
+							if (!res.ok) throw new Error('Feedback failed');
+							return res.json();
+						})
+					: null;
+
 			oncomplete?.({
 				feedback,
 				charCount: feedback.length,
-				timeSpentSeconds
+				timeSpentSeconds,
+				...(evaluationPromise
+					? {
+							_evaluationPromise: evaluationPromise,
+							_userBubbles: [feedback],
+							_prompt: instruction
+						}
+					: {})
 			});
 		} catch (err) {
 			submitError = err instanceof Error ? err.message : 'Something went wrong.';

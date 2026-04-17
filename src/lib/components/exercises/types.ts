@@ -87,12 +87,22 @@ export interface AnalogySubmissionResponse {
 	evaluation: AnalogyEvaluation;
 }
 
+/**
+ * Feedback returned by the journey-module LLM endpoints (reflection,
+ * real-life-task, photo). Unlike exercises these aren't scored — just a
+ * warm, SDT-aligned note back to the user about what they wrote.
+ */
+export interface JourneyFeedbackResponse {
+	evaluation: { feedback: string };
+}
+
 export type AnySubmissionResponse =
 	| SubmissionResponse
 	| ScamperSubmissionResponse
 	| StoryBuilderSubmissionResponse
 	| ConstraintSubmissionResponse
-	| AnalogySubmissionResponse;
+	| AnalogySubmissionResponse
+	| JourneyFeedbackResponse;
 
 export interface PendingEvaluation {
 	promise: Promise<AnySubmissionResponse>;
