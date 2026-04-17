@@ -3,19 +3,35 @@
 	import Button from '$lib/components/Button.svelte';
 	import type { Lesson } from '$lib/types/course';
 
-	type Progress = { completed: number; total: number };
+	type Progress = { completed: number; total: number; started?: boolean };
 
 	let {
+		lessons = [],
 		lessonProgress = {},
 		praise = "I'm proud of you! Keep doing what you do :) 🎉",
 		selectedLesson = null,
 		courseId
 	}: {
+		lessons?: Lesson[];
 		lessonProgress?: Record<string, Progress>;
 		praise?: string;
 		selectedLesson?: Lesson | null;
 		courseId?: string;
 	} = $props();
+
+	// First not-completed lesson — where the idle-view CTA should send the user.
+	let nextLesson = $derived(
+		lessons.find((l) => {
+			const p = lessonProgress[l.slug];
+			const total = p?.total ?? l.modules.length;
+			const completed = p?.completed ?? 0;
+			return completed < total;
+		}) ?? null
+	);
+	// Has the user already started any lesson? Drives the CTA label.
+	let hasStarted = $derived(
+		Object.values(lessonProgress).some((p) => (p.started ?? false) || p.completed > 0)
+	);
 
 	let totals = $derived(
 		Object.values(lessonProgress).reduce(
@@ -48,9 +64,7 @@
 		selectedLesson ? lessonProgress[selectedLesson.slug] : undefined
 	);
 	let lessonCompleted = $derived(lessonProgressEntry?.completed ?? 0);
-	let lessonTotal = $derived(
-		lessonProgressEntry?.total ?? selectedLesson?.modules.length ?? 0
-	);
+	let lessonTotal = $derived(lessonProgressEntry?.total ?? selectedLesson?.modules.length ?? 0);
 	let lessonPercent = $derived(
 		lessonTotal === 0 ? 0 : Math.round((lessonCompleted / lessonTotal) * 100)
 	);
@@ -159,6 +173,16 @@
 			</div>
 
 			<div class="quote" data-testid="praise">{praise}</div>
+
+			{#if nextLesson && courseId}
+				<form method="POST" action="/lesson" class="cta-form" data-testid="idle-cta-form">
+					<input type="hidden" name="courseId" value={courseId} />
+					<input type="hidden" name="lessonSlug" value={nextLesson.slug} />
+					<Button type="submit" variant="primary" rounded="default">
+						{hasStarted ? 'Continue where you left off' : 'Start exercise'}
+					</Button>
+				</form>
+			{/if}
 		</div>
 	{/if}
 </aside>
@@ -282,6 +306,10 @@
 	}
 
 	.start-form {
+		margin-top: 0.5rem;
+	}
+
+	.cta-form {
 		margin-top: 0.5rem;
 	}
 

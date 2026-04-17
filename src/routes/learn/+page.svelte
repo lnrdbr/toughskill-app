@@ -85,7 +85,7 @@
 	</aside>
 
 	<div class="main">
-		<div class="path-col" bind:this={pathColEl}>
+		<div class="course-header">
 			<div class="mb-2 grid grid-cols-[min-content_1fr] items-center gap-2">
 				<span class="course-icon inline-flex h-16 w-16 items-center justify-center">
 					{#if data.course?.icon}
@@ -97,6 +97,9 @@
 					{data.course?.description ?? ''}
 				</p>
 			</div>
+		</div>
+
+		<div class="path-col" bind:this={pathColEl}>
 			{#if data.course}
 				<DotPath
 					lessons={data.course.lessons}
@@ -113,6 +116,7 @@
 
 		<div class="progress-col" bind:this={progressColEl}>
 			<ProgressPanel
+				lessons={data.course?.lessons ?? []}
 				lessonProgress={data.lessonProgress}
 				{selectedLesson}
 				courseId={data.course?.id}
@@ -206,19 +210,29 @@
 		/* Mirror column widths so the path column (center) sits dead-centered
 		   in the viewport and the progress panel sits right next to it. */
 		grid-template-columns: minmax(0, 14rem) minmax(0, 28rem) minmax(0, 24rem);
+		grid-template-rows: auto 1fr;
 		justify-content: center;
-		gap: 3rem;
+		column-gap: 3rem;
 		padding: 3rem 2rem 3rem 4rem; /* extra left padding to clear toggle when closed */
+	}
+
+	.course-header {
+		grid-column: 2;
+		grid-row: 1;
+		min-width: 0;
+		width: 100%;
 	}
 
 	.path-col {
 		grid-column: 2;
+		grid-row: 2;
 		min-width: 0;
 		width: 100%;
 	}
 
 	.progress-col {
 		grid-column: 3;
+		grid-row: 2;
 		min-width: 0;
 	}
 
@@ -226,6 +240,7 @@
 		.main {
 			grid-template-columns: minmax(0, 28rem) minmax(0, 24rem);
 		}
+		.course-header,
 		.path-col {
 			grid-column: 1;
 		}
@@ -237,11 +252,22 @@
 	@media (max-width: 960px) {
 		.main {
 			grid-template-columns: minmax(0, 28rem);
+			grid-template-rows: auto auto auto;
 			padding-left: 4rem;
 		}
+		.course-header,
 		.path-col,
 		.progress-col {
 			grid-column: 1;
+		}
+		.course-header {
+			grid-row: 1;
+		}
+		.path-col {
+			grid-row: 2;
+		}
+		.progress-col {
+			grid-row: 3;
 		}
 	}
 </style>

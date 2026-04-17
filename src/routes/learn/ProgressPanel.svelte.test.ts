@@ -89,6 +89,50 @@ describe('ProgressPanel (idle view)', () => {
 		// "transparent" or rgba(…, 0) — anything without a solid fill.
 		expect(bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent').toBe(true);
 	});
+
+	it('renders "Start exercise" CTA when no lesson has been started', async () => {
+		const { container } = render(ProgressPanel, {
+			lessons: [lesson],
+			lessonProgress: { preparation: { completed: 0, total: 2, started: false } },
+			courseId: 'creativity'
+		});
+
+		const form = container.querySelector('[data-testid="idle-cta-form"]') as HTMLFormElement;
+		expect(form).not.toBeNull();
+		expect(form.textContent).toContain('Start exercise');
+		expect((form.querySelector('input[name="courseId"]') as HTMLInputElement).value).toBe(
+			'creativity'
+		);
+		expect((form.querySelector('input[name="lessonSlug"]') as HTMLInputElement).value).toBe(
+			'preparation'
+		);
+	});
+
+	it('renders "Continue where you left off" CTA when a lesson is in progress', async () => {
+		const { container } = render(ProgressPanel, {
+			lessons: [lesson],
+			lessonProgress: { preparation: { completed: 1, total: 2, started: true } },
+			courseId: 'creativity'
+		});
+
+		const form = container.querySelector('[data-testid="idle-cta-form"]') as HTMLFormElement;
+		expect(form).not.toBeNull();
+		expect(form.textContent).toContain('Continue where you left off');
+		// Points at the first not-completed lesson (still "preparation" here).
+		expect((form.querySelector('input[name="lessonSlug"]') as HTMLInputElement).value).toBe(
+			'preparation'
+		);
+	});
+
+	it('omits the CTA when every lesson is complete', async () => {
+		const { container } = render(ProgressPanel, {
+			lessons: [lesson],
+			lessonProgress: { preparation: { completed: 2, total: 2, started: true } },
+			courseId: 'creativity'
+		});
+
+		expect(container.querySelector('[data-testid="idle-cta-form"]')).toBeNull();
+	});
 });
 
 describe('ProgressPanel (lesson view)', () => {
@@ -130,12 +174,12 @@ describe('ProgressPanel (lesson view)', () => {
 		});
 
 		expect(container.textContent).toContain('Start lesson');
-		expect(
-			(container.querySelector('input[name="courseId"]') as HTMLInputElement).value
-		).toBe('creativity');
-		expect(
-			(container.querySelector('input[name="lessonSlug"]') as HTMLInputElement).value
-		).toBe('preparation');
+		expect((container.querySelector('input[name="courseId"]') as HTMLInputElement).value).toBe(
+			'creativity'
+		);
+		expect((container.querySelector('input[name="lessonSlug"]') as HTMLInputElement).value).toBe(
+			'preparation'
+		);
 	});
 
 	it('renders "Continue lesson" when in progress', async () => {
