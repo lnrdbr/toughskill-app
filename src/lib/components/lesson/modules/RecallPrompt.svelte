@@ -29,15 +29,12 @@
 
 	const savedDraft = readDraft<DraftShape | null>(draftKey, null);
 
-	let textAnswer = $state<string>(
-		typeof savedDraft === 'string' ? savedDraft : ''
-	);
+	let textAnswer = $state<string>(typeof savedDraft === 'string' ? savedDraft : '');
 	let selected = $state<string[]>(Array.isArray(savedDraft) ? savedDraft : []);
 	let submitted = $state(false);
 	let matched = $state<boolean | null>(null);
 	let submitting = $state(false);
 	let submitError: string | null = $state(null);
-	let startedAt = $state(Date.now());
 
 	$effect(() => {
 		if (mode === 'multi-check') {
@@ -66,9 +63,7 @@
 
 	function toggleOption(opt: string) {
 		if (submitting || submitted) return;
-		selected = selected.includes(opt)
-			? selected.filter((s) => s !== opt)
-			: [...selected, opt];
+		selected = selected.includes(opt) ? selected.filter((s) => s !== opt) : [...selected, opt];
 	}
 
 	let trimmedAnswer = $derived(textAnswer.trim());
@@ -82,7 +77,6 @@
 		if (!canSubmit) return;
 		submitting = true;
 		submitError = null;
-		const timeSpentSeconds = Math.max(0, Math.round((Date.now() - startedAt) / 1000));
 
 		let payload: Record<string, unknown>;
 		let completionData: Record<string, unknown>;
@@ -100,8 +94,7 @@
 			completionData = {
 				mode,
 				userAnswer,
-				matched: didMatch,
-				timeSpentSeconds
+				matched: didMatch
 			};
 		} else if (mode === 'open-recall') {
 			const userAnswer = trimmedAnswer;
@@ -112,8 +105,7 @@
 			completionData = {
 				mode,
 				userAnswer,
-				charCount: userAnswer.length,
-				timeSpentSeconds
+				charCount: userAnswer.length
 			};
 		} else {
 			const picked = [...selected];
@@ -123,8 +115,7 @@
 			};
 			completionData = {
 				mode,
-				selected: picked,
-				timeSpentSeconds
+				selected: picked
 			};
 		}
 

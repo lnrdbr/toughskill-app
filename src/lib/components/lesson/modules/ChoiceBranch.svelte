@@ -26,7 +26,6 @@
 	let submitting = $state(false);
 	let submitted = $state(false);
 	let submitError: string | null = $state(null);
-	let startedAt = $state(Date.now());
 
 	// Persist selection on every change.
 	$effect(() => {
@@ -37,9 +36,7 @@
 	function toggle(id: string) {
 		if (submitting || submitted) return;
 		if (allowMultiple) {
-			selected = selected.includes(id)
-				? selected.filter((s) => s !== id)
-				: [...selected, id];
+			selected = selected.includes(id) ? selected.filter((s) => s !== id) : [...selected, id];
 		} else {
 			selected = selected[0] === id ? [] : [id];
 			// Single-select: a pick is the submit. No separate Continue click.
@@ -63,7 +60,6 @@
 		const selectedLabels = selectedIds
 			.map((id) => options.find((o) => o.id === id)?.label ?? id)
 			.filter((l): l is string => typeof l === 'string');
-		const timeSpentSeconds = Math.max(0, Math.round((Date.now() - startedAt) / 1000));
 		try {
 			if (courseId && lessonSlug) {
 				const res = await fetch('/api/submissions', {
@@ -87,8 +83,7 @@
 			submitted = true;
 			oncomplete?.({
 				selectedIds,
-				selectedLabels,
-				timeSpentSeconds
+				selectedLabels
 			});
 		} catch (err) {
 			submitError = err instanceof Error ? err.message : 'Something went wrong.';

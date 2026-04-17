@@ -23,7 +23,6 @@
 	let submitting = $state(false);
 	let submitted = $state(false);
 	let submitError: string | null = $state(null);
-	let startedAt = $state(Date.now());
 
 	// Persist draft on every change so nothing is lost to reload.
 	$effect(() => {
@@ -57,7 +56,6 @@
 			}
 			clearDraft(draftKey);
 			submitted = true;
-			const timeSpentSeconds = Math.round((Date.now() - startedAt) / 1000);
 
 			// Fire LLM feedback in the background. The lesson page picks this
 			// up via `_evaluationPromise` and renders it on the lesson-complete
@@ -78,7 +76,6 @@
 			oncomplete?.({
 				text: trimmed,
 				charCount: trimmed.length,
-				timeSpentSeconds,
 				...(evaluationPromise
 					? {
 							_evaluationPromise: evaluationPromise,

@@ -37,7 +37,6 @@
 	let submitting = $state(false);
 	let submitted = $state(false);
 	let submitError: string | null = $state(null);
-	let startedAt = $state(Date.now());
 
 	const MAX_DIMENSION = 512;
 	const JPEG_QUALITY = 0.85;
@@ -132,7 +131,6 @@
 		submitting = true;
 		submitError = null;
 		const captionText = trimmedCaption;
-		const timeSpentSeconds = Math.max(0, Math.round((Date.now() - startedAt) / 1000));
 		try {
 			if (courseId && lessonSlug) {
 				const res = await fetch('/api/submissions', {
@@ -178,7 +176,6 @@
 				charCount: captionText.length,
 				width: photoWidth,
 				height: photoHeight,
-				timeSpentSeconds,
 				...(evaluationPromise
 					? {
 							_evaluationPromise: evaluationPromise,
@@ -215,12 +212,7 @@
 		<div class="preview">
 			<img src={photoDataUrl} alt="" data-testid="photo-preview" />
 		</div>
-		<button
-			type="button"
-			class="retake-link"
-			onclick={retake}
-			data-testid="photo-retake"
-		>
+		<button type="button" class="retake-link" onclick={retake} data-testid="photo-retake">
 			Use a different photo
 		</button>
 

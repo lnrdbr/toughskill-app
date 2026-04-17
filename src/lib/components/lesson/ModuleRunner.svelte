@@ -3,6 +3,7 @@
 	import type { ComponentModule, Module, ModuleCompletionResult } from '$lib/types/course';
 	import { isComponentModule } from '$lib/types/course';
 	import { getModuleComponent } from '$lib/config/module-registry';
+	import { readDraft, writeDraft, clearDraft } from '$lib/client/draft';
 	import ReflectionPrompt from './modules/ReflectionPrompt.svelte';
 	import MeditationTimer from './modules/MeditationTimer.svelte';
 	import PhoneFreeChallenge from './modules/PhoneFreeChallenge.svelte';
@@ -28,11 +29,27 @@
 	let error: string | null = $state(null);
 	let loading = $state(true);
 
+	// Default practice-time tracking lives here so every module gets a
+	// consistent wall-clock measurement without re-implementing it. Persisted
+	// to sessionStorage so a refresh mid-module doesn't reset the timer.
+	// Modules with *semantic* time (meditation, phone-free, real-life-task)
+	// override by providing their own `timeSpentSeconds` in the complete
+	// payload — we only fill in when it's absent.
+	const runnerDraftKey = `ts:runner:${courseId}:${lessonSlug}:${module.id}`;
+	const startedAt: number = readDraft<number>(runnerDraftKey, Date.now());
+	writeDraft<number>(runnerDraftKey, startedAt);
+
 	function handleComplete(data: Record<string, unknown>) {
+		const existing = data?.timeSpentSeconds;
+		const enriched =
+			typeof existing === 'number' && existing >= 0
+				? data
+				: { ...data, timeSpentSeconds: Math.max(0, Math.round((Date.now() - startedAt) / 1000)) };
+		clearDraft(runnerDraftKey);
 		oncomplete?.({
 			moduleId: module.id,
 			completedAt: new Date().toISOString(),
-			data
+			data: enriched
 		});
 	}
 
@@ -73,10 +90,7 @@
 				const imported = await loader();
 				if (!cancelled) resolved = imported.default;
 			} catch (err) {
-				console.error(
-					`[ModuleRunner] Failed to load module "${componentMod.componentId}":`,
-					err
-				);
+				console.error(`[ModuleRunner] Failed to load module "${componentMod.componentId}":`, err);
 				if (!cancelled) error = "This exercise couldn't be loaded. Please try again later.";
 			}
 			if (!cancelled) loading = false;

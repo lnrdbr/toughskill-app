@@ -38,9 +38,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		);
 	}
 
-	if (!Number.isInteger(timeSpentSeconds) || timeSpentSeconds < 0 || timeSpentSeconds > 86400) {
-		error(400, 'timeSpentSeconds must be an integer between 0 and 86400');
+	if (!Number.isInteger(timeSpentSeconds) || timeSpentSeconds < 0) {
+		error(400, 'timeSpentSeconds must be a non-negative integer');
 	}
+	// Clamp rather than reject: real-life tasks legitimately span >24h (the
+	// user goes and does the task, comes back the next day). Rejecting would
+	// silently drop their completion. Cap at 24h so one row can't skew totals.
+	const clampedTimeSpentSeconds = Math.min(timeSpentSeconds, 86400);
 
 	if (data != null && (typeof data !== 'object' || Array.isArray(data))) {
 		error(400, 'data must be a plain object or null');
@@ -65,7 +69,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				moduleId,
 				courseId,
 				lessonSlug,
-				timeSpentSeconds,
+				timeSpentSeconds: clampedTimeSpentSeconds,
 				data: data ?? null
 			})
 			.returning({ id: moduleCompletion.id });
