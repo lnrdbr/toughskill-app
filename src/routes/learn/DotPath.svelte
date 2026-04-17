@@ -1,6 +1,25 @@
 <script lang="ts">
-	import type { Lesson } from '$lib/types/course';
+	import type { Lesson, Module } from '$lib/types/course';
 	import DotPathNode from './DotPathNode.svelte';
+
+	const TYPE_ICONS: Record<Module['type'], string> = {
+		intro: 'mdi:book-open-page-variant-outline',
+		reflection: 'mdi:pencil-outline',
+		real_life_task: 'mdi:walk',
+		meditation: 'mdi:meditation',
+		phone_free: 'mdi:cellphone-off',
+		photo: 'mdi:camera-outline',
+		choice: 'mdi:arrow-decision-outline',
+		recall: 'mdi:history',
+		exercise: 'mdi:dumbbell',
+		learning: 'mdi:school-outline',
+		results: 'mdi:chart-box-outline'
+	};
+
+	function getTypeIcon(lesson: Lesson): string | null {
+		const first = lesson.modules[0];
+		return first ? (TYPE_ICONS[first.type] ?? null) : null;
+	}
 
 	let {
 		lessons,
@@ -56,6 +75,7 @@
 			<DotPathNode
 				{status}
 				icon={lesson.icon}
+				typeIcon={getTypeIcon(lesson)}
 				completed={progress?.completed ?? 0}
 				total={progress?.total ?? lesson.modules.length}
 				selected={isSelected}

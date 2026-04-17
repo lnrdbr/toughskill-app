@@ -1,9 +1,10 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
-import { moduleCompletion } from '$lib/server/db/schema';
+import { moduleCompletion, moduleSubmission } from '$lib/server/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { getCourse, getLessonBySlug } from '$lib/config/courses';
+import type { Module } from '$lib/types/course';
 import { resolveLessonSession } from './session';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
@@ -62,7 +63,17 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 	const completedIds = new Set(completions.map((c) => c.moduleId));
 
-	const session = resolveLessonSession(lesson.modules, completedIds, {
+	// Lesson 22's StoryBuilder is seeded with the photo the user took in lesson
+	// 10. At render time, pull the most recent `mod-10-photo` submission and
+	// inject its dataUrl into the StoryBuilder config so the story prompt shows
+	// the user's own image above the input.
+	const modulesForSession = await injectStoryBuilderPhoto(
+		lesson.modules,
+		lessonSlug,
+		locals.user.id
+	);
+
+	const session = resolveLessonSession(modulesForSession, completedIds, {
 		courseId,
 		lessonSlug,
 		lessonTitle: lesson.title,
@@ -80,6 +91,35 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 		nextLesson: next ? { slug: next.slug, title: next.title } : undefined
 	};
 };
+
+async function injectStoryBuilderPhoto(
+	modules: Module[],
+	lessonSlug: string,
+	userId: string
+): Promise<Module[]> {
+	if (lessonSlug !== 'photo-story') return modules;
+
+	const [photo] = await db
+		.select({ payload: moduleSubmission.payload })
+		.from(moduleSubmission)
+		.where(
+			and(
+				eq(moduleSubmission.userId, userId),
+				eq(moduleSubmission.moduleId, 'mod-10-photo')
+			)
+		)
+		.orderBy(desc(moduleSubmission.createdAt))
+		.limit(1);
+
+	const dataUrl = photo?.payload?.photoDataUrl;
+	if (typeof dataUrl !== 'string' || !dataUrl) return modules;
+
+	return modules.map((m) =>
+		m.type === 'exercise' && m.id === 'mod-22-story'
+			? { ...m, config: { ...m.config, photoDataUrl: dataUrl } }
+			: m
+	);
+}
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {

@@ -4,6 +4,7 @@
 	let {
 		status,
 		icon = 'mdi:lightbulb',
+		typeIcon = null,
 		completed = 0,
 		total = 1,
 		selected = false,
@@ -11,6 +12,8 @@
 	}: {
 		status: 'completed' | 'in-progress' | 'not-started';
 		icon?: string;
+		/** Optional secondary glyph indicating the lesson's module type. */
+		typeIcon?: string | null;
 		completed?: number;
 		total?: number;
 		selected?: boolean;
@@ -52,6 +55,11 @@
 			<Icon {icon} width="32" height="32" />
 		{/if}
 	</span>
+	{#if typeIcon && status !== 'completed'}
+		<span class="type-badge" aria-hidden="true">
+			<Icon icon={typeIcon} width="14" height="14" />
+		</span>
+	{/if}
 </button>
 
 <style>
@@ -75,6 +83,22 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+
+	.type-badge {
+		position: absolute;
+		bottom: -4px;
+		right: -4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 22px;
+		height: 22px;
+		border-radius: 999px;
+		background: var(--color-background);
+		color: var(--color-foreground);
+		border: 2px solid var(--color-foreground);
+		pointer-events: none;
 	}
 
 	.progress-ring {

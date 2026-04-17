@@ -71,4 +71,26 @@ describe('DotPathNode', () => {
 
 		expect(container.querySelector('.progress-ring')).toBeNull();
 	});
+
+	it('renders a module-type badge when typeIcon is provided', async () => {
+		const { container } = render(DotPathNode, {
+			status: 'not-started',
+			icon: 'mdi:camera-outline',
+			typeIcon: 'mdi:pencil-outline',
+			onclick: () => {}
+		});
+
+		expect(container.querySelector('.type-badge')).not.toBeNull();
+	});
+
+	it('hides the module-type badge for completed lessons', async () => {
+		const { container } = render(DotPathNode, {
+			status: 'completed',
+			icon: 'mdi:camera-outline',
+			typeIcon: 'mdi:pencil-outline',
+			onclick: () => {}
+		});
+
+		expect(container.querySelector('.type-badge')).toBeNull();
+	});
 });
