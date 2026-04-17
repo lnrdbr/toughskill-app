@@ -3,9 +3,19 @@
 	import type { ComponentModule, Module, ModuleCompletionResult } from '$lib/types/course';
 	import { isComponentModule } from '$lib/types/course';
 	import { getModuleComponent } from '$lib/config/module-registry';
+	import ReflectionPrompt from './modules/ReflectionPrompt.svelte';
 
-	let { module, oncomplete = undefined as ((result: ModuleCompletionResult) => void) | undefined } =
-		$props<{ module: Module; oncomplete?: (result: ModuleCompletionResult) => void }>();
+	let {
+		module,
+		courseId = '',
+		lessonSlug = '',
+		oncomplete = undefined as ((result: ModuleCompletionResult) => void) | undefined
+	} = $props<{
+		module: Module;
+		courseId?: string;
+		lessonSlug?: string;
+		oncomplete?: (result: ModuleCompletionResult) => void;
+	}>();
 
 	let resolved: Component | null = $state(null);
 	let error: string | null = $state(null);
@@ -32,9 +42,10 @@
 			error = null;
 			loading = true;
 
+			// Journey modules are rendered directly by this component — no async load needed.
 			if (!isComponentModule(mod)) {
 				if (!cancelled) {
-					error = `Module type "${mod.type}" is not yet supported.`;
+					error = null;
 					loading = false;
 				}
 				return;
@@ -82,6 +93,15 @@
 	<div class="runner-error">
 		<p class="error-text">{error}</p>
 	</div>
+{:else if module.type === 'reflection'}
+	<ReflectionPrompt
+		moduleId={module.id}
+		prompt={module.prompt}
+		minLength={module.minLength}
+		{courseId}
+		{lessonSlug}
+		oncomplete={handleComplete}
+	/>
 {:else if resolved}
 	{@const Mod = resolved}
 	<Mod {...componentConfig} moduleId={module.id} oncomplete={handleComplete} />
