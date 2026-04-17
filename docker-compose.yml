@@ -3,7 +3,7 @@ services:
     build: .
     container_name: toughskill-app
     restart: unless-stopped
-    user: '${APP_UID:-1000}:${APP_GID:-1000}'
+    user: '1001:1001'
     env_file: .env
     volumes:
       - ./data:/data
