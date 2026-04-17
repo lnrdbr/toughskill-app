@@ -8,6 +8,7 @@
 	import PhoneFreeChallenge from './modules/PhoneFreeChallenge.svelte';
 	import RealLifeTask from './modules/RealLifeTask.svelte';
 	import PhotoCapture from './modules/PhotoCapture.svelte';
+	import ChoiceBranch from './modules/ChoiceBranch.svelte';
 
 	let {
 		module,
@@ -138,6 +139,16 @@
 		moduleId={module.id}
 		prompt={module.prompt}
 		captionPrompt={module.captionPrompt}
+		{courseId}
+		{lessonSlug}
+		oncomplete={handleComplete}
+	/>
+{:else if module.type === 'choice'}
+	<ChoiceBranch
+		moduleId={module.id}
+		prompt={module.prompt}
+		options={module.options}
+		allowMultiple={module.allowMultiple}
 		{courseId}
 		{lessonSlug}
 		oncomplete={handleComplete}
