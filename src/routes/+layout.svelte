@@ -35,5 +35,6 @@
 	.content {
 		flex: 1;
 		overflow-y: auto;
+		overscroll-behavior: none;
 	}
 </style>
