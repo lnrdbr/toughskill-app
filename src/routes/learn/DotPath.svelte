@@ -59,7 +59,7 @@
 	}
 </script>
 
-<div class="dot-path flex flex-col items-center gap-7">
+<div class="dot-path flex flex-col items-center gap-7" style="view-transition-name: dot-path;">
 	{#each lessons as lesson, i (lesson.slug)}
 		{@const status = getStatus(lesson.slug)}
 		{@const isSelected = selectedSlug === lesson.slug}
