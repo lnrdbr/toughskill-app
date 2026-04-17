@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Button from '$lib/components/Button.svelte';
 
 	let {
@@ -16,15 +17,13 @@
 	} = $props();
 
 	let submitting = $state(false);
-	let submitted = $state(false);
 	let submitError: string | null = $state(null);
-	let startedAt = $state(Date.now());
+	let submitted = $state(false);
 
-	async function handleContinue() {
-		if (submitting) return;
+	async function submit() {
+		if (submitting || submitted) return;
 		submitting = true;
 		submitError = null;
-		const timeSpentSeconds = Math.max(0, Math.round((Date.now() - startedAt) / 1000));
 		try {
 			if (courseId && lessonSlug) {
 				const res = await fetch('/api/submissions', {
@@ -36,8 +35,7 @@
 						courseId,
 						lessonSlug,
 						payload: {
-							acknowledged: true,
-							timeSpentSeconds
+							acknowledged: true
 						}
 					})
 				});
@@ -45,8 +43,7 @@
 			}
 			submitted = true;
 			oncomplete?.({
-				acknowledged: true,
-				timeSpentSeconds
+				acknowledged: true
 			});
 		} catch (err) {
 			submitError = err instanceof Error ? err.message : 'Something went wrong.';
@@ -54,6 +51,12 @@
 			submitting = false;
 		}
 	}
+
+	// Auto-acknowledge on mount so the parent lesson shell can show its own
+	// "Next module" button — no duplicate Continue here.
+	onMount(() => {
+		submit();
+	});
 </script>
 
 <section class="intro" aria-labelledby="intro-body">
@@ -61,18 +64,15 @@
 
 	{#if submitError}
 		<p class="error" role="alert">{submitError}</p>
-	{/if}
-
-	{#if !submitted}
 		<div class="actions">
 			<Button
 				variant="primary"
 				rounded="default"
 				disabled={submitting}
-				onclick={handleContinue}
-				data-testid="intro-continue"
+				onclick={submit}
+				data-testid="intro-retry"
 			>
-				{submitting ? 'Saving…' : 'Continue'}
+				{submitting ? 'Retrying…' : 'Retry'}
 			</Button>
 		</div>
 	{/if}

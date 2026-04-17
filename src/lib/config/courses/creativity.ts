@@ -9,9 +9,9 @@ import type { Course } from '$lib/types/course';
  *   3. Practice (16–22)  — real-life application
  *   4. Integration (23–30) — habit, identity, daily ritual
  *
- * Each lesson is a short (~2 min) single-module beat. Journey modules render
- * via ModuleRunner's direct branches; exercise modules render via the
- * component-registry path and use `compact: true` to skip the reflection phase.
+ * Each lesson is a short (~2 min) beat. Most lessons now include a brief
+ * `intro` module either before the main module (framing "why this matters")
+ * or after it (a warm debrief), both using the existing IntroBeat component.
  *
  * Memorable quotes planted for later recall:
  *   - Lesson 1 → "Creativity is noticing what others walk past."   (recalled 5, finished 11)
@@ -22,7 +22,7 @@ export const creativity: Course = {
 	title: 'Creativity',
 	slug: 'creativity',
 	description:
-		'A 30-day journey that turns creativity from a talent you either have or don\'t into a way of paying attention.',
+		"A 30-day journey that turns creativity from a talent you either have or don't into a way of paying attention.",
 	icon: 'mdi:lightbulb',
 	color: 'primary',
 	lessons: [
@@ -48,10 +48,17 @@ export const creativity: Course = {
 			id: 'lesson-02-myth-of-the-creative',
 			title: 'The myth of "the creative"',
 			slug: 'myth-of-the-creative',
-			description: 'Creativity isn\'t reserved for artists.',
+			description: "Creativity isn't reserved for artists.",
 			icon: 'mdi:account-question-outline',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-02-intro-pre',
+					title: 'Who gets to be creative?',
+					estimatedMinutes: 1,
+					body: 'A lot of people think creativity belongs to "the creatives." This next one might quietly change that for you.'
+				},
 				{
 					type: 'choice',
 					id: 'mod-02-choice',
@@ -62,22 +69,22 @@ export const creativity: Course = {
 						{
 							id: 'painter',
 							label: 'A painter finishing a portrait',
-							body: 'Yes — and so are the rest. Creativity shows up wherever someone gets unstuck in a way that wasn\'t obvious.'
+							body: "Yes — and so are the rest. Creativity shows up wherever someone gets unstuck in a way that wasn't obvious."
 						},
 						{
 							id: 'engineer',
 							label: 'An engineer finding a workaround',
-							body: 'Yes — and so are the rest. Creativity shows up wherever someone gets unstuck in a way that wasn\'t obvious.'
+							body: "Yes — and so are the rest. Creativity shows up wherever someone gets unstuck in a way that wasn't obvious."
 						},
 						{
 							id: 'parent',
 							label: 'A parent inventing a bedtime story',
-							body: 'Yes — and so are the rest. Creativity shows up wherever someone gets unstuck in a way that wasn\'t obvious.'
+							body: "Yes — and so are the rest. Creativity shows up wherever someone gets unstuck in a way that wasn't obvious."
 						},
 						{
 							id: 'cook',
-							label: 'A cook improvising with what\'s in the fridge',
-							body: 'Yes — and so are the rest. Creativity shows up wherever someone gets unstuck in a way that wasn\'t obvious.'
+							label: "A cook improvising with what's in the fridge",
+							body: "Yes — and so are the rest. Creativity shows up wherever someone gets unstuck in a way that wasn't obvious."
 						}
 					]
 				}
@@ -99,6 +106,13 @@ export const creativity: Course = {
 					prompt:
 						'What\'s the earliest thing you remember making or inventing? It doesn\'t have to be "art" — a game, a hiding spot, a made-up word all count.',
 					minLength: 40
+				},
+				{
+					type: 'intro',
+					id: 'mod-03-intro-post',
+					title: 'That was you being creative',
+					estimatedMinutes: 1,
+					body: "Whatever you just remembered — that was you being creative, probably before anyone taught you the word. It's been in you the whole time."
 				}
 			]
 		},
@@ -110,6 +124,13 @@ export const creativity: Course = {
 			icon: 'mdi:eye-outline',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-04-intro-pre',
+					title: 'A small hunt',
+					estimatedMinutes: 1,
+					body: "When you stop looking for creativity in museums and start looking for it in the world, it's everywhere. Here's a small hunt."
+				},
 				{
 					type: 'real_life_task',
 					id: 'mod-04-task',
@@ -152,6 +173,13 @@ export const creativity: Course = {
 			estimatedMinutes: 2,
 			modules: [
 				{
+					type: 'intro',
+					id: 'mod-06-intro-pre',
+					title: 'Ideas live in the gaps',
+					estimatedMinutes: 1,
+					body: "Creative ideas almost never show up when you're chasing them. They show up in the gaps. Here's a small gap."
+				},
+				{
 					type: 'meditation',
 					id: 'mod-06-meditation',
 					title: 'A 2-minute pause',
@@ -170,6 +198,13 @@ export const creativity: Course = {
 			estimatedMinutes: 2,
 			modules: [
 				{
+					type: 'intro',
+					id: 'mod-07-intro-pre',
+					title: 'Keep the pencil moving',
+					estimatedMinutes: 1,
+					body: 'A classic warm-up. No right answers — just keep the pencil moving, even when the ideas get weird.'
+				},
+				{
 					type: 'exercise',
 					id: 'mod-07-paperclip',
 					title: 'The paperclip test',
@@ -181,6 +216,13 @@ export const creativity: Course = {
 						timerDuration: 90,
 						compact: true
 					}
+				},
+				{
+					type: 'intro',
+					id: 'mod-07-intro-post',
+					title: 'Second gear',
+					estimatedMinutes: 1,
+					body: 'The first answers were obvious. Somewhere after that, you started inventing. That second gear is where creativity actually lives.'
 				}
 			]
 		},
@@ -194,6 +236,13 @@ export const creativity: Course = {
 			icon: 'mdi:cellphone',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-08-intro-pre',
+					title: 'Attention is the raw material',
+					estimatedMinutes: 1,
+					body: 'Attention is the raw material of creativity. Before you can make anything new, it helps to notice where yours actually goes.'
+				},
 				{
 					type: 'reflection',
 					id: 'mod-08-reflection',
@@ -214,6 +263,13 @@ export const creativity: Course = {
 			estimatedMinutes: 2,
 			modules: [
 				{
+					type: 'intro',
+					id: 'mod-09-intro-pre',
+					title: 'Give your mind room',
+					estimatedMinutes: 1,
+					body: "Just one minute. The goal isn't productivity — it's giving your mind a little room before it hands you an idea."
+				},
+				{
 					type: 'phone_free',
 					id: 'mod-09-phone-free',
 					title: 'A phone-free minute',
@@ -231,12 +287,19 @@ export const creativity: Course = {
 			estimatedMinutes: 2,
 			modules: [
 				{
+					type: 'intro',
+					id: 'mod-10-intro-pre',
+					title: 'Old things, new eyes',
+					estimatedMinutes: 1,
+					body: "Creativity isn't finding new things. It's looking at ordinary things in a way that makes them feel new."
+				},
+				{
 					type: 'photo',
 					id: 'mod-10-photo',
 					title: 'The hidden detail',
 					estimatedMinutes: 2,
 					prompt:
-						'Find something completely ordinary within arm\'s reach. Look at it like you\'ve never seen one before. Photograph it.',
+						"Find something completely ordinary within arm's reach. Look at it like you've never seen one before. Photograph it.",
 					captionPrompt: 'What did you suddenly notice?'
 				}
 			]
@@ -274,7 +337,7 @@ export const creativity: Course = {
 					id: 'mod-12-intro',
 					title: 'Why limits help',
 					estimatedMinutes: 2,
-					body: 'Limits don\'t cage creativity. They shape it.'
+					body: "Limits don't cage creativity. They shape it."
 				}
 			]
 		},
@@ -287,6 +350,13 @@ export const creativity: Course = {
 			estimatedMinutes: 2,
 			modules: [
 				{
+					type: 'intro',
+					id: 'mod-13-intro-pre',
+					title: 'An annoying rule unlocks it',
+					estimatedMinutes: 1,
+					body: "A rule that seems annoying is often exactly what unlocks the creative muscle. You'll feel it in a second."
+				},
+				{
 					type: 'exercise',
 					id: 'mod-13-one-rule',
 					title: 'Write with one rule',
@@ -298,6 +368,13 @@ export const creativity: Course = {
 						instruction: 'Write a few sentences — the rule will force every word to matter.',
 						compact: true
 					}
+				},
+				{
+					type: 'intro',
+					id: 'mod-13-intro-post',
+					title: 'Constraints push you further',
+					estimatedMinutes: 1,
+					body: "If the rule hadn't been there, you'd have written the obvious thing. Constraints keep pushing you somewhere unexpected."
 				}
 			]
 		},
@@ -305,18 +382,25 @@ export const creativity: Course = {
 			id: 'lesson-14-take-a-new-path',
 			title: 'Take a new path',
 			slug: 'take-a-new-path',
-			description: 'Walk a route you\'ve never taken.',
+			description: "Walk a route you've never taken.",
 			icon: 'mdi:walk',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-14-intro-pre',
+					title: 'Wake the brain up',
+					estimatedMinutes: 1,
+					body: 'Your brain predicts familiar routes to save energy. A new one wakes it up — and noticing wakes up with it.'
+				},
 				{
 					type: 'real_life_task',
 					id: 'mod-14-task',
 					title: 'Take a new path',
 					estimatedMinutes: 2,
 					instruction:
-						'Next time you leave the house, take a route you\'ve never taken. Even a small detour counts. Pay attention.',
-					feedbackPrompt: 'What did you see on the new path that you\'d never noticed before?',
+						"Next time you leave the house, take a route you've never taken. Even a small detour counts. Pay attention.",
+					feedbackPrompt: "What did you see on the new path that you'd never noticed before?",
 					returnAfterMinutes: 0
 				}
 			]
@@ -330,6 +414,13 @@ export const creativity: Course = {
 			estimatedMinutes: 2,
 			modules: [
 				{
+					type: 'intro',
+					id: 'mod-15-intro-pre',
+					title: 'Mute the editor',
+					estimatedMinutes: 1,
+					body: "The internal editor kills ideas before they're big enough to be good. For two minutes, we mute it."
+				},
+				{
 					type: 'reflection',
 					id: 'mod-15-reflection',
 					title: 'Two minutes, no editing',
@@ -337,6 +428,13 @@ export const creativity: Course = {
 					prompt:
 						'Write for two minutes without stopping, without editing, without reading back. Any topic. Just keep the words moving.',
 					minLength: 80
+				},
+				{
+					type: 'intro',
+					id: 'mod-15-intro-post',
+					title: "That's unfiltered",
+					estimatedMinutes: 1,
+					body: "Somewhere in there you probably surprised yourself. That's what unfiltered looks like."
 				}
 			]
 		},
@@ -358,7 +456,7 @@ export const creativity: Course = {
 					mode: 'open-recall',
 					referenceLessonSlug: 'paperclip-test',
 					prompt:
-						'A few days ago you brainstormed uses for a paperclip. What\'s one idea of yours you still remember?'
+						"A few days ago you brainstormed uses for a paperclip. What's one idea of yours you still remember?"
 				}
 			]
 		},
@@ -370,6 +468,13 @@ export const creativity: Course = {
 			icon: 'mdi:swap-horizontal',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-17-intro-pre',
+					title: 'Creativity, mechanically',
+					estimatedMinutes: 1,
+					body: "Analogies are how the brain borrows patterns from one place and drops them somewhere new. That's creativity, mechanically."
+				},
 				{
 					type: 'exercise',
 					id: 'mod-17-analogy',
@@ -383,6 +488,13 @@ export const creativity: Course = {
 						timerDuration: 90,
 						compact: true
 					}
+				},
+				{
+					type: 'intro',
+					id: 'mod-17-intro-post',
+					title: 'Where the real thinking starts',
+					estimatedMinutes: 1,
+					body: 'The first analogy was easy. The tenth one is where the real thinking started.'
 				}
 			]
 		},
@@ -394,6 +506,13 @@ export const creativity: Course = {
 			icon: 'mdi:merge',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-18-intro-pre',
+					title: "Two things that didn't belong",
+					estimatedMinutes: 1,
+					body: "A lot of creative work is just two things that didn't belong together — until someone put them together."
+				},
 				{
 					type: 'choice',
 					id: 'mod-18-choice',
@@ -421,6 +540,13 @@ export const creativity: Course = {
 			estimatedMinutes: 2,
 			modules: [
 				{
+					type: 'intro',
+					id: 'mod-19-intro-pre',
+					title: "Ideas don't come on command",
+					estimatedMinutes: 1,
+					body: 'Ideas rarely arrive on command. They tend to wait for moments exactly like this one.'
+				},
+				{
 					type: 'meditation',
 					id: 'mod-19-meditation',
 					title: 'Silence as fuel',
@@ -438,6 +564,13 @@ export const creativity: Course = {
 			icon: 'mdi:hand-heart',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-20-intro-pre',
+					title: 'Make something for someone',
+					estimatedMinutes: 1,
+					body: 'Making something for another person — even something tiny — is one of the fastest ways to feel like a creative person.'
+				},
 				{
 					type: 'real_life_task',
 					id: 'mod-20-task',
@@ -466,6 +599,13 @@ export const creativity: Course = {
 					prompt:
 						'Name one person whose creativity you admire — alive or not, famous or not. What about them sticks with you?',
 					minLength: 40
+				},
+				{
+					type: 'intro',
+					id: 'mod-21-intro-post',
+					title: "It's growing in you too",
+					estimatedMinutes: 1,
+					body: 'What you admire in someone else is usually something quietly growing in you, too.'
 				}
 			]
 		},
@@ -477,6 +617,13 @@ export const creativity: Course = {
 			icon: 'mdi:image-text',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-22-intro-pre',
+					title: 'One thing, paying attention',
+					estimatedMinutes: 1,
+					body: 'One object, one story. This is how writers and filmmakers begin — from a single thing, paying attention.'
+				},
 				{
 					type: 'exercise',
 					id: 'mod-22-story',
@@ -496,16 +643,16 @@ export const creativity: Course = {
 		// ─── Act 4: Integration (23–30) ──────────────────────────────────────
 		{
 			id: 'lesson-23-how-far-youve-come',
-			title: 'How far you\'ve come',
+			title: "How far you've come",
 			slug: 'how-far-youve-come',
-			description: 'Check in on what you\'ve tried.',
+			description: "Check in on what you've tried.",
 			icon: 'mdi:map-marker-path',
 			estimatedMinutes: 2,
 			modules: [
 				{
 					type: 'recall',
 					id: 'mod-23-recall',
-					title: 'How far you\'ve come',
+					title: "How far you've come",
 					estimatedMinutes: 2,
 					mode: 'multi-check',
 					prompt: 'Which of these have you actually done?',
@@ -517,6 +664,13 @@ export const creativity: Course = {
 						'Photographed something ordinary',
 						'Did something creative for someone'
 					]
+				},
+				{
+					type: 'intro',
+					id: 'mod-23-intro-post',
+					title: "That's evidence",
+					estimatedMinutes: 1,
+					body: "Every checkbox is a creative act you actually did. That's not nothing — that's evidence."
 				}
 			]
 		},
@@ -528,6 +682,13 @@ export const creativity: Course = {
 			icon: 'mdi:hourglass-empty',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-24-intro-pre',
+					title: 'Boredom is soil',
+					estimatedMinutes: 1,
+					body: "Boredom has a bad reputation it doesn't deserve. It's the soil most original ideas grow out of."
+				},
 				{
 					type: 'phone_free',
 					id: 'mod-24-phone-free',
@@ -545,6 +706,13 @@ export const creativity: Course = {
 			icon: 'mdi:hammer-wrench',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-25-intro-pre',
+					title: 'Small beats big',
+					estimatedMinutes: 1,
+					body: "Creativity doesn't need hours. A 30-second ritual done daily beats a two-hour session done once."
+				},
 				{
 					type: 'reflection',
 					id: 'mod-25-reflection',
@@ -564,6 +732,13 @@ export const creativity: Course = {
 			icon: 'mdi:check-decagram-outline',
 			estimatedMinutes: 2,
 			modules: [
+				{
+					type: 'intro',
+					id: 'mod-26-intro-pre',
+					title: 'Done becomes identity',
+					estimatedMinutes: 1,
+					body: 'Designed rituals stay in your head. Done ones become identity.'
+				},
 				{
 					type: 'real_life_task',
 					id: 'mod-26-task',
@@ -591,7 +766,7 @@ export const creativity: Course = {
 					estimatedMinutes: 2,
 					mode: 'finish-quote',
 					referenceLessonSlug: 'why-limits-help',
-					prompt: 'Limits don\'t cage creativity. They ___',
+					prompt: "Limits don't cage creativity. They ___",
 					expected: 'shape it'
 				}
 			]
@@ -605,17 +780,23 @@ export const creativity: Course = {
 			estimatedMinutes: 2,
 			modules: [
 				{
+					type: 'intro',
+					id: 'mod-28-intro-pre',
+					title: 'No right audience',
+					estimatedMinutes: 1,
+					body: "There's no right audience for creative work. There's only the one that feels honest to you right now."
+				},
+				{
 					type: 'choice',
 					id: 'mod-28-choice',
 					title: 'How would you share?',
 					estimatedMinutes: 2,
-					prompt:
-						'If you made something creative today, how would you want to share it?',
+					prompt: 'If you made something creative today, how would you want to share it?',
 					options: [
 						{
 							id: 'one-friend',
 							label: 'Just one friend',
-							body: 'That\'s enough. Sharing with one person is still sharing.'
+							body: "That's enough. Sharing with one person is still sharing."
 						},
 						{
 							id: 'small-group',
@@ -645,6 +826,13 @@ export const creativity: Course = {
 			estimatedMinutes: 2,
 			modules: [
 				{
+					type: 'intro',
+					id: 'mod-29-intro-pre',
+					title: 'Notice what changed',
+					estimatedMinutes: 1,
+					body: "You're not the same person who started this. Here's a small way to notice what actually changed."
+				},
+				{
 					type: 'reflection',
 					id: 'mod-29-reflection',
 					title: 'A letter to your past self',
@@ -652,6 +840,13 @@ export const creativity: Course = {
 					prompt:
 						'Write a short letter to the version of you who started this journey. What do you want them to know?',
 					minLength: 80
+				},
+				{
+					type: 'intro',
+					id: 'mod-29-intro-post',
+					title: 'Keep this letter',
+					estimatedMinutes: 1,
+					body: 'Hold onto what you just wrote. On the harder days, that letter is a reminder of who you already are.'
 				}
 			]
 		},
@@ -668,8 +863,7 @@ export const creativity: Course = {
 					id: 'mod-30-intro',
 					title: 'The journey continues',
 					estimatedMinutes: 2,
-					body:
-						'The journey ends here — but creativity doesn\'t. From now on, it lives in how you look at everything.'
+					body: "The journey ends here — but creativity doesn't. From now on, it lives in how you look at everything."
 				}
 			]
 		}

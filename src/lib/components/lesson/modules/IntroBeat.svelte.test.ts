@@ -24,7 +24,7 @@ describe('IntroBeat', () => {
 		playSpy.mockRestore();
 	});
 
-	it('renders the beat body and a continue button', async () => {
+	it('renders the beat body without a continue button', async () => {
 		const { container } = render(IntroBeat, {
 			moduleId: 'mod-i',
 			body: 'Creativity is not for artists. It is for you.'
@@ -32,20 +32,18 @@ describe('IntroBeat', () => {
 
 		const b = container.querySelector('[data-testid="intro-body"]') as HTMLElement;
 		expect(b.textContent).toBe('Creativity is not for artists. It is for you.');
-		expect(container.querySelector('[data-testid="intro-continue"]')).not.toBeNull();
+		expect(container.querySelector('[data-testid="intro-continue"]')).toBeNull();
 	});
 
-	it('POSTs acknowledged:true and fires oncomplete', async () => {
+	it('auto-POSTs acknowledged:true and fires oncomplete on mount', async () => {
 		const oncomplete = vi.fn();
-		const { container } = render(IntroBeat, {
+		render(IntroBeat, {
 			moduleId: 'mod-i',
 			body: 'x',
 			courseId: 'creativity',
 			lessonSlug: 'what-is-creativity',
 			oncomplete
 		});
-
-		(container.querySelector('[data-testid="intro-continue"]') as HTMLButtonElement).click();
 
 		await expect.poll(() => oncomplete).toHaveBeenCalled();
 
@@ -60,8 +58,7 @@ describe('IntroBeat', () => {
 			courseId: 'creativity',
 			lessonSlug: 'what-is-creativity',
 			payload: {
-				acknowledged: true,
-				timeSpentSeconds: expect.any(Number)
+				acknowledged: true
 			}
 		});
 
@@ -69,21 +66,19 @@ describe('IntroBeat', () => {
 		expect(arg.acknowledged).toBe(true);
 	});
 
-	it('does not POST in preview mode but still fires oncomplete', async () => {
+	it('does not POST in preview mode but still fires oncomplete on mount', async () => {
 		const oncomplete = vi.fn();
-		const { container } = render(IntroBeat, {
+		render(IntroBeat, {
 			moduleId: 'mod-i',
 			body: 'x',
 			oncomplete
 		});
 
-		(container.querySelector('[data-testid="intro-continue"]') as HTMLButtonElement).click();
-
 		await expect.poll(() => oncomplete).toHaveBeenCalled();
 		expect(fetchSpy).not.toHaveBeenCalled();
 	});
 
-	it('shows an error and does not complete when the request fails', async () => {
+	it('shows an error with retry button when the request fails', async () => {
 		fetchSpy.mockResolvedValueOnce(new Response('server err', { status: 500 }));
 		const oncomplete = vi.fn();
 		const { container } = render(IntroBeat, {
@@ -94,9 +89,8 @@ describe('IntroBeat', () => {
 			oncomplete
 		});
 
-		(container.querySelector('[data-testid="intro-continue"]') as HTMLButtonElement).click();
-
 		await expect.poll(() => container.querySelector('[role="alert"]')).not.toBeNull();
 		expect(oncomplete).not.toHaveBeenCalled();
+		expect(container.querySelector('[data-testid="intro-retry"]')).not.toBeNull();
 	});
 });

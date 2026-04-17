@@ -26,9 +26,9 @@ describe('getLessonBySlug', () => {
 	it('returns the paperclip exercise lesson configured in compact mode', () => {
 		const lesson = getLessonBySlug('creativity', 'paperclip-test');
 		expect(lesson).toBeDefined();
-		const module = lesson!.modules[0];
-		expect(module.type).toBe('exercise');
-		if (module.type === 'exercise') {
+		const module = lesson!.modules.find((m) => m.type === 'exercise');
+		expect(module).toBeDefined();
+		if (module && module.type === 'exercise') {
 			expect(module.componentId).toBe('DivergentThinking');
 			expect(module.config.compact).toBe(true);
 		}
@@ -84,9 +84,7 @@ describe('30-lesson structure', () => {
 
 	it('every exercise module uses compact mode', () => {
 		const course = getCourse('creativity')!;
-		const exercises = course.lessons
-			.flatMap((l) => l.modules)
-			.filter((m) => m.type === 'exercise');
+		const exercises = course.lessons.flatMap((l) => l.modules).filter((m) => m.type === 'exercise');
 		expect(exercises.length).toBeGreaterThan(0);
 		for (const ex of exercises) {
 			if (ex.type === 'exercise') {
@@ -98,9 +96,7 @@ describe('30-lesson structure', () => {
 	it('every recall module that references a prior lesson points at an existing slug', () => {
 		const course = getCourse('creativity')!;
 		const slugs = new Set(course.lessons.map((l) => l.slug));
-		const recalls = course.lessons
-			.flatMap((l) => l.modules)
-			.filter((m) => m.type === 'recall');
+		const recalls = course.lessons.flatMap((l) => l.modules).filter((m) => m.type === 'recall');
 		for (const r of recalls) {
 			if (r.type === 'recall' && r.referenceLessonSlug) {
 				expect(slugs.has(r.referenceLessonSlug)).toBe(true);
