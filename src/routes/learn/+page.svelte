@@ -17,8 +17,8 @@
 	let courseHeaderEl: HTMLDivElement | undefined = $state();
 
 	// Sticky offset for the progress panel — its initial distance from the top of
-	// the scroll container, so it sticks at the same height as the start of the
-	// DotPath instead of floating near the viewport top.
+	// the scroll container, so it pins right below the course header (which now
+	// sits above the panel in the right-hand column).
 	let panelStickyTop = $state('1.5rem');
 	$effect(() => {
 		if (!courseHeaderEl) return;
@@ -33,6 +33,10 @@
 		ro.observe(courseHeaderEl);
 		return () => ro.disconnect();
 	});
+
+	// The DotPath no longer has the course header above it, so its sticky act
+	// headings pin near the top of the scroll container.
+	const pathStickyTop = '1.5rem';
 
 	function startLesson(lesson: Lesson) {
 		if (!data.course) return;
@@ -104,17 +108,6 @@
 	</aside>
 
 	<div class="main">
-		<div class="course-header" bind:this={courseHeaderEl}>
-			<div class="mb-12 grid grid-cols-[min-content_1fr] items-center gap-2">
-				<span class="course-icon inline-flex h-16 w-16 items-center justify-center">
-					{#if data.course?.icon}
-						<Icon icon={data.course.icon} width="64" height="64" />
-					{/if}
-				</span>
-				<h1 class="text-left text-3xl font-bold">{data.course?.title ?? 'Course'}</h1>
-			</div>
-		</div>
-
 		<div class="path-col" bind:this={pathColEl}>
 			{#if data.course}
 				<DotPath
@@ -122,7 +115,7 @@
 					lessonProgress={data.lessonProgress}
 					acts={data.course.acts ?? []}
 					selectedSlug={selectedLesson?.slug ?? null}
-					stickyTop={panelStickyTop}
+					stickyTop={pathStickyTop}
 					onSelect={(lesson) => (selectedLesson = lesson)}
 					onStart={startLesson}
 				/>
@@ -133,6 +126,16 @@
 		</div>
 
 		<div class="progress-col" bind:this={progressColEl}>
+			<div class="course-header" bind:this={courseHeaderEl}>
+				<div class="mb-6 grid grid-cols-[min-content_1fr] items-center gap-2">
+					<span class="course-icon inline-flex h-16 w-16 items-center justify-center">
+						{#if data.course?.icon}
+							<Icon icon={data.course.icon} width="64" height="64" />
+						{/if}
+					</span>
+					<h1 class="text-left text-3xl font-bold">{data.course?.title ?? 'Course'}</h1>
+				</div>
+			</div>
 			<ProgressPanel
 				lessons={data.course?.lessons ?? []}
 				lessonProgress={data.lessonProgress}
@@ -230,37 +233,31 @@
 		/* Mirror column widths so the path column (center) sits dead-centered
 		   in the viewport and the progress panel sits right next to it. */
 		grid-template-columns: minmax(0, 14rem) minmax(0, 28rem) minmax(0, 24rem);
-		grid-template-rows: auto 1fr;
 		justify-content: center;
 		column-gap: 3rem;
 		padding: 3rem 2rem 3rem 4rem; /* extra left padding to clear toggle when closed */
 	}
 
-	.course-header {
-		grid-column: 2;
-		grid-row: 1;
-		min-width: 0;
-		width: 100%;
-	}
-
 	.path-col {
 		grid-column: 2;
-		grid-row: 2;
 		min-width: 0;
 		width: 100%;
 	}
 
 	.progress-col {
 		grid-column: 3;
-		grid-row: 2;
 		min-width: 0;
+	}
+
+	.course-header {
+		min-width: 0;
+		width: 100%;
 	}
 
 	@media (max-width: 1200px) {
 		.main {
 			grid-template-columns: minmax(0, 28rem) minmax(0, 24rem);
 		}
-		.course-header,
 		.path-col {
 			grid-column: 1;
 		}
@@ -272,22 +269,18 @@
 	@media (max-width: 960px) {
 		.main {
 			grid-template-columns: minmax(0, 28rem);
-			grid-template-rows: auto auto auto;
+			grid-template-rows: auto auto;
 			padding-left: 4rem;
 		}
-		.course-header,
 		.path-col,
 		.progress-col {
 			grid-column: 1;
 		}
-		.course-header {
+		.progress-col {
 			grid-row: 1;
 		}
 		.path-col {
 			grid-row: 2;
-		}
-		.progress-col {
-			grid-row: 3;
 		}
 	}
 </style>
