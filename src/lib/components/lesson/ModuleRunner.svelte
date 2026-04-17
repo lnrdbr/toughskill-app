@@ -5,6 +5,7 @@
 	import { getModuleComponent } from '$lib/config/module-registry';
 	import ReflectionPrompt from './modules/ReflectionPrompt.svelte';
 	import MeditationTimer from './modules/MeditationTimer.svelte';
+	import PhoneFreeChallenge from './modules/PhoneFreeChallenge.svelte';
 
 	let {
 		module,
@@ -108,6 +109,14 @@
 		moduleId={module.id}
 		durationSeconds={module.durationSeconds}
 		style={module.style}
+		{courseId}
+		{lessonSlug}
+		oncomplete={handleComplete}
+	/>
+{:else if module.type === 'phone_free'}
+	<PhoneFreeChallenge
+		moduleId={module.id}
+		durationSeconds={module.durationSeconds}
 		{courseId}
 		{lessonSlug}
 		oncomplete={handleComplete}
