@@ -6,7 +6,6 @@
 	import type { AnySubmissionResponse } from '$lib/components/exercises/types';
 	import { pendingEvaluations } from '$lib/components/exercises/types';
 	import { resolve } from '$app/paths';
-	import { goto } from '$app/navigation';
 	import { getModuleComponent } from '$lib/config/module-registry';
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
 	import Button from '$lib/components/Button.svelte';
@@ -213,12 +212,13 @@
 					<div class="next-bar">
 						<Button
 							variant="primary"
-							onclick={() =>
-								goto(
+							onclick={() => {
+								window.location.assign(
 									`/lesson?course=${encodeURIComponent(courseId)}&slug=${encodeURIComponent(nextLesson.slug)}`
-								)}
+								);
+							}}
 						>
-							Next lesson: {nextLesson.title}
+							Next lesson
 						</Button>
 					</div>
 				{/if}
