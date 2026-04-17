@@ -6,7 +6,7 @@ import { env } from '$env/dynamic/private';
 import { getRequestEvent } from '$app/server';
 import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
-import { exerciseSubmission } from '$lib/server/db/schema';
+import { exerciseSubmission, moduleCompletion, moduleSubmission } from '$lib/server/db/schema';
 
 export const auth = betterAuth({
 	baseURL: env.ORIGIN,
@@ -22,10 +22,25 @@ export const auth = betterAuth({
 	plugins: [
 		anonymous({
 			onLinkAccount: async ({ anonymousUser, newUser }) => {
-				await db
-					.update(exerciseSubmission)
-					.set({ userId: newUser.user.id })
-					.where(eq(exerciseSubmission.userId, anonymousUser.user.id));
+				// Reassign every piece of progress the anon user accumulated so the
+				// newly-signed-up account picks up exactly where they left off.
+				const anonId = anonymousUser.user.id;
+				const realId = newUser.user.id;
+
+				await Promise.all([
+					db
+						.update(exerciseSubmission)
+						.set({ userId: realId })
+						.where(eq(exerciseSubmission.userId, anonId)),
+					db
+						.update(moduleCompletion)
+						.set({ userId: realId })
+						.where(eq(moduleCompletion.userId, anonId)),
+					db
+						.update(moduleSubmission)
+						.set({ userId: realId })
+						.where(eq(moduleSubmission.userId, anonId))
+				]);
 			}
 		}),
 		sveltekitCookies(getRequestEvent) // make sure this is the last plugin in the array
