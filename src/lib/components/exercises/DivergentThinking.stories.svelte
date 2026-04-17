@@ -40,3 +40,13 @@
 		<DivergentThinking oncomplete={(result) => console.log('Exercise completed:', result)} />
 	{/snippet}
 </Story>
+
+<Story name="Compact (no reflection)">
+	{#snippet template()}
+		<DivergentThinking
+			prompt="Paperclip"
+			instruction="How many uses can you think of?"
+			compact
+		/>
+	{/snippet}
+</Story>

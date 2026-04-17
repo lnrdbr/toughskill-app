@@ -15,6 +15,7 @@
 		instruction = 'How many uses can you think of?',
 		timerDuration = 0,
 		initialIdeas = [] as string[],
+		compact = false,
 		oncomplete = undefined as ((result: Record<string, unknown>) => void) | undefined
 	} = $props();
 
@@ -93,7 +94,11 @@
 	}
 
 	function finish() {
-		phase = 'reflecting';
+		if (compact) {
+			submitReflection();
+		} else {
+			phase = 'reflecting';
+		}
 	}
 
 	function handleTimerExpire() {
