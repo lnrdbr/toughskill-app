@@ -25,6 +25,12 @@ export const creativity: Course = {
 		"A 30-day journey that turns creativity from a talent you either have or don't into a way of paying attention.",
 	icon: 'mdi:lightbulb',
 	color: 'primary',
+	acts: [
+		{ title: 'Awakening', startLessonSlug: 'what-is-creativity' },
+		{ title: 'Unblocking', startLessonSlug: 'phone-attention' },
+		{ title: 'Practice', startLessonSlug: 'remember-paperclip' },
+		{ title: 'Integration', startLessonSlug: 'how-far-youve-come' }
+	],
 	lessons: [
 		// ─── Act 1: Awakening (1–7) ──────────────────────────────────────────
 		{
@@ -186,6 +192,13 @@ export const creativity: Course = {
 					estimatedMinutes: 2,
 					durationSeconds: 120,
 					style: 'breathing'
+				},
+				{
+					type: 'intro',
+					id: 'mod-06-intro-post',
+					title: 'Take this with you',
+					estimatedMinutes: 1,
+					body: "Next time you feel overwhelmed, or can't find any ideas — stop what you're doing and focus on nothing. Even for a minute."
 				}
 			]
 		},
