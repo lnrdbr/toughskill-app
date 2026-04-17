@@ -1,17 +1,13 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import Button from '$lib/components/Button.svelte';
 	import { resolve } from '$app/paths';
-	import { goto } from '$app/navigation';
 	import type { ModuleCompletionResult } from '$lib/types/course';
 	import { pendingEvaluations } from '$lib/components/exercises/types';
 
 	let {
 		completionResults = [] as ModuleCompletionResult[],
-		courseId = '',
 		courseTitle = '',
-		lessonTitle = '',
-		nextLesson = undefined as { slug: string; title: string } | undefined
+		lessonTitle = ''
 	} = $props();
 
 	let totalSeconds = $derived(
@@ -40,13 +36,6 @@
 			})
 			.filter((h): h is { moduleId: string; feedback: string } => h !== null)
 	);
-
-	function goToNext() {
-		if (!nextLesson) return;
-		goto(
-			`/lesson?course=${encodeURIComponent(courseId)}&slug=${encodeURIComponent(nextLesson.slug)}`
-		);
-	}
 </script>
 
 <div class="lesson-complete">
@@ -85,11 +74,6 @@
 	{/if}
 
 	<div class="actions">
-		{#if nextLesson}
-			<Button variant="primary" onclick={goToNext}>
-				Next lesson: {nextLesson.title}
-			</Button>
-		{/if}
 		<a href={resolve('/learn')} class="back-link">Back to the learning path</a>
 	</div>
 </div>

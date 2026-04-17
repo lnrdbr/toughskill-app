@@ -6,6 +6,7 @@
 	import type { AnySubmissionResponse } from '$lib/components/exercises/types';
 	import { pendingEvaluations } from '$lib/components/exercises/types';
 	import { resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
 	import { getModuleComponent } from '$lib/config/module-registry';
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
 	import Button from '$lib/components/Button.svelte';
@@ -201,13 +202,27 @@
 {:else}
 	{#key sessionKey}
 		{#if sessionDone}
-			<LessonComplete
-				{completionResults}
-				{courseId}
-				{courseTitle}
-				{lessonTitle}
-				nextLesson={(session as { nextLesson?: { slug: string; title: string } }).nextLesson}
-			/>
+			{@const nextLesson = (session as { nextLesson?: { slug: string; title: string } })
+				.nextLesson}
+			<div class="lesson-container">
+				<div class="module-area">
+					<LessonComplete {completionResults} {courseTitle} {lessonTitle} />
+				</div>
+
+				{#if nextLesson}
+					<div class="next-bar">
+						<Button
+							variant="primary"
+							onclick={() =>
+								goto(
+									`/lesson?course=${encodeURIComponent(courseId)}&slug=${encodeURIComponent(nextLesson.slug)}`
+								)}
+						>
+							Next lesson: {nextLesson.title}
+						</Button>
+					</div>
+				{/if}
+			</div>
 		{:else if modules.length > 0}
 			<div class="lesson-container">
 				<header class="lesson-header">
