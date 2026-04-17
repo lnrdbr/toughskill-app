@@ -14,24 +14,6 @@
 
 	let pathColEl: HTMLDivElement | undefined = $state();
 	let progressColEl: HTMLDivElement | undefined = $state();
-	let courseHeaderEl: HTMLDivElement | undefined = $state();
-
-	// Sticky offset for the progress panel — pins right below the course header,
-	// which also sticks at the top of the right-hand column so both move as one
-	// sticky block.
-	const BASE_STICKY_TOP_PX = 24; // 1.5rem, matches .course-header top
-	let panelStickyTop = $state('1.5rem');
-	$effect(() => {
-		if (!courseHeaderEl) return;
-		const update = () => {
-			if (!courseHeaderEl) return;
-			panelStickyTop = `${BASE_STICKY_TOP_PX + courseHeaderEl.offsetHeight}px`;
-		};
-		update();
-		const ro = new ResizeObserver(update);
-		ro.observe(courseHeaderEl);
-		return () => ro.disconnect();
-	});
 
 	// The DotPath's sticky act headings pin at the very top of the scroll
 	// container; their own top padding provides the visible offset, and their
@@ -126,7 +108,7 @@
 		</div>
 
 		<div class="progress-col" bind:this={progressColEl}>
-			<div class="course-header" bind:this={courseHeaderEl}>
+			<div class="course-header">
 				<div class="mb-6 grid grid-cols-[min-content_1fr] items-center gap-2">
 					<span class="course-icon inline-flex h-16 w-16 items-center justify-center">
 						{#if data.course?.icon}
@@ -142,7 +124,7 @@
 				{selectedLesson}
 				courseId={data.course?.id}
 				courseDescription={data.course?.description ?? ''}
-				stickyTop={panelStickyTop}
+				stickyTop="0"
 			/>
 		</div>
 	</div>
@@ -247,15 +229,20 @@
 	.progress-col {
 		grid-column: 3;
 		min-width: 0;
+		/* Pin the whole right-hand column (course header + progress panel) as a
+		   single sticky block. align-self: start keeps progress-col at the
+		   natural height of its content so sticky has room to travel through
+		   the taller path column beside it. */
+		position: sticky;
+		top: 1.5rem;
+		align-self: start;
+		z-index: 6;
+		background: var(--color-background);
 	}
 
 	.course-header {
 		min-width: 0;
 		width: 100%;
-		position: sticky;
-		top: 1.5rem;
-		z-index: 6;
-		background: var(--color-background);
 	}
 
 	@media (max-width: 1200px) {
