@@ -15,6 +15,13 @@
       "when": 1776431205304,
       "tag": "0001_legal_norrin_radd",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1776447494786,
+      "tag": "0002_known_ares",
+      "breakpoints": true
     }
   ]
 }
