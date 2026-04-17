@@ -90,7 +90,7 @@ describe('ProgressPanel (idle view)', () => {
 		expect(bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent').toBe(true);
 	});
 
-	it('renders "Start exercise" CTA when no lesson has been started', async () => {
+	it('renders "Start new lesson" CTA when the next lesson is fresh', async () => {
 		const { container } = render(ProgressPanel, {
 			lessons: [lesson],
 			lessonProgress: { preparation: { completed: 0, total: 2, started: false } },
@@ -99,7 +99,7 @@ describe('ProgressPanel (idle view)', () => {
 
 		const form = container.querySelector('[data-testid="idle-cta-form"]') as HTMLFormElement;
 		expect(form).not.toBeNull();
-		expect(form.textContent).toContain('Start exercise');
+		expect(form.textContent).toContain('Start new lesson');
 		expect((form.querySelector('input[name="courseId"]') as HTMLInputElement).value).toBe(
 			'creativity'
 		);
@@ -108,7 +108,7 @@ describe('ProgressPanel (idle view)', () => {
 		);
 	});
 
-	it('renders "Continue where you left off" CTA when a lesson is in progress', async () => {
+	it('renders "Continue where you left off" CTA when the next lesson is in progress', async () => {
 		const { container } = render(ProgressPanel, {
 			lessons: [lesson],
 			lessonProgress: { preparation: { completed: 1, total: 2, started: true } },
@@ -122,6 +122,45 @@ describe('ProgressPanel (idle view)', () => {
 		expect((form.querySelector('input[name="lessonSlug"]') as HTMLInputElement).value).toBe(
 			'preparation'
 		);
+	});
+
+	it('renders "Continue where you left off" when the next lesson was viewed but has no completions', async () => {
+		const { container } = render(ProgressPanel, {
+			lessons: [lesson],
+			lessonProgress: { preparation: { completed: 0, total: 2, started: true } },
+			courseId: 'creativity'
+		});
+
+		const form = container.querySelector('[data-testid="idle-cta-form"]') as HTMLFormElement;
+		expect(form!.textContent).toContain('Continue where you left off');
+	});
+
+	it('renders "Start new lesson" when the next lesson is untouched even if a previous lesson is complete', async () => {
+		const secondLesson: Lesson = { ...lesson, id: 'l-2', slug: 'ideation', title: 'Ideation' };
+		const { container } = render(ProgressPanel, {
+			lessons: [lesson, secondLesson],
+			lessonProgress: {
+				preparation: { completed: 2, total: 2, started: true },
+				ideation: { completed: 0, total: 2, started: false }
+			},
+			courseId: 'creativity'
+		});
+
+		const form = container.querySelector('[data-testid="idle-cta-form"]') as HTMLFormElement;
+		expect(form!.textContent).toContain('Start new lesson');
+		expect((form.querySelector('input[name="lessonSlug"]') as HTMLInputElement).value).toBe(
+			'ideation'
+		);
+	});
+
+	it('applies the stickyTop prop to the panel style', async () => {
+		const { container } = render(ProgressPanel, {
+			lessonProgress: {},
+			stickyTop: '10rem'
+		});
+
+		const panel = container.querySelector('.panel') as HTMLElement;
+		expect(panel.style.top).toBe('10rem');
 	});
 
 	it('omits the CTA when every lesson is complete', async () => {

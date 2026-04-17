@@ -14,6 +14,25 @@
 
 	let pathColEl: HTMLDivElement | undefined = $state();
 	let progressColEl: HTMLDivElement | undefined = $state();
+	let courseHeaderEl: HTMLDivElement | undefined = $state();
+
+	// Sticky offset for the progress panel — its initial distance from the top of
+	// the scroll container, so it sticks at the same height as the start of the
+	// DotPath instead of floating near the viewport top.
+	let panelStickyTop = $state('1.5rem');
+	$effect(() => {
+		if (!courseHeaderEl) return;
+		const update = () => {
+			if (!courseHeaderEl) return;
+			// .main has padding-top: 3rem (48px); the course header sits immediately
+			// below that padding. The panel should pin where the header ends.
+			panelStickyTop = `${48 + courseHeaderEl.offsetHeight}px`;
+		};
+		update();
+		const ro = new ResizeObserver(update);
+		ro.observe(courseHeaderEl);
+		return () => ro.disconnect();
+	});
 
 	function startLesson(lesson: Lesson) {
 		if (!data.course) return;
@@ -85,7 +104,7 @@
 	</aside>
 
 	<div class="main">
-		<div class="course-header">
+		<div class="course-header" bind:this={courseHeaderEl}>
 			<div class="mb-2 grid grid-cols-[min-content_1fr] items-center gap-2">
 				<span class="course-icon inline-flex h-16 w-16 items-center justify-center">
 					{#if data.course?.icon}
@@ -120,6 +139,7 @@
 				lessonProgress={data.lessonProgress}
 				{selectedLesson}
 				courseId={data.course?.id}
+				stickyTop={panelStickyTop}
 			/>
 		</div>
 	</div>

@@ -10,13 +10,15 @@
 		lessonProgress = {},
 		praise = "I'm proud of you! Keep doing what you do :) 🎉",
 		selectedLesson = null,
-		courseId
+		courseId,
+		stickyTop = '1.5rem'
 	}: {
 		lessons?: Lesson[];
 		lessonProgress?: Record<string, Progress>;
 		praise?: string;
 		selectedLesson?: Lesson | null;
 		courseId?: string;
+		stickyTop?: string;
 	} = $props();
 
 	// First not-completed lesson — where the idle-view CTA should send the user.
@@ -28,10 +30,12 @@
 			return completed < total;
 		}) ?? null
 	);
-	// Has the user already started any lesson? Drives the CTA label.
-	let hasStarted = $derived(
-		Object.values(lessonProgress).some((p) => (p.started ?? false) || p.completed > 0)
-	);
+	// Is the target (next) lesson already in progress, or would the CTA start a fresh one?
+	let nextLessonStarted = $derived.by(() => {
+		if (!nextLesson) return false;
+		const p = lessonProgress[nextLesson.slug];
+		return (p?.started ?? false) || (p?.completed ?? 0) > 0;
+	});
 
 	let totals = $derived(
 		Object.values(lessonProgress).reduce(
@@ -105,7 +109,7 @@
 	});
 </script>
 
-<aside class="panel" aria-label="Progress">
+<aside class="panel" aria-label="Progress" style="top: {stickyTop};">
 	{#if selectedLesson}
 		<div class="lesson-view" data-testid="lesson-view">
 			<h2 class="lesson-title">{selectedLesson.title}</h2>
@@ -179,7 +183,7 @@
 					<input type="hidden" name="courseId" value={courseId} />
 					<input type="hidden" name="lessonSlug" value={nextLesson.slug} />
 					<Button type="submit" variant="primary" rounded="default">
-						{hasStarted ? 'Continue where you left off' : 'Start exercise'}
+						{nextLessonStarted ? 'Continue where you left off' : 'Start new lesson'}
 					</Button>
 				</form>
 			{/if}
