@@ -163,13 +163,12 @@
 		</div>
 	{:else if phase === 'running'}
 		<div class="running">
-			<div
-				class="visual"
-				class:breathing={style === 'breathing'}
-				class:silence={style === 'silence'}
-				aria-hidden="true"
-			>
-				<div class="orb"></div>
+			<div class="visual" aria-hidden="true">
+				<div
+					class="orb"
+					class:breathing={style === 'breathing'}
+					class:silence={style === 'silence'}
+				></div>
 			</div>
 			<div class="countdown" data-testid="meditation-remaining">
 				{formatTime(remaining)}
@@ -272,11 +271,11 @@
 		filter: drop-shadow(0 4px 8px color-mix(in srgb, var(--color-primary-700) 40%, transparent));
 	}
 
-	.visual.breathing .orb {
+	.orb.breathing {
 		animation: breathe 8s ease-in-out infinite;
 	}
 
-	.visual.silence .orb {
+	.orb.silence {
 		animation: pulse 3.5s ease-in-out infinite;
 	}
 
@@ -346,8 +345,8 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.visual.breathing .orb,
-		.visual.silence .orb {
+		.orb.breathing,
+		.orb.silence {
 			animation: none;
 		}
 	}
