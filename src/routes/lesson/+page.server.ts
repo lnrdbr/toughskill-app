@@ -4,6 +4,7 @@ import { db } from '$lib/server/db';
 import { moduleCompletion } from '$lib/server/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { getCourse, getLessonBySlug } from '$lib/config/courses';
+import { resolveLessonSession } from './session';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
@@ -43,20 +44,13 @@ export const load: PageServerLoad = async ({ locals }) => {
 		);
 
 	const completedIds = new Set(completions.map((c) => c.moduleId));
-	const completedModules = lesson.modules.filter((m) => completedIds.has(m.id));
 
-	if (completedModules.length === 0) {
-		return { sessionType: 'empty' as const, modules: [] };
-	}
-
-	return {
-		sessionType: 'revision' as const,
+	return resolveLessonSession(lesson.modules, completedIds, {
 		courseId: latest.courseId,
 		lessonSlug: latest.lessonSlug,
 		lessonTitle: lesson.title,
-		courseTitle: course.title,
-		modules: completedModules
-	};
+		courseTitle: course.title
+	});
 };
 
 export const actions: Actions = {
