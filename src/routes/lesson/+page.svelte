@@ -10,6 +10,12 @@
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
 	import Button from '$lib/components/Button.svelte';
 	import { readDraft, writeDraft, clearDraft } from '$lib/client/draft';
+	import {
+		saveEvaluationResult,
+		saveEvaluationError,
+		loadEvaluation,
+		listCachedEvaluationIds
+	} from '$lib/client/evaluation-cache';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -71,11 +77,36 @@
 		promise
 			.then((data) => {
 				entry.result = data;
+				saveEvaluationResult(exerciseModuleId, data, userIdeas, prompt);
 			})
 			.catch((err) => {
-				entry.error = String(err);
+				const message = String(err);
+				entry.error = message;
+				saveEvaluationError(exerciseModuleId, message, userIdeas, prompt);
 			});
 		pendingEvaluations[exerciseModuleId] = entry;
+	}
+
+	// Seed pendingEvaluations from any evaluations cached on a previous visit
+	// so a reload mid-results (or at the results module) still shows feedback.
+	for (const id of listCachedEvaluationIds()) {
+		if (pendingEvaluations[id]) continue;
+		const cached = loadEvaluation(id);
+		if (!cached) continue;
+		const entry = {
+			userIdeas: cached.userIdeas as string[] | Record<string, string[]>,
+			prompt: cached.prompt
+		} as import('$lib/components/exercises/types').PendingEvaluation;
+		if (cached.kind === 'result') {
+			entry.result = cached.result;
+			entry.promise = Promise.resolve(cached.result);
+		} else {
+			entry.error = cached.error;
+			entry.promise = Promise.reject(new Error(cached.error));
+			// swallow the unhandled-rejection warning; ExerciseResults attaches .catch
+			entry.promise.catch(() => {});
+		}
+		pendingEvaluations[id] = entry;
 	}
 
 	// Preload the next module's component while the user is on the current one
@@ -197,7 +228,12 @@
 
 				<div class="module-area">
 					{#key modules[currentIndex].id}
-						<ModuleRunner module={modules[currentIndex]} oncomplete={handleModuleComplete} />
+						<ModuleRunner
+						module={modules[currentIndex]}
+						{courseId}
+						{lessonSlug}
+						oncomplete={handleModuleComplete}
+					/>
 					{/key}
 				</div>
 
