@@ -10,6 +10,47 @@
 
 	let sidebarOpen = $state(false);
 	let selectedLesson: Lesson | null = $state(null);
+
+	let pathColEl: HTMLDivElement | undefined = $state();
+	let progressColEl: HTMLDivElement | undefined = $state();
+
+	function startLesson(lesson: Lesson) {
+		if (!data.course) return;
+		const form = document.createElement('form');
+		form.method = 'POST';
+		form.action = '/lesson';
+		form.style.display = 'none';
+
+		const courseInput = document.createElement('input');
+		courseInput.type = 'hidden';
+		courseInput.name = 'courseId';
+		courseInput.value = data.course.id;
+		form.appendChild(courseInput);
+
+		const slugInput = document.createElement('input');
+		slugInput.type = 'hidden';
+		slugInput.name = 'lessonSlug';
+		slugInput.value = lesson.slug;
+		form.appendChild(slugInput);
+
+		document.body.appendChild(form);
+		form.submit();
+	}
+
+	// Outside-click: clicking anywhere that isn't inside the DotPath or the ProgressPanel
+	// deselects the currently-selected lesson.
+	$effect(() => {
+		const handler = (e: MouseEvent) => {
+			if (!selectedLesson) return;
+			const target = e.target as Node | null;
+			if (!target) return;
+			if (pathColEl?.contains(target)) return;
+			if (progressColEl?.contains(target)) return;
+			selectedLesson = null;
+		};
+		document.addEventListener('click', handler);
+		return () => document.removeEventListener('click', handler);
+	});
 </script>
 
 <div class="learn-layout" class:open={sidebarOpen}>
@@ -39,7 +80,7 @@
 	</aside>
 
 	<div class="main">
-		<div class="path-col">
+		<div class="path-col" bind:this={pathColEl}>
 			<div class="mb-2 grid grid-cols-[min-content_1fr] items-center gap-2">
 				<span class="course-icon inline-flex h-16 w-16 items-center justify-center">
 					{#if data.course?.icon}
@@ -55,12 +96,14 @@
 				<DotPath
 					lessons={data.course.lessons}
 					lessonProgress={data.lessonProgress}
+					selectedSlug={selectedLesson?.slug ?? null}
 					onSelect={(lesson) => (selectedLesson = lesson)}
+					onStart={startLesson}
 				/>
 			{/if}
 		</div>
 
-		<div class="progress-col">
+		<div class="progress-col" bind:this={progressColEl}>
 			<ProgressPanel
 				lessonProgress={data.lessonProgress}
 				{selectedLesson}
@@ -130,15 +173,11 @@
 		overflow-y: auto;
 		overflow-x: hidden;
 		background: var(--color-secondary-50);
-		border-right: 4px solid transparent;
-		transition:
-			border-color 0.3s ease,
-			box-shadow 0.3s ease;
+		transition: box-shadow 0.3s ease;
 		box-shadow: none;
 	}
 
 	.learn-layout.open .sidebar {
-		border-right-color: var(--color-secondary-300);
 		box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
 	}
 
@@ -156,15 +195,14 @@
 		grid-column: 2;
 		grid-row: 1;
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(22rem, 28rem);
+		grid-template-columns: minmax(0, 28rem) minmax(0, 24rem);
+		justify-content: center;
 		gap: 3rem;
 		padding: 3rem 2rem 3rem 4rem; /* extra left padding to clear toggle when closed */
 	}
 
 	.path-col {
 		min-width: 0;
-		max-width: 28rem;
-		justify-self: end;
 		width: 100%;
 	}
 
@@ -174,7 +212,7 @@
 
 	@media (max-width: 960px) {
 		.main {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 28rem);
 			padding-left: 4rem;
 		}
 	}
