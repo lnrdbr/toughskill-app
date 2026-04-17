@@ -11,6 +11,7 @@
 		praise = "I'm proud of you! Keep doing what you do :) 🎉",
 		selectedLesson = null,
 		courseId,
+		courseDescription = '',
 		stickyTop = '1.5rem'
 	}: {
 		lessons?: Lesson[];
@@ -18,6 +19,7 @@
 		praise?: string;
 		selectedLesson?: Lesson | null;
 		courseId?: string;
+		courseDescription?: string;
 		stickyTop?: string;
 	} = $props();
 
@@ -148,6 +150,9 @@
 		</div>
 	{:else}
 		<div class="idle-view" data-testid="idle-view">
+			{#if courseDescription}
+				<p class="course-description" data-testid="course-description">{courseDescription}</p>
+			{/if}
 			<div class="progress-ring-wrap">
 				<div class="progress-ring">
 					<svg class="progress-ring-svg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
@@ -315,6 +320,12 @@
 
 	.cta-form {
 		margin-top: 0.5rem;
+	}
+
+	.course-description {
+		margin: 0 0 0.25rem;
+		color: var(--color-muted-foreground, #6b7280);
+		line-height: 1.45;
 	}
 
 	@keyframes cloud-bob {

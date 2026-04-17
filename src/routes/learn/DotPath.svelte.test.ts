@@ -144,7 +144,7 @@ describe('DotPath', () => {
 		expect(buttons[0].classList.contains('completed')).toBe(true);
 	});
 
-	it('renders an act divider before each lesson that opens an act', () => {
+	it('renders a sticky act heading for each act', () => {
 		const { container } = render(DotPath, {
 			lessons,
 			lessonProgress,
@@ -154,27 +154,47 @@ describe('DotPath', () => {
 			]
 		});
 
-		const dividers = container.querySelectorAll('[data-testid="act-divider"]');
-		expect(dividers).toHaveLength(2);
-		expect(dividers[0].textContent).toContain('Awakening');
-		expect(dividers[1].textContent).toContain('Unblocking');
+		const headings = container.querySelectorAll('[data-testid="act-heading"]');
+		expect(headings).toHaveLength(2);
+		expect(headings[0].textContent).toContain('Awakening');
+		expect(headings[1].textContent).toContain('Unblocking');
+		expect(getComputedStyle(headings[0] as HTMLElement).position).toBe('sticky');
 	});
 
-	it('renders no dividers when acts prop is omitted', () => {
+	it('renders no act headings when acts prop is omitted', () => {
 		const { container } = render(DotPath, { lessons, lessonProgress });
 
-		expect(container.querySelectorAll('[data-testid="act-divider"]')).toHaveLength(0);
+		expect(container.querySelectorAll('[data-testid="act-heading"]')).toHaveLength(0);
 	});
 
-	it('places each divider directly before its start lesson in DOM order', () => {
+	it('groups lessons into per-act sections so headers pin within their own section', () => {
 		const { container } = render(DotPath, {
 			lessons,
 			lessonProgress,
-			acts: [{ title: 'Awakening', startLessonSlug: 'exploration' }]
+			acts: [
+				{ title: 'Awakening', startLessonSlug: 'preparation' },
+				{ title: 'Unblocking', startLessonSlug: 'exploration' }
+			]
 		});
 
-		const divider = container.querySelector('[data-testid="act-divider"]') as HTMLElement;
-		const nextEl = divider.nextElementSibling as HTMLElement;
-		expect(nextEl.querySelector('.dot-label')!.textContent).toBe('Exploration');
+		const sections = container.querySelectorAll('[data-testid="act-section"]');
+		expect(sections).toHaveLength(2);
+		// Each section owns only its own act's lesson labels.
+		expect(sections[0].querySelectorAll('.dot-label')).toHaveLength(1);
+		expect(sections[0].querySelector('.dot-label')!.textContent).toBe('Preparation');
+		expect(sections[1].querySelectorAll('.dot-label')).toHaveLength(1);
+		expect(sections[1].querySelector('.dot-label')!.textContent).toBe('Exploration');
+	});
+
+	it('applies the stickyTop prop as the sticky offset on each heading', () => {
+		const { container } = render(DotPath, {
+			lessons,
+			lessonProgress,
+			acts: [{ title: 'Awakening', startLessonSlug: 'preparation' }],
+			stickyTop: '8rem'
+		});
+
+		const heading = container.querySelector('[data-testid="act-heading"]') as HTMLElement;
+		expect(heading.style.top).toBe('8rem');
 	});
 });

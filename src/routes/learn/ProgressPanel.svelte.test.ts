@@ -163,6 +163,23 @@ describe('ProgressPanel (idle view)', () => {
 		expect(panel.style.top).toBe('10rem');
 	});
 
+	it('renders the course description above the progress ring when provided', async () => {
+		const { container } = render(ProgressPanel, {
+			lessonProgress: {},
+			courseDescription: 'A 30-day creativity journey.'
+		});
+
+		const desc = container.querySelector('[data-testid="course-description"]');
+		expect(desc).not.toBeNull();
+		expect(desc!.textContent).toContain('A 30-day creativity journey.');
+	});
+
+	it('omits the course description node when the prop is empty', async () => {
+		const { container } = render(ProgressPanel, { lessonProgress: {} });
+
+		expect(container.querySelector('[data-testid="course-description"]')).toBeNull();
+	});
+
 	it('omits the CTA when every lesson is complete', async () => {
 		const { container } = render(ProgressPanel, {
 			lessons: [lesson],

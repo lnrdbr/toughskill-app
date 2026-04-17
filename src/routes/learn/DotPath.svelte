@@ -26,6 +26,7 @@
 		lessonProgress,
 		acts = [],
 		selectedSlug = null,
+		stickyTop = '0',
 		onSelect,
 		onStart
 	}: {
@@ -33,14 +34,34 @@
 		lessonProgress: Record<string, { completed: number; total: number; started?: boolean }>;
 		acts?: Act[];
 		selectedSlug?: string | null;
+		/** Offset from the scroll container top at which act headers should pin. */
+		stickyTop?: string;
 		onSelect?: (lesson: Lesson) => void;
 		onStart?: (lesson: Lesson) => void;
 	} = $props();
 
-	// Map of lessonSlug → act title, so we can render a header row above that lesson.
-	let actHeadingBySlug = $derived(
-		new Map(acts.map((a) => [a.startLessonSlug, a.title]))
-	);
+	// Group lessons into sections, one per act. A leading "no-act" section holds any
+	// lessons that appear before the first act's start lesson (if the course uses acts).
+	type Section = { actTitle: string | null; startIndex: number; lessons: Lesson[] };
+	let sections = $derived.by<Section[]>(() => {
+		if (acts.length === 0) {
+			return [{ actTitle: null, startIndex: 0, lessons }];
+		}
+		const startSlugs = new Map(acts.map((a) => [a.startLessonSlug, a.title]));
+		const result: Section[] = [];
+		let current: Section = { actTitle: null, startIndex: 0, lessons: [] };
+		lessons.forEach((lesson, idx) => {
+			const actTitle = startSlugs.get(lesson.slug);
+			if (actTitle !== undefined) {
+				if (current.lessons.length > 0) result.push(current);
+				current = { actTitle, startIndex: idx, lessons: [lesson] };
+			} else {
+				current.lessons.push(lesson);
+			}
+		});
+		if (current.lessons.length > 0) result.push(current);
+		return result;
+	});
 
 	function getStatus(lessonSlug: string): 'completed' | 'in-progress' | 'not-started' {
 		const progress = lessonProgress[lessonSlug];
@@ -67,40 +88,47 @@
 	}
 </script>
 
-<div class="dot-path flex flex-col items-center gap-7">
-	{#each lessons as lesson, i (lesson.slug)}
-		{@const status = getStatus(lesson.slug)}
-		{@const isSelected = selectedSlug === lesson.slug}
-		{@const progress = lessonProgress[lesson.slug]}
-		{@const offset = getDotOffset(i)}
-		{@const actTitle = actHeadingBySlug.get(lesson.slug)}
+<div class="dot-path flex flex-col items-stretch">
+	{#each sections as section, sIdx (section.actTitle ?? `no-act-${sIdx}`)}
+		<section class="act-section" data-testid="act-section">
+			{#if section.actTitle}
+				<h2
+					class="act-heading"
+					data-testid="act-heading"
+					style="top: {stickyTop};"
+				>
+					{section.actTitle}
+				</h2>
+			{/if}
+			<div class="act-lessons flex flex-col items-center gap-7">
+				{#each section.lessons as lesson, li (lesson.slug)}
+					{@const globalIdx = section.startIndex + li}
+					{@const status = getStatus(lesson.slug)}
+					{@const isSelected = selectedSlug === lesson.slug}
+					{@const progress = lessonProgress[lesson.slug]}
+					{@const offset = getDotOffset(globalIdx)}
 
-		{#if actTitle}
-			<div class="act-divider" data-testid="act-divider" role="separator" aria-label={actTitle}>
-				<span class="act-line" aria-hidden="true"></span>
-				<span class="act-title">{actTitle}</span>
-				<span class="act-line" aria-hidden="true"></span>
+					<div
+						class="dot-step flex flex-col items-center gap-2"
+						style="--offset: {offset}"
+						ondblclick={() => handleDblClick(lesson)}
+						role="presentation"
+					>
+						<DotPathNode
+							{status}
+							icon={lesson.icon}
+							typeIcon={getTypeIcon(lesson)}
+							completed={progress?.completed ?? 0}
+							total={progress?.total ?? lesson.modules.length}
+							selected={isSelected}
+							onclick={() => handleClick(lesson)}
+						/>
+
+						<span class="dot-label text-sm font-semibold">{lesson.title}</span>
+					</div>
+				{/each}
 			</div>
-		{/if}
-
-		<div
-			class="dot-step flex flex-col items-center gap-2"
-			style="--offset: {offset}"
-			ondblclick={() => handleDblClick(lesson)}
-			role="presentation"
-		>
-			<DotPathNode
-				{status}
-				icon={lesson.icon}
-				typeIcon={getTypeIcon(lesson)}
-				completed={progress?.completed ?? 0}
-				total={progress?.total ?? lesson.modules.length}
-				selected={isSelected}
-				onclick={() => handleClick(lesson)}
-			/>
-
-			<span class="dot-label text-sm font-semibold">{lesson.title}</span>
-		</div>
+		</section>
 	{/each}
 </div>
 
@@ -117,27 +145,27 @@
 		user-select: none;
 	}
 
-	.act-divider {
+	.act-section {
 		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		width: 100%;
-		/* Pull the divider outside the snake offset so it always spans the path. */
-		transform: translateX(0);
+		flex-direction: column;
+		/* Section is its own sticky container: when it scrolls out, the sticky header
+		   unsticks with it and the next section's header takes over at the top. */
 	}
 
-	.act-line {
-		flex: 1;
-		height: 1px;
-		background: color-mix(in srgb, var(--color-foreground) 20%, transparent);
+	.act-section + .act-section {
+		margin-top: 1.75rem;
 	}
 
-	.act-title {
-		font-size: 0.85rem;
-		font-weight: 600;
-		letter-spacing: 0.02em;
-		color: color-mix(in srgb, var(--color-foreground) 55%, transparent);
-		text-transform: uppercase;
-		white-space: nowrap;
+	.act-heading {
+		position: sticky;
+		top: 0;
+		z-index: 5;
+		margin: 0 0 1.25rem;
+		padding: 0.75rem 0;
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--color-foreground);
+		background: var(--color-background);
+		text-align: left;
 	}
 </style>
