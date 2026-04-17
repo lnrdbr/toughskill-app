@@ -1,7 +1,9 @@
 import type { Course, Lesson, Module } from '$lib/types/course';
 import { creativity } from './creativity';
+import { communication } from './communication';
+import { workEthic } from './work-ethic';
 
-const courses: Course[] = [creativity];
+const courses: Course[] = [creativity, communication, workEthic];
 
 export function getCourse(courseId: string): Course | undefined {
 	return courses.find((c) => c.id === courseId);
