@@ -153,7 +153,10 @@
 	}
 
 	.act-section + .act-section {
-		margin-top: 0.25rem;
+		/* No gap between sections: the sticky heading of the outgoing section
+		   slides up in lock-step with the incoming section's heading sliding into
+		   its sticky slot, so no dot-path peeks through during the handoff. */
+		margin-top: 0;
 	}
 
 	.act-heading {
