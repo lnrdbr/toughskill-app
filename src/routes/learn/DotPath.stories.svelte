@@ -14,6 +14,7 @@
 			title: 'Preparation',
 			slug: 'preparation',
 			description: 'Warm up your creative muscles with classic divergent thinking challenges.',
+			icon: 'mdi:dumbbell',
 			modules: [
 				{
 					type: 'exercise',
@@ -39,6 +40,7 @@
 			title: 'Exploration',
 			slug: 'exploration',
 			description: 'Explore creative techniques through guided exercises.',
+			icon: 'mdi:shape-outline',
 			modules: [
 				{
 					type: 'exercise',
@@ -56,6 +58,7 @@
 			title: 'Application',
 			slug: 'application',
 			description: 'Apply what you learned to real-world scenarios.',
+			icon: 'mdi:atom',
 			modules: [
 				{
 					type: 'exercise',

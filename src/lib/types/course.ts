@@ -26,6 +26,7 @@ export interface Lesson {
 	title: string;
 	slug: string;
 	description: string;
+	icon: string;
 	modules: Module[];
 	estimatedMinutes: number;
 }

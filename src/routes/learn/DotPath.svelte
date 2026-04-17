@@ -39,6 +39,9 @@
 		<div class="dot-step flex flex-col items-center gap-2" style="--offset: {offset}">
 			<DotPathNode
 				{status}
+				icon={lesson.icon}
+				completed={progress?.completed ?? 0}
+				total={progress?.total ?? lesson.modules.length}
 				selected={isSelected}
 				onclick={() => (selectedIndex = selectedIndex === i ? null : i)}
 			/>

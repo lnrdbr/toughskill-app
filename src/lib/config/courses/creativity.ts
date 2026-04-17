@@ -14,6 +14,7 @@ export const creativity: Course = {
 			title: 'Preparation',
 			slug: 'preparation',
 			description: 'Warm up your creative muscles with classic divergent thinking challenges.',
+			icon: 'mdi:dumbbell',
 			modules: [
 				{
 					type: 'learning',
@@ -125,6 +126,7 @@ export const creativity: Course = {
 			slug: 'scamper',
 			description:
 				'Apply structured creative lenses to transform everyday objects into something new.',
+			icon: 'mdi:shape-outline',
 			modules: [
 				{
 					type: 'learning',
@@ -204,6 +206,7 @@ export const creativity: Course = {
 			slug: 'connections',
 			description:
 				'Associative thinking — connecting unrelated concepts to spark novel ideas.',
+			icon: 'mdi:vector-link',
 			modules: [
 				{
 					type: 'learning',
@@ -318,6 +321,7 @@ export const creativity: Course = {
 			slug: 'constraints',
 			description:
 				'Constraints as creative fuel — how limitations force original thinking.',
+			icon: 'mdi:lock-outline',
 			modules: [
 				{
 					type: 'learning',
@@ -435,6 +439,7 @@ export const creativity: Course = {
 			slug: 'narrative',
 			description:
 				'Storytelling as a creative skill — constructing meaning, building worlds, finding voice.',
+			icon: 'mdi:feather',
 			modules: [
 				{
 					type: 'learning',
@@ -550,6 +555,7 @@ export const creativity: Course = {
 			slug: 'synthesis',
 			description:
 				'Combining all creative thinking techniques in a single complex challenge.',
+			icon: 'mdi:atom',
 			modules: [
 				{
 					type: 'learning',

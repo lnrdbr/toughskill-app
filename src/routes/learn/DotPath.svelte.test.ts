@@ -10,6 +10,7 @@ const lessons: Lesson[] = [
 		title: 'Preparation',
 		slug: 'preparation',
 		description: 'Warm up your creative muscles.',
+		icon: 'mdi:dumbbell',
 		modules: [
 			{
 				type: 'exercise',
@@ -35,6 +36,7 @@ const lessons: Lesson[] = [
 		title: 'Exploration',
 		slug: 'exploration',
 		description: 'Explore creative techniques.',
+		icon: 'mdi:shape-outline',
 		modules: [
 			{
 				type: 'exercise',
