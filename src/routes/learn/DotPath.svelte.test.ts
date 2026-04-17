@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import DotPath from './DotPath.svelte';
@@ -58,37 +58,48 @@ const lessonProgress = {
 
 describe('DotPath', () => {
 	it('renders a dot button for each lesson', async () => {
-		render(DotPath, { lessons, lessonProgress, courseId: 'creativity' });
+		render(DotPath, { lessons, lessonProgress });
 
 		const buttons = page.getByRole('button');
 		await expect.element(buttons.first()).toBeVisible();
 		expect(await buttons.all()).toHaveLength(2);
 	});
 
-	it('shows detail card when a dot is clicked', async () => {
-		render(DotPath, { lessons, lessonProgress, courseId: 'creativity' });
+	it('fires onSelect with the clicked lesson', async () => {
+		const onSelect = vi.fn();
+		render(DotPath, { lessons, lessonProgress, onSelect });
 
 		await page.getByRole('button').first().click();
-		await expect.element(page.getByRole('heading', { name: 'Preparation' })).toBeVisible();
-		await expect.element(page.getByText('Warm up your creative muscles.')).toBeVisible();
-		await expect.element(page.getByText('2 / 2 modules completed')).toBeVisible();
+		expect(onSelect).toHaveBeenCalledWith(lessons[0]);
 	});
 
-	it('hides detail card when same dot is clicked again', async () => {
-		render(DotPath, { lessons, lessonProgress, courseId: 'creativity' });
+	it('fires onSelect with null when the same dot is clicked twice', async () => {
+		const onSelect = vi.fn();
+		render(DotPath, { lessons, lessonProgress, onSelect });
 
 		await page.getByRole('button').first().click();
-		await expect.element(page.getByText('Warm up your creative muscles.')).toBeVisible();
-
 		await page.getByRole('button').first().click();
-		await expect.element(page.getByText('Warm up your creative muscles.')).not.toBeInTheDocument();
+
+		expect(onSelect).toHaveBeenNthCalledWith(1, lessons[0]);
+		expect(onSelect).toHaveBeenNthCalledWith(2, null);
 	});
 
-	it('shows correct button label based on status', async () => {
-		render(DotPath, { lessons, lessonProgress, courseId: 'creativity' });
+	it('fires onSelect with the new lesson when switching dots', async () => {
+		const onSelect = vi.fn();
+		render(DotPath, { lessons, lessonProgress, onSelect });
 
-		// First lesson is completed
+		const buttons = await page.getByRole('button').all();
+		await buttons[0].click();
+		await buttons[1].click();
+
+		expect(onSelect).toHaveBeenNthCalledWith(2, lessons[1]);
+	});
+
+	it('does not render an inline lesson detail card', async () => {
+		const { container } = render(DotPath, { lessons, lessonProgress });
+
 		await page.getByRole('button').first().click();
-		await expect.element(page.getByText('Revise Lesson')).toBeVisible();
+		// LessonDetailCard used to render a heading + description inline — it should no longer exist.
+		expect(container.querySelector('.detail-card')).toBeNull();
 	});
 });

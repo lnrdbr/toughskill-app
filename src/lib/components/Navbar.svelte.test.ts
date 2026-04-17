@@ -21,24 +21,28 @@ describe('Navbar', () => {
 		expect(login.element().getAttribute('href')).toBe('/auth/login');
 	});
 
-	it('does not show Learn or Dashboard when logged out', async () => {
+	it('does not show Learn when logged out', async () => {
 		const { container } = render(Navbar, { user: null });
 
 		expect(container.querySelector('a[href="/learn"]')).toBeNull();
-		expect(container.querySelector('a[href="/me"]')).toBeNull();
 	});
 
-	it('shows Learn and Dashboard when logged in', async () => {
+	it('shows Learn when logged in', async () => {
 		render(Navbar, {
 			user: { id: 'u-1', name: 'Ada', email: 'ada@example.com' }
 		});
 
 		const learn = page.getByRole('link', { name: /learn/i });
-		const dashboard = page.getByRole('link', { name: /dashboard/i });
 		await expect.element(learn).toBeVisible();
-		await expect.element(dashboard).toBeVisible();
 		expect(learn.element().getAttribute('href')).toBe('/learn');
-		expect(dashboard.element().getAttribute('href')).toBe('/me');
+	});
+
+	it('does not link to the removed /me dashboard', async () => {
+		const { container } = render(Navbar, {
+			user: { id: 'u-1', name: 'Ada', email: 'ada@example.com' }
+		});
+
+		expect(container.querySelector('a[href="/me"]')).toBeNull();
 	});
 
 	it('shows sign-up CTA for anonymous users and no profile avatar', async () => {

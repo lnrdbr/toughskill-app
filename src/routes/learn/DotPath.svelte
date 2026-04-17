@@ -1,25 +1,36 @@
 <script lang="ts">
 	import type { Lesson } from '$lib/types/course';
 	import DotPathNode from './DotPathNode.svelte';
-	import LessonDetailCard from './LessonDetailCard.svelte';
 
 	let {
 		lessons,
 		lessonProgress,
-		courseId
+		selectedSlug = null,
+		onSelect,
+		onStart
 	}: {
 		lessons: Lesson[];
 		lessonProgress: Record<string, { completed: number; total: number }>;
-		courseId: string;
+		selectedSlug?: string | null;
+		onSelect?: (lesson: Lesson) => void;
+		onStart?: (lesson: Lesson) => void;
 	} = $props();
-
-	let selectedIndex: number | null = $state(null);
 
 	function getStatus(lessonSlug: string): 'completed' | 'in-progress' | 'not-started' {
 		const progress = lessonProgress[lessonSlug];
 		if (!progress || progress.completed === 0) return 'not-started';
 		if (progress.completed >= progress.total) return 'completed';
 		return 'in-progress';
+	}
+
+	function handleClick(lesson: Lesson) {
+		// Clicking the already-selected dot is a no-op (deselect happens via outside click).
+		if (selectedSlug === lesson.slug) return;
+		onSelect?.(lesson);
+	}
+
+	function handleDblClick(lesson: Lesson) {
+		onStart?.(lesson);
 	}
 
 	/** Snake pattern: dots weave left→center→right→center→left... */
@@ -32,34 +43,27 @@
 <div class="dot-path flex flex-col items-center gap-7">
 	{#each lessons as lesson, i (lesson.slug)}
 		{@const status = getStatus(lesson.slug)}
-		{@const isSelected = selectedIndex === i}
+		{@const isSelected = selectedSlug === lesson.slug}
 		{@const progress = lessonProgress[lesson.slug]}
 		{@const offset = getDotOffset(i)}
 
-		<div class="dot-step flex flex-col items-center gap-2" style="--offset: {offset}">
+		<div
+			class="dot-step flex flex-col items-center gap-2"
+			style="--offset: {offset}"
+			ondblclick={() => handleDblClick(lesson)}
+			role="presentation"
+		>
 			<DotPathNode
 				{status}
 				icon={lesson.icon}
 				completed={progress?.completed ?? 0}
 				total={progress?.total ?? lesson.modules.length}
 				selected={isSelected}
-				onclick={() => (selectedIndex = selectedIndex === i ? null : i)}
+				onclick={() => handleClick(lesson)}
 			/>
 
 			<span class="dot-label text-sm font-semibold">{lesson.title}</span>
 		</div>
-
-		{#if isSelected}
-			<LessonDetailCard
-				title={lesson.title}
-				description={lesson.description}
-				completed={progress?.completed ?? 0}
-				total={progress?.total ?? lesson.modules.length}
-				{courseId}
-				lessonSlug={lesson.slug}
-				{status}
-			/>
-		{/if}
 	{/each}
 </div>
 
@@ -73,5 +77,6 @@
 		color: var(--color-foreground);
 		text-align: center;
 		white-space: nowrap;
+		user-select: none;
 	}
 </style>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from './Button.svelte';
 	import Icon from '@iconify/svelte';
+	import logo from '$lib/assets/LogoCloudy.png';
 
 	type NavUser = {
 		id: string;
@@ -20,6 +21,7 @@
 
 <nav class="navbar" aria-label="Primary">
 	<a href="/" class="brand" aria-label="TOUGHSKILL home">
+		<img src={logo} alt="" class="brand-logo" />
 		<span class="brand-text">TOUGHSKILL</span>
 	</a>
 
@@ -47,14 +49,6 @@
 					<span class="row">
 						<Icon icon="mdi:book-open-variant" width="18" height="18" />
 						Learn
-					</span>
-				</Button>
-			</a>
-			<a href="/me" class="nav-link">
-				<Button rounded="default" silent>
-					<span class="row">
-						<Icon icon="mdi:view-dashboard-outline" width="18" height="18" />
-						Dashboard
 					</span>
 				</Button>
 			</a>
@@ -96,6 +90,9 @@
 	}
 
 	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
 		text-decoration: none;
 		color: var(--color-foreground);
 		font-family: var(--font-display), serif;
@@ -103,6 +100,12 @@
 		font-weight: 700;
 		letter-spacing: 0.02em;
 		line-height: 1;
+	}
+
+	.brand-logo {
+		width: 2.25rem;
+		height: 2.25rem;
+		object-fit: contain;
 	}
 
 	.brand:hover {
