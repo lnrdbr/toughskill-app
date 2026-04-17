@@ -12,7 +12,7 @@
 		self-determination theory, not streaks and leaderboards.
 	</p>
 
-	<a href="/learn" class="cta">
+	<a href="/courses" class="cta">
 		<Button variant="primary">Start Course</Button>
 	</a>
 

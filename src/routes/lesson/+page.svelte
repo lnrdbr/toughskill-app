@@ -203,8 +203,8 @@
 		{#if sessionDone}
 			{@const nextLesson = (session as { nextLesson?: { slug: string; title: string } })
 				.nextLesson}
-			<div class="lesson-container">
-				<div class="module-area">
+			<div class="lesson-container lesson-container--complete">
+				<div class="module-area module-area--complete">
 					<LessonComplete {completionResults} {courseTitle} {lessonTitle} />
 				</div>
 
@@ -305,6 +305,10 @@
 		grid-template-rows: auto 1fr auto;
 	}
 
+	.lesson-container--complete {
+		grid-template-rows: 1fr auto;
+	}
+
 	.lesson-header {
 		padding: 16px 24px;
 		border-bottom: 1px solid var(--color-border);
@@ -321,6 +325,10 @@
 		justify-content: center;
 		min-height: 0;
 		overflow-y: auto;
+	}
+
+	.module-area--complete {
+		align-items: center;
 	}
 
 	.lesson-context {

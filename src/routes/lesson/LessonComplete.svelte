@@ -40,7 +40,7 @@
 
 <div class="lesson-complete">
 	<div class="trophy">
-		<Icon icon="mdi:check-decagram-outline" width="96" height="96" />
+		<Icon icon="mdi:check-decagram-outline" width="56" height="56" />
 	</div>
 
 	<h1 class="heading">Lesson complete</h1>
@@ -82,11 +82,11 @@
 	.lesson-complete {
 		max-width: 640px;
 		margin: 0 auto;
-		padding: 48px 24px;
+		padding: 24px 24px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 16px;
+		gap: 10px;
 		text-align: center;
 	}
 
@@ -97,7 +97,7 @@
 
 	.heading {
 		font-family: var(--font-display);
-		font-size: 2.4rem;
+		font-size: 1.6rem;
 		color: var(--color-foreground);
 		margin: 0;
 		letter-spacing: 0.04em;
@@ -116,7 +116,7 @@
 	.stats {
 		display: flex;
 		gap: 32px;
-		margin-top: 8px;
+		margin-top: 4px;
 	}
 
 	.stat {
@@ -127,7 +127,7 @@
 	}
 
 	.stat-value {
-		font-size: 1.8rem;
+		font-size: 1.3rem;
 		font-weight: 700;
 		color: var(--color-primary-600);
 	}
@@ -141,8 +141,8 @@
 
 	.highlights {
 		width: 100%;
-		margin-top: 16px;
-		padding: 20px;
+		margin-top: 8px;
+		padding: 14px 16px;
 		background: var(--color-primary-50);
 		border: 2px solid var(--color-primary-200);
 		border-radius: 12px;
@@ -176,7 +176,7 @@
 	}
 
 	.actions {
-		margin-top: 16px;
+		margin-top: 4px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
