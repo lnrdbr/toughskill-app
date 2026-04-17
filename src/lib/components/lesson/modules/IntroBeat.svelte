@@ -84,15 +84,15 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 1.75rem;
-		max-width: 32rem;
+		max-width: 40rem;
 		margin: 0 auto;
 		text-align: center;
 	}
 
 	.body {
 		font-family: var(--font-display);
-		font-size: 1.6rem;
-		line-height: 1.3;
+		font-size: clamp(1.9rem, 3.2vw, 2.4rem);
+		line-height: 1.25;
 		color: var(--color-foreground);
 		margin: 0;
 		padding: 1.5rem 1rem;
