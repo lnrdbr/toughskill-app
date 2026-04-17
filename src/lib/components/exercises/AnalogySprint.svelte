@@ -10,8 +10,12 @@
 		domains = [] as string[],
 		instruction = '',
 		timerDuration = 0,
+		compact = false,
 		oncomplete = undefined as ((result: Record<string, unknown>) => void) | undefined
 	} = $props();
+
+	// Compact mode exposes only the first domain.
+	const effectiveDomains = $derived(compact ? domains.slice(0, 1) : domains);
 
 	type Draft = {
 		analogies: Record<string, { like: string; because: string }>;
@@ -30,7 +34,9 @@
 
 	let analogies: Record<string, { like: string; because: string }> = $state(
 		initial?.analogies ??
-			Object.fromEntries(domains.map((d) => [d, { like: '', because: '' }]))
+			Object.fromEntries(
+				(compact ? domains.slice(0, 1) : domains).map((d) => [d, { like: '', because: '' }])
+			)
 	);
 
 	$effect(() => {
@@ -52,7 +58,11 @@
 	let canFinish = $derived(filledCount > 0);
 
 	function finish() {
-		phase = 'reflecting';
+		if (compact) {
+			submitReflection();
+		} else {
+			phase = 'reflecting';
+		}
 	}
 
 	function handleTimerExpire() {
@@ -107,7 +117,7 @@
 		{/if}
 
 		<div class="domains">
-			{#each domains as domain (domain)}
+			{#each effectiveDomains as domain (domain)}
 				<div class="domain-card">
 					<span class="domain-label">{domain}</span>
 					<div class="analogy-row">
@@ -133,7 +143,7 @@
 		</div>
 
 		<div class="actions">
-			<span class="filled-count">{filledCount} / {domains.length} domains</span>
+			<span class="filled-count">{filledCount} / {effectiveDomains.length} domains</span>
 			<Button onclick={finish} disabled={!canFinish}>I'm Done</Button>
 		</div>
 	{:else if phase === 'reflecting'}
@@ -143,7 +153,7 @@
 			</div>
 
 			<div class="analogies-review">
-				{#each domains as domain (domain)}
+				{#each effectiveDomains as domain (domain)}
 					{@const a = analogies[domain]}
 					{#if a.like.trim() || a.because.trim()}
 						<div class="review-item">
