@@ -198,7 +198,7 @@ export const creativity: Course = {
 					id: 'mod-06-intro-post',
 					title: 'Take this with you',
 					estimatedMinutes: 1,
-					body: "Next time you feel overwhelmed, or can't find any ideas — stop what you're doing and focus on nothing. Even for a minute."
+					body: "Next time you feel overwhelmed, or can't find any ideas — stop what you're doing and focus on nothing. You'll have enough ideas in no time."
 				}
 			]
 		},
