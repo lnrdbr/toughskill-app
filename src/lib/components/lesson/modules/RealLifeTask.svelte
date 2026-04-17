@@ -32,6 +32,7 @@
 	let starting = $state(false);
 	let startError: string | null = $state(null);
 	let submitting = $state(false);
+	let submitted = $state(false);
 	let submitError: string | null = $state(null);
 
 	async function postSubmission(payload: Record<string, unknown>): Promise<void> {
@@ -95,6 +96,7 @@
 				timeSpentSeconds
 			});
 			clearDraft(draftKey);
+			submitted = true;
 			oncomplete?.({
 				feedback,
 				charCount: feedback.length,
@@ -171,17 +173,19 @@
 			{#if submitError}
 				<p class="error" role="alert">{submitError}</p>
 			{/if}
-			<div class="actions">
-				<Button
-					variant="primary"
-					rounded="default"
-					disabled={!canSubmitFeedback}
-					onclick={submitFeedback}
-					data-testid="task-submit"
-				>
-					{submitting ? 'Saving…' : 'Save feedback'}
-				</Button>
-			</div>
+			{#if !submitted}
+				<div class="actions">
+					<Button
+						variant="primary"
+						rounded="default"
+						disabled={!canSubmitFeedback}
+						onclick={submitFeedback}
+						data-testid="task-submit"
+					>
+						{submitting ? 'Saving…' : 'Save feedback'}
+					</Button>
+				</div>
+			{/if}
 		</div>
 	{/if}
 </section>

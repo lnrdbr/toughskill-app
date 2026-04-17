@@ -35,6 +35,7 @@
 	let processing = $state(false);
 	let processError: string | null = $state(null);
 	let submitting = $state(false);
+	let submitted = $state(false);
 	let submitError: string | null = $state(null);
 	let startedAt = $state(Date.now());
 
@@ -154,6 +155,7 @@
 				if (!res.ok) throw new Error(`Submission failed: ${res.status}`);
 			}
 			clearDraft(draftKey);
+			submitted = true;
 			oncomplete?.({
 				caption: captionText,
 				charCount: captionText.length,
@@ -217,7 +219,7 @@
 		<p class="error" role="alert">{submitError}</p>
 	{/if}
 
-	{#if photoDataUrl}
+	{#if photoDataUrl && !submitted}
 		<div class="actions">
 			<Button
 				variant="primary"

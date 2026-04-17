@@ -16,6 +16,7 @@
 	} = $props();
 
 	let submitting = $state(false);
+	let submitted = $state(false);
 	let submitError: string | null = $state(null);
 	let startedAt = $state(Date.now());
 
@@ -42,6 +43,7 @@
 				});
 				if (!res.ok) throw new Error(`Submission failed: ${res.status}`);
 			}
+			submitted = true;
 			oncomplete?.({
 				acknowledged: true,
 				timeSpentSeconds
@@ -61,17 +63,19 @@
 		<p class="error" role="alert">{submitError}</p>
 	{/if}
 
-	<div class="actions">
-		<Button
-			variant="primary"
-			rounded="default"
-			disabled={submitting}
-			onclick={handleContinue}
-			data-testid="intro-continue"
-		>
-			{submitting ? 'Saving…' : 'Continue'}
-		</Button>
-	</div>
+	{#if !submitted}
+		<div class="actions">
+			<Button
+				variant="primary"
+				rounded="default"
+				disabled={submitting}
+				onclick={handleContinue}
+				data-testid="intro-continue"
+			>
+				{submitting ? 'Saving…' : 'Continue'}
+			</Button>
+		</div>
+	{/if}
 </section>
 
 <style>

@@ -24,6 +24,7 @@
 	const draftKey = `ts:choice:${courseId}:${lessonSlug}:${moduleId}`;
 	let selected = $state<string[]>(readDraft<string[]>(draftKey, []));
 	let submitting = $state(false);
+	let submitted = $state(false);
 	let submitError: string | null = $state(null);
 	let startedAt = $state(Date.now());
 
@@ -79,6 +80,7 @@
 				if (!res.ok) throw new Error(`Submission failed: ${res.status}`);
 			}
 			clearDraft(draftKey);
+			submitted = true;
 			oncomplete?.({
 				selectedIds,
 				selectedLabels,
@@ -122,17 +124,19 @@
 		<p class="error" role="alert">{submitError}</p>
 	{/if}
 
-	<div class="actions">
-		<Button
-			variant="primary"
-			rounded="default"
-			disabled={!canSubmit}
-			onclick={handleSubmit}
-			data-testid="choice-submit"
-		>
-			{submitting ? 'Saving…' : 'Continue'}
-		</Button>
-	</div>
+	{#if !submitted}
+		<div class="actions">
+			<Button
+				variant="primary"
+				rounded="default"
+				disabled={!canSubmit}
+				onclick={handleSubmit}
+				data-testid="choice-submit"
+			>
+				{submitting ? 'Saving…' : 'Continue'}
+			</Button>
+		</div>
+	{/if}
 </section>
 
 <style>

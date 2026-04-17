@@ -23,6 +23,7 @@
 	let stoppedEarly = $state(false);
 	let peekCount = $state(0);
 	let submitting = $state(false);
+	let submitted = $state(false);
 	let submitError: string | null = $state(null);
 	let tickHandle: ReturnType<typeof setInterval> | null = null;
 
@@ -120,6 +121,7 @@
 				});
 				if (!res.ok) throw new Error(`Submission failed: ${res.status}`);
 			}
+			submitted = true;
 			oncomplete?.({
 				durationSeconds,
 				completedFull,
@@ -209,15 +211,17 @@
 			{#if submitError}
 				<p class="error" role="alert">{submitError}</p>
 			{/if}
-			<Button
-				variant="primary"
-				rounded="default"
-				disabled={submitting}
-				onclick={saveAndContinue}
-				data-testid="phone-free-continue"
-			>
-				{submitting ? 'Saving…' : 'Save & continue'}
-			</Button>
+			{#if !submitted}
+				<Button
+					variant="primary"
+					rounded="default"
+					disabled={submitting}
+					onclick={saveAndContinue}
+					data-testid="phone-free-continue"
+				>
+					{submitting ? 'Saving…' : 'Save & continue'}
+				</Button>
+			{/if}
 		</div>
 	{/if}
 </section>

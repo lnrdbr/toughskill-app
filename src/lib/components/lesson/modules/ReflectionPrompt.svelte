@@ -21,6 +21,7 @@
 	const draftKey = `ts:reflection:${courseId}:${lessonSlug}:${moduleId}`;
 	let text = $state(readDraft<string>(draftKey, ''));
 	let submitting = $state(false);
+	let submitted = $state(false);
 	let submitError: string | null = $state(null);
 	let startedAt = $state(Date.now());
 
@@ -55,6 +56,7 @@
 				}
 			}
 			clearDraft(draftKey);
+			submitted = true;
 			const timeSpentSeconds = Math.round((Date.now() - startedAt) / 1000);
 			oncomplete?.({
 				text: trimmed,
@@ -95,17 +97,19 @@
 		{/if}
 	</div>
 
-	<div class="actions">
-		<Button
-			variant="primary"
-			rounded="default"
-			disabled={!canSubmit}
-			onclick={handleSubmit}
-			data-testid="reflection-submit"
-		>
-			{submitting ? 'Saving…' : 'Save reflection'}
-		</Button>
-	</div>
+	{#if !submitted}
+		<div class="actions">
+			<Button
+				variant="primary"
+				rounded="default"
+				disabled={!canSubmit}
+				onclick={handleSubmit}
+				data-testid="reflection-submit"
+			>
+				{submitting ? 'Saving…' : 'Save reflection'}
+			</Button>
+		</div>
+	{/if}
 </section>
 
 <style>
