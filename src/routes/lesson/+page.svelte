@@ -203,6 +203,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>toughskill | {lessonTitle || 'Lesson'}</title>
+</svelte:head>
+
 {#if form && 'error' in form}
 	<div class="session-empty">
 		<p class="error-text">{form.error}</p>

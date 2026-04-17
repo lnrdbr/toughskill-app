@@ -15,7 +15,10 @@
 	});
 </script>
 
-<svelte:head><link rel="icon" type="image/png" href={favicon} /></svelte:head>
+<svelte:head>
+	<title>toughskill</title>
+	<link rel="icon" type="image/png" href={favicon} />
+</svelte:head>
 
 <div class="layout">
 	<Navbar user={data.user} />

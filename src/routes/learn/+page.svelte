@@ -54,6 +54,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>toughskill | {data.course?.title ?? 'Learn'}</title>
+</svelte:head>
+
 <div class="learn-layout" class:open={sidebarOpen}>
 	<button
 		type="button"

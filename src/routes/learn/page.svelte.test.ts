@@ -39,8 +39,14 @@ const data = {
 			}
 		]
 	},
-	lessonProgress: { preparation: { completed: 0, total: 1 } },
-	journeyStats: null
+	lessonProgress: { preparation: { completed: 0, total: 1, started: false } },
+	journeyStats: {
+		completedLessons: 0,
+		totalLessons: 1,
+		totalPracticeSeconds: 0,
+		realLifeTasksCompleted: 0,
+		allDone: false
+	}
 };
 
 describe('Learn page sidebar toggle', () => {

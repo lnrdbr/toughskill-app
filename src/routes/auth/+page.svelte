@@ -9,6 +9,10 @@
 	const initial = (data.user.name ?? data.user.email ?? '?').trim().charAt(0).toUpperCase();
 </script>
 
+<svelte:head>
+	<title>toughskill | Account</title>
+</svelte:head>
+
 <div class="page">
 	<div class="card">
 		<div class="avatar" aria-hidden="true">{initial}</div>

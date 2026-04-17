@@ -9,6 +9,10 @@
 	let mode: 'signin' | 'signup' = $state('signin');
 </script>
 
+<svelte:head>
+	<title>toughskill | {mode === 'signin' ? 'Sign in' : 'Create account'}</title>
+</svelte:head>
+
 <div class="page">
 	<div class="card">
 		<h1 class="title">{mode === 'signin' ? 'Welcome back' : 'Create account'}</h1>
