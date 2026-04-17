@@ -6,6 +6,7 @@
 	import ReflectionPrompt from './modules/ReflectionPrompt.svelte';
 	import MeditationTimer from './modules/MeditationTimer.svelte';
 	import PhoneFreeChallenge from './modules/PhoneFreeChallenge.svelte';
+	import RealLifeTask from './modules/RealLifeTask.svelte';
 
 	let {
 		module,
@@ -117,6 +118,16 @@
 	<PhoneFreeChallenge
 		moduleId={module.id}
 		durationSeconds={module.durationSeconds}
+		{courseId}
+		{lessonSlug}
+		oncomplete={handleComplete}
+	/>
+{:else if module.type === 'real_life_task'}
+	<RealLifeTask
+		moduleId={module.id}
+		instruction={module.instruction}
+		feedbackPrompt={module.feedbackPrompt}
+		returnAfterMinutes={module.returnAfterMinutes}
 		{courseId}
 		{lessonSlug}
 		oncomplete={handleComplete}
