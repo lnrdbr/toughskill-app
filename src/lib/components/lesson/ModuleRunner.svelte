@@ -10,6 +10,7 @@
 	import PhotoCapture from './modules/PhotoCapture.svelte';
 	import ChoiceBranch from './modules/ChoiceBranch.svelte';
 	import RecallPrompt from './modules/RecallPrompt.svelte';
+	import IntroBeat from './modules/IntroBeat.svelte';
 
 	let {
 		module,
@@ -161,6 +162,14 @@
 		mode={module.mode}
 		expected={module.expected}
 		options={module.options}
+		{courseId}
+		{lessonSlug}
+		oncomplete={handleComplete}
+	/>
+{:else if module.type === 'intro'}
+	<IntroBeat
+		moduleId={module.id}
+		body={module.body}
 		{courseId}
 		{lessonSlug}
 		oncomplete={handleComplete}
