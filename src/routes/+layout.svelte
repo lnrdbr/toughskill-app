@@ -2,23 +2,9 @@
 	import './layout.css';
 	import '$lib/icons';
 	import favicon from '$lib/assets/CloudyFavicon.png';
-	import { invalidateAll, onNavigate } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	import { authClient } from '$lib/auth-client';
 	import Navbar from '$lib/components/Navbar.svelte';
-
-	// Cross-fade between routes via the browser's View Transitions API.
-	// Falls back to instant navigation on browsers that don't support it
-	// (Firefox today) — users just see the old behaviour, nothing breaks.
-	onNavigate((navigation) => {
-		if (typeof document === 'undefined' || !document.startViewTransition) return;
-
-		return new Promise((resolve) => {
-			document.startViewTransition(async () => {
-				resolve();
-				await navigation.complete;
-			});
-		});
-	});
 
 	let { data, children } = $props();
 
