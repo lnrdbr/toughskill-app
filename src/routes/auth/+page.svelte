@@ -7,6 +7,19 @@
 	let { data }: { data: PageServerData } = $props();
 
 	const initial = (data.user.name ?? data.user.email ?? '?').trim().charAt(0).toUpperCase();
+
+	const PROVIDER_LABELS: Record<string, { label: string; icon: string }> = {
+		credential: { label: 'Email & password', icon: 'mdi:email-outline' },
+		github: { label: 'GitHub', icon: 'mdi:github' },
+		anonymous: { label: 'Guest', icon: 'mdi:incognito' }
+	};
+
+	const providerMeta = data.signUpProvider
+		? (PROVIDER_LABELS[data.signUpProvider] ?? {
+				label: data.signUpProvider,
+				icon: 'mdi:key-outline'
+			})
+		: null;
 </script>
 
 <svelte:head>
@@ -24,6 +37,15 @@
 				<span class="meta-label">User ID</span>
 				<code class="meta-value">{data.user.id}</code>
 			</div>
+			{#if providerMeta}
+				<div class="meta-row">
+					<span class="meta-label">Sign-in method</span>
+					<span class="meta-value provider">
+						<Icon icon={providerMeta.icon} width="16" height="16" />
+						{providerMeta.label}
+					</span>
+				</div>
+			{/if}
 		</div>
 
 		<div class="actions">
@@ -111,6 +133,19 @@
 		flex-direction: column;
 		gap: 0.25rem;
 		text-align: left;
+	}
+
+	.meta-row + .meta-row {
+		margin-top: 0.75rem;
+	}
+
+	.provider {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		font-family: inherit;
+		font-size: 0.9rem;
+		color: var(--color-foreground);
 	}
 
 	.meta-label {
