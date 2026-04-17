@@ -344,10 +344,7 @@
 		}
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		.orb.breathing,
-		.orb.silence {
-			animation: none;
-		}
-	}
+	/* Note: no `prefers-reduced-motion` override here. The breathing / pulsing
+	   orb is the whole point of the meditation module — a user following the
+	   visual to pace their breath can't do that if the orb is frozen. */
 </style>
