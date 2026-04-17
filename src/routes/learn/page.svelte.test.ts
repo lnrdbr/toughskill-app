@@ -39,7 +39,8 @@ const data = {
 			}
 		]
 	},
-	lessonProgress: { preparation: { completed: 0, total: 1 } }
+	lessonProgress: { preparation: { completed: 0, total: 1 } },
+	journeyStats: null
 };
 
 describe('Learn page sidebar toggle', () => {

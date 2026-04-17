@@ -5,6 +5,7 @@
 	import type { Lesson } from '$lib/types/course';
 	import DotPath from './DotPath.svelte';
 	import ProgressPanel from './ProgressPanel.svelte';
+	import JourneyFinisher from './JourneyFinisher.svelte';
 
 	let { data } = $props();
 
@@ -100,6 +101,9 @@
 					onSelect={(lesson) => (selectedLesson = lesson)}
 					onStart={startLesson}
 				/>
+				{#if data.journeyStats}
+					<JourneyFinisher stats={data.journeyStats} courseTitle={data.course.title} />
+				{/if}
 			{/if}
 		</div>
 
