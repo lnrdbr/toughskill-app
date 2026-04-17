@@ -1,0 +1,33 @@
+import { addIcon } from '@iconify/svelte';
+
+import lightbulb from '@iconify-icons/mdi/lightbulb';
+import checkBold from '@iconify-icons/mdi/check-bold';
+import dumbbell from '@iconify-icons/mdi/dumbbell';
+import shapeOutline from '@iconify-icons/mdi/shape-outline';
+import vectorLink from '@iconify-icons/mdi/vector-link';
+import lockOutline from '@iconify-icons/mdi/lock-outline';
+import feather from '@iconify-icons/mdi/feather';
+import atom from '@iconify-icons/mdi/atom';
+import github from '@iconify-icons/mdi/github';
+import bookOpenVariant from '@iconify-icons/mdi/book-open-variant';
+import logout from '@iconify-icons/mdi/logout';
+import homeOutline from '@iconify-icons/mdi/home-outline';
+import login from '@iconify-icons/mdi/login';
+import viewDashboardOutline from '@iconify-icons/mdi/view-dashboard-outline';
+import contentSaveOutline from '@iconify-icons/mdi/content-save-outline';
+
+addIcon('mdi:lightbulb', lightbulb);
+addIcon('mdi:check-bold', checkBold);
+addIcon('mdi:dumbbell', dumbbell);
+addIcon('mdi:shape-outline', shapeOutline);
+addIcon('mdi:vector-link', vectorLink);
+addIcon('mdi:lock-outline', lockOutline);
+addIcon('mdi:feather', feather);
+addIcon('mdi:atom', atom);
+addIcon('mdi:github', github);
+addIcon('mdi:book-open-variant', bookOpenVariant);
+addIcon('mdi:logout', logout);
+addIcon('mdi:home-outline', homeOutline);
+addIcon('mdi:login', login);
+addIcon('mdi:view-dashboard-outline', viewDashboardOutline);
+addIcon('mdi:content-save-outline', contentSaveOutline);
