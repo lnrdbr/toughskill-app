@@ -163,7 +163,12 @@
 		</div>
 	{:else if phase === 'running'}
 		<div class="running">
-			<div class="visual {style}" aria-hidden="true">
+			<div
+				class="visual"
+				class:breathing={style === 'breathing'}
+				class:silence={style === 'silence'}
+				aria-hidden="true"
+			>
 				<div class="orb"></div>
 			</div>
 			<div class="countdown" data-testid="meditation-remaining">

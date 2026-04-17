@@ -153,10 +153,13 @@
 		const timeRaw = savableData?.timeSpentSeconds;
 		const timeSpentSeconds = typeof timeRaw === 'number' ? Math.round(Math.max(0, timeRaw)) : 0;
 
-		// Non-blocking progress POST
+		// Non-blocking progress POST. keepalive ensures the request completes even
+		// if the user closes the tab immediately after submitting — critical for
+		// single-module lessons where the submit click is the user's only action.
 		fetch('/api/progress', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
+			keepalive: true,
 			body: JSON.stringify({
 				moduleId: result.moduleId,
 				courseId,
