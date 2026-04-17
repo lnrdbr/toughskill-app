@@ -35,13 +35,17 @@
 	});
 
 	function toggle(id: string) {
-		if (submitting) return;
+		if (submitting || submitted) return;
 		if (allowMultiple) {
 			selected = selected.includes(id)
 				? selected.filter((s) => s !== id)
 				: [...selected, id];
 		} else {
 			selected = selected[0] === id ? [] : [id];
+			// Single-select: a pick is the submit. No separate Continue click.
+			if (selected.length > 0) {
+				handleSubmit();
+			}
 		}
 	}
 
@@ -124,7 +128,7 @@
 		<p class="error" role="alert">{submitError}</p>
 	{/if}
 
-	{#if !submitted}
+	{#if !submitted && allowMultiple}
 		<div class="actions">
 			<Button
 				variant="primary"

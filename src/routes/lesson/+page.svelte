@@ -9,6 +9,7 @@
 	import { getModuleComponent } from '$lib/config/module-registry';
 	import lessonFinisherSrc from '$lib/assets/lesson Finisher.wav';
 	import Button from '$lib/components/Button.svelte';
+	import LessonComplete from './LessonComplete.svelte';
 	import { readDraft, writeDraft, clearDraft } from '$lib/client/draft';
 	import {
 		saveEvaluationResult,
@@ -200,15 +201,13 @@
 {:else}
 	{#key sessionKey}
 		{#if sessionDone}
-			<div class="session-done">
-				<h2>Session complete!</h2>
-				<p>
-					You completed {completionResults.length} module{completionResults.length === 1
-						? ''
-						: 's'}. Great work!
-				</p>
-				<a href={resolve('/learn')} class="back-link">Continue learning</a>
-			</div>
+			<LessonComplete
+				{completionResults}
+				{courseId}
+				{courseTitle}
+				{lessonTitle}
+				nextLesson={(session as { nextLesson?: { slug: string; title: string } }).nextLesson}
+			/>
 		{:else if modules.length > 0}
 			<div class="lesson-container">
 				<header class="lesson-header">
@@ -253,8 +252,7 @@
 {/if}
 
 <style>
-	.session-empty,
-	.session-done {
+	.session-empty {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -264,15 +262,13 @@
 		text-align: center;
 	}
 
-	.session-empty h2,
-	.session-done h2 {
+	.session-empty h2 {
 		font-size: 1.5rem;
 		font-weight: 700;
 		color: var(--color-foreground);
 	}
 
-	.session-empty p,
-	.session-done p {
+	.session-empty p {
 		color: var(--color-muted-foreground);
 	}
 

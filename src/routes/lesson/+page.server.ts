@@ -6,27 +6,44 @@ import { eq, and, desc } from 'drizzle-orm';
 import { getCourse, getLessonBySlug } from '$lib/config/courses';
 import { resolveLessonSession } from './session';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
 	if (!locals.user) {
 		return redirect(302, '/auth/login');
 	}
 
-	const [latest] = await db
-		.select({
-			courseId: moduleCompletion.courseId,
-			lessonSlug: moduleCompletion.lessonSlug
-		})
-		.from(moduleCompletion)
-		.where(eq(moduleCompletion.userId, locals.user.id))
-		.orderBy(desc(moduleCompletion.completedAt))
-		.limit(1);
+	// Prefer the lesson named in the URL (set by the form action on entry from
+	// /learn). Falls back to "most recently completed" only when no URL hint
+	// is present — otherwise a reload of a just-started lesson would show the
+	// previous lesson in revision mode.
+	const paramCourseId = url.searchParams.get('course');
+	const paramSlug = url.searchParams.get('slug');
 
-	if (!latest) {
-		return { sessionType: 'empty' as const, modules: [] };
+	let courseId = '';
+	let lessonSlug = '';
+
+	if (paramCourseId && paramSlug && getLessonBySlug(paramCourseId, paramSlug)) {
+		courseId = paramCourseId;
+		lessonSlug = paramSlug;
+	} else {
+		const [latest] = await db
+			.select({
+				courseId: moduleCompletion.courseId,
+				lessonSlug: moduleCompletion.lessonSlug
+			})
+			.from(moduleCompletion)
+			.where(eq(moduleCompletion.userId, locals.user.id))
+			.orderBy(desc(moduleCompletion.completedAt))
+			.limit(1);
+
+		if (!latest) {
+			return { sessionType: 'empty' as const, modules: [] };
+		}
+		courseId = latest.courseId;
+		lessonSlug = latest.lessonSlug;
 	}
 
-	const lesson = getLessonBySlug(latest.courseId, latest.lessonSlug);
-	const course = getCourse(latest.courseId);
+	const lesson = getLessonBySlug(courseId, lessonSlug);
+	const course = getCourse(courseId);
 
 	if (!lesson || !course) {
 		return { sessionType: 'empty' as const, modules: [] };
@@ -38,19 +55,30 @@ export const load: PageServerLoad = async ({ locals }) => {
 		.where(
 			and(
 				eq(moduleCompletion.userId, locals.user.id),
-				eq(moduleCompletion.courseId, latest.courseId),
-				eq(moduleCompletion.lessonSlug, latest.lessonSlug)
+				eq(moduleCompletion.courseId, courseId),
+				eq(moduleCompletion.lessonSlug, lessonSlug)
 			)
 		);
 
 	const completedIds = new Set(completions.map((c) => c.moduleId));
 
-	return resolveLessonSession(lesson.modules, completedIds, {
-		courseId: latest.courseId,
-		lessonSlug: latest.lessonSlug,
+	const session = resolveLessonSession(lesson.modules, completedIds, {
+		courseId,
+		lessonSlug,
 		lessonTitle: lesson.title,
 		courseTitle: course.title
 	});
+
+	const lessonIdx = course.lessons.findIndex((l) => l.slug === lessonSlug);
+	const next =
+		lessonIdx >= 0 && lessonIdx < course.lessons.length - 1
+			? course.lessons[lessonIdx + 1]
+			: null;
+
+	return {
+		...session,
+		nextLesson: next ? { slug: next.slug, title: next.title } : undefined
+	};
 };
 
 export const actions: Actions = {
@@ -77,31 +105,9 @@ export const actions: Actions = {
 			return fail(404, { error: 'Lesson not found' });
 		}
 
-		const course = getCourse(courseId);
-
-		const completions = await db
-			.select({ moduleId: moduleCompletion.moduleId })
-			.from(moduleCompletion)
-			.where(
-				and(
-					eq(moduleCompletion.userId, locals.user.id),
-					eq(moduleCompletion.courseId, courseId),
-					eq(moduleCompletion.lessonSlug, lessonSlug)
-				)
-			);
-
-		const completedIds = new Set(completions.map((c) => c.moduleId));
-		const remaining = lesson.modules.filter((m) => !completedIds.has(m.id));
-		const allCompleted = remaining.length === 0;
-
-		return {
-			sessionType: 'new' as const,
-			courseId,
-			lessonSlug,
-			lessonTitle: lesson.title,
-			courseTitle: course?.title ?? '',
-			modules: allCompleted ? lesson.modules : remaining,
-			allCompleted
-		};
+		// Redirect with the lesson in the URL so reloads land on the same lesson
+		// rather than whatever the user most recently completed a module in.
+		const target = `/lesson?course=${encodeURIComponent(courseId)}&slug=${encodeURIComponent(lessonSlug)}`;
+		return redirect(303, target);
 	}
 };

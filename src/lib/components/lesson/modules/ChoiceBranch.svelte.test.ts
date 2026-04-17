@@ -43,11 +43,12 @@ describe('ChoiceBranch', () => {
 		expect(container.querySelector('[data-testid="choice-option-c"]')).not.toBeNull();
 	});
 
-	it('disables submit until a selection is made', async () => {
+	it('multi-select: disables submit until a selection is made', async () => {
 		const { container } = render(ChoiceBranch, {
 			moduleId: 'mod-c',
 			prompt: 'Pick one',
-			options: OPTIONS
+			options: OPTIONS,
+			allowMultiple: true
 		});
 
 		const submit = container.querySelector(
@@ -59,40 +60,32 @@ describe('ChoiceBranch', () => {
 		await expect.poll(() => submit.disabled).toBe(false);
 	});
 
-	it('single-select: picking a different option replaces the selection', async () => {
+	it('single-select: does not render a separate Continue button', async () => {
 		const { container } = render(ChoiceBranch, {
 			moduleId: 'mod-c',
 			prompt: 'Pick one',
 			options: OPTIONS
 		});
 
-		const a = container.querySelector('[data-testid="choice-option-a"]') as HTMLButtonElement;
-		const b = container.querySelector('[data-testid="choice-option-b"]') as HTMLButtonElement;
-
-		a.click();
-		await expect.poll(() => a.getAttribute('aria-checked')).toBe('true');
-		b.click();
-		await expect.poll(() => b.getAttribute('aria-checked')).toBe('true');
-		expect(a.getAttribute('aria-checked')).toBe('false');
+		expect(container.querySelector('[data-testid="choice-submit"]')).toBeNull();
 	});
 
-	it('single-select: clicking the picked option again clears it', async () => {
+	it('single-select: picking an option auto-submits and fires oncomplete', async () => {
+		const oncomplete = vi.fn();
 		const { container } = render(ChoiceBranch, {
 			moduleId: 'mod-c',
 			prompt: 'Pick one',
-			options: OPTIONS
+			options: OPTIONS,
+			courseId: 'creativity',
+			lessonSlug: 'myth-of-the-creative',
+			oncomplete
 		});
 
-		const a = container.querySelector('[data-testid="choice-option-a"]') as HTMLButtonElement;
-		a.click();
-		await expect.poll(() => a.getAttribute('aria-checked')).toBe('true');
-		a.click();
-		await expect.poll(() => a.getAttribute('aria-checked')).toBe('false');
+		(container.querySelector('[data-testid="choice-option-a"]') as HTMLButtonElement).click();
 
-		const submit = container.querySelector(
-			'[data-testid="choice-submit"]'
-		) as HTMLButtonElement;
-		expect(submit.disabled).toBe(true);
+		await expect.poll(() => oncomplete).toHaveBeenCalled();
+		const arg = oncomplete.mock.calls[0][0] as Record<string, unknown>;
+		expect(arg.selectedIds).toEqual(['a']);
 	});
 
 	it('multi-select: allows toggling multiple options', async () => {
@@ -113,11 +106,12 @@ describe('ChoiceBranch', () => {
 		expect(b.getAttribute('aria-checked')).toBe('true');
 	});
 
-	it('reveals the option body only while that option is selected', async () => {
+	it('multi-select: reveals the option body only while that option is selected', async () => {
 		const { container } = render(ChoiceBranch, {
 			moduleId: 'mod-c',
-			prompt: 'Pick one',
-			options: OPTIONS
+			prompt: 'Pick all',
+			options: OPTIONS,
+			allowMultiple: true
 		});
 
 		expect(container.querySelector('[data-testid="choice-body-a"]')).toBeNull();
@@ -131,7 +125,7 @@ describe('ChoiceBranch', () => {
 		await expect.poll(() => container.querySelector('[data-testid="choice-body-a"]')).toBeNull();
 	});
 
-	it('submits the selection, POSTs to /api/submissions, and fires oncomplete', async () => {
+	it('single-select: submits the selection, POSTs to /api/submissions, and fires oncomplete', async () => {
 		const oncomplete = vi.fn();
 		const { container } = render(ChoiceBranch, {
 			moduleId: 'mod-c',
@@ -143,12 +137,6 @@ describe('ChoiceBranch', () => {
 		});
 
 		(container.querySelector('[data-testid="choice-option-b"]') as HTMLButtonElement).click();
-
-		const submit = container.querySelector(
-			'[data-testid="choice-submit"]'
-		) as HTMLButtonElement;
-		await expect.poll(() => submit.disabled).toBe(false);
-		submit.click();
 
 		await expect.poll(() => oncomplete).toHaveBeenCalled();
 
@@ -212,12 +200,6 @@ describe('ChoiceBranch', () => {
 
 		(container.querySelector('[data-testid="choice-option-a"]') as HTMLButtonElement).click();
 
-		const submit = container.querySelector(
-			'[data-testid="choice-submit"]'
-		) as HTMLButtonElement;
-		await expect.poll(() => submit.disabled).toBe(false);
-		submit.click();
-
 		await expect.poll(() => oncomplete).toHaveBeenCalled();
 		expect(fetchSpy).not.toHaveBeenCalled();
 	});
@@ -235,12 +217,6 @@ describe('ChoiceBranch', () => {
 		});
 
 		(container.querySelector('[data-testid="choice-option-a"]') as HTMLButtonElement).click();
-
-		const submit = container.querySelector(
-			'[data-testid="choice-submit"]'
-		) as HTMLButtonElement;
-		await expect.poll(() => submit.disabled).toBe(false);
-		submit.click();
 
 		await expect.poll(() => container.querySelector('[role="alert"]')).not.toBeNull();
 		expect(oncomplete).not.toHaveBeenCalled();
@@ -277,14 +253,6 @@ describe('ChoiceBranch', () => {
 		});
 
 		(container.querySelector('[data-testid="choice-option-b"]') as HTMLButtonElement).click();
-
-		await expect.poll(() => window.sessionStorage.getItem(key)).not.toBeNull();
-
-		const submit = container.querySelector(
-			'[data-testid="choice-submit"]'
-		) as HTMLButtonElement;
-		await expect.poll(() => submit.disabled).toBe(false);
-		submit.click();
 
 		await expect.poll(() => oncomplete).toHaveBeenCalled();
 		expect(window.sessionStorage.getItem(key)).toBeNull();

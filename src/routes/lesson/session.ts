@@ -8,6 +8,7 @@ export interface LessonSession {
 	courseTitle?: string;
 	modules: Module[];
 	allCompleted?: boolean;
+	nextLesson?: { slug: string; title: string };
 }
 
 /**
