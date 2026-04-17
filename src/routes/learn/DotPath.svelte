@@ -163,11 +163,14 @@
 		position: sticky;
 		top: 0;
 		z-index: 5;
-		margin: 0 0 1.25rem;
+		margin: 0;
 		/* Top padding pushes the title text down while the heading's opaque
 		   background extends to the very top of the scroll container, hiding any
-		   dots that would otherwise scroll past above the pinned title. */
-		padding: 1.5rem 0 0.75rem;
+		   dots that would otherwise scroll past above the pinned title. The
+		   bottom padding replaces the previous margin-bottom — as padding, it's
+		   part of the heading's border-box and gets its opaque background, so no
+		   transparent strip sits below the pinned title for dots to peek through. */
+		padding: 1.5rem 0 2rem;
 		font-size: 1.5rem;
 		font-weight: 700;
 		color: var(--color-foreground);
