@@ -7,6 +7,7 @@
 	import MeditationTimer from './modules/MeditationTimer.svelte';
 	import PhoneFreeChallenge from './modules/PhoneFreeChallenge.svelte';
 	import RealLifeTask from './modules/RealLifeTask.svelte';
+	import PhotoCapture from './modules/PhotoCapture.svelte';
 
 	let {
 		module,
@@ -128,6 +129,15 @@
 		instruction={module.instruction}
 		feedbackPrompt={module.feedbackPrompt}
 		returnAfterMinutes={module.returnAfterMinutes}
+		{courseId}
+		{lessonSlug}
+		oncomplete={handleComplete}
+	/>
+{:else if module.type === 'photo'}
+	<PhotoCapture
+		moduleId={module.id}
+		prompt={module.prompt}
+		captionPrompt={module.captionPrompt}
 		{courseId}
 		{lessonSlug}
 		oncomplete={handleComplete}
