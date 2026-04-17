@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Component } from 'svelte';
-	import type { Module, ModuleCompletionResult } from '$lib/types/course';
+	import type { ComponentModule, Module, ModuleCompletionResult } from '$lib/types/course';
+	import { isComponentModule } from '$lib/types/course';
 	import { getModuleComponent } from '$lib/config/module-registry';
 
 	let { module, oncomplete = undefined as ((result: ModuleCompletionResult) => void) | undefined } =
@@ -18,6 +19,11 @@
 		});
 	}
 
+	// When `resolved` is set we know the guard passed — expose the config for the template.
+	let componentConfig = $derived(
+		isComponentModule(module) ? module.config : ({} as Record<string, unknown>)
+	);
+
 	$effect(() => {
 		let cancelled = false;
 
@@ -26,10 +32,19 @@
 			error = null;
 			loading = true;
 
-			const loader = getModuleComponent(mod.componentId);
+			if (!isComponentModule(mod)) {
+				if (!cancelled) {
+					error = `Module type "${mod.type}" is not yet supported.`;
+					loading = false;
+				}
+				return;
+			}
+
+			const componentMod: ComponentModule = mod;
+			const loader = getModuleComponent(componentMod.componentId);
 			if (!loader) {
 				if (!cancelled) {
-					console.error(`[ModuleRunner] Unknown module: "${mod.componentId}"`);
+					console.error(`[ModuleRunner] Unknown module: "${componentMod.componentId}"`);
 					error = "This exercise couldn't be loaded. Please try again later.";
 					loading = false;
 				}
@@ -40,7 +55,10 @@
 				const imported = await loader();
 				if (!cancelled) resolved = imported.default;
 			} catch (err) {
-				console.error(`[ModuleRunner] Failed to load module "${mod.componentId}":`, err);
+				console.error(
+					`[ModuleRunner] Failed to load module "${componentMod.componentId}":`,
+					err
+				);
 				if (!cancelled) error = "This exercise couldn't be loaded. Please try again later.";
 			}
 			if (!cancelled) loading = false;
@@ -66,7 +84,7 @@
 	</div>
 {:else if resolved}
 	{@const Mod = resolved}
-	<Mod {...module.config} oncomplete={handleComplete} />
+	<Mod {...componentConfig} moduleId={module.id} oncomplete={handleComplete} />
 {/if}
 
 <style>

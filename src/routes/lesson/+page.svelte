@@ -2,6 +2,7 @@
 	import type { PageData, ActionData } from './$types';
 	import ModuleRunner from '$lib/components/lesson/ModuleRunner.svelte';
 	import type { ModuleCompletionResult, Module } from '$lib/types/course';
+	import { isComponentModule } from '$lib/types/course';
 	import type { AnySubmissionResponse } from '$lib/components/exercises/types';
 	import { pendingEvaluations } from '$lib/components/exercises/types';
 	import { resolve } from '$app/paths';
@@ -64,7 +65,7 @@
 	// Preload the next module's component while the user is on the current one
 	$effect(() => {
 		const next = modules[currentIndex + 1];
-		if (next) {
+		if (next && isComponentModule(next)) {
 			getModuleComponent(next.componentId)?.();
 		}
 	});
