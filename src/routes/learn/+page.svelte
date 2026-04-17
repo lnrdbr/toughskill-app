@@ -123,6 +123,7 @@
 				<DotPath
 					lessons={data.course.lessons}
 					lessonProgress={data.lessonProgress}
+					acts={data.course.acts ?? []}
 					selectedSlug={selectedLesson?.slug ?? null}
 					onSelect={(lesson) => (selectedLesson = lesson)}
 					onStart={startLesson}

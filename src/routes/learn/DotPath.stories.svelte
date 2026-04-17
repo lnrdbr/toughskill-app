@@ -120,3 +120,21 @@
 		}
 	}}
 />
+
+<Story
+	name="With Act Dividers"
+	args={{
+		courseId: 'creativity',
+		lessons,
+		acts: [
+			{ title: 'Awakening', startLessonSlug: 'preparation' },
+			{ title: 'Unblocking', startLessonSlug: 'exploration' },
+			{ title: 'Practice', startLessonSlug: 'application' }
+		],
+		lessonProgress: {
+			preparation: { completed: 2, total: 2 },
+			exploration: { completed: 1, total: 1 },
+			application: { completed: 0, total: 2 }
+		}
+	}}
+/>

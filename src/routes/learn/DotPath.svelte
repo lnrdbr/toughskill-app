@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Lesson, Module } from '$lib/types/course';
+	import type { Act, Lesson, Module } from '$lib/types/course';
 	import DotPathNode from './DotPathNode.svelte';
 
 	const TYPE_ICONS: Record<Module['type'], string> = {
@@ -24,16 +24,23 @@
 	let {
 		lessons,
 		lessonProgress,
+		acts = [],
 		selectedSlug = null,
 		onSelect,
 		onStart
 	}: {
 		lessons: Lesson[];
 		lessonProgress: Record<string, { completed: number; total: number; started?: boolean }>;
+		acts?: Act[];
 		selectedSlug?: string | null;
 		onSelect?: (lesson: Lesson) => void;
 		onStart?: (lesson: Lesson) => void;
 	} = $props();
+
+	// Map of lessonSlug → act title, so we can render a header row above that lesson.
+	let actHeadingBySlug = $derived(
+		new Map(acts.map((a) => [a.startLessonSlug, a.title]))
+	);
 
 	function getStatus(lessonSlug: string): 'completed' | 'in-progress' | 'not-started' {
 		const progress = lessonProgress[lessonSlug];
@@ -66,6 +73,15 @@
 		{@const isSelected = selectedSlug === lesson.slug}
 		{@const progress = lessonProgress[lesson.slug]}
 		{@const offset = getDotOffset(i)}
+		{@const actTitle = actHeadingBySlug.get(lesson.slug)}
+
+		{#if actTitle}
+			<div class="act-divider" data-testid="act-divider" role="separator" aria-label={actTitle}>
+				<span class="act-line" aria-hidden="true"></span>
+				<span class="act-title">{actTitle}</span>
+				<span class="act-line" aria-hidden="true"></span>
+			</div>
+		{/if}
 
 		<div
 			class="dot-step flex flex-col items-center gap-2"
@@ -99,5 +115,29 @@
 		text-align: center;
 		white-space: nowrap;
 		user-select: none;
+	}
+
+	.act-divider {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		width: 100%;
+		/* Pull the divider outside the snake offset so it always spans the path. */
+		transform: translateX(0);
+	}
+
+	.act-line {
+		flex: 1;
+		height: 1px;
+		background: color-mix(in srgb, var(--color-foreground) 20%, transparent);
+	}
+
+	.act-title {
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		color: color-mix(in srgb, var(--color-foreground) 55%, transparent);
+		text-transform: uppercase;
+		white-space: nowrap;
 	}
 </style>

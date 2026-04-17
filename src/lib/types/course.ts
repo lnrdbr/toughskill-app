@@ -121,6 +121,12 @@ export interface Lesson {
 	estimatedMinutes: number;
 }
 
+export interface Act {
+	title: string;
+	/** Slug of the lesson that opens this act; used by DotPath to render the act header. */
+	startLessonSlug: string;
+}
+
 export interface Course {
 	id: string;
 	title: string;
@@ -129,6 +135,8 @@ export interface Course {
 	icon: string;
 	color: string;
 	lessons: Lesson[];
+	/** Optional narrative acts, in order. Each entry points at the lesson that starts the act. */
+	acts?: Act[];
 }
 
 export interface ModuleCompletionResult {

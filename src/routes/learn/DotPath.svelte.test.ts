@@ -143,4 +143,38 @@ describe('DotPath', () => {
 		const buttons = container.querySelectorAll('button.dot-button');
 		expect(buttons[0].classList.contains('completed')).toBe(true);
 	});
+
+	it('renders an act divider before each lesson that opens an act', () => {
+		const { container } = render(DotPath, {
+			lessons,
+			lessonProgress,
+			acts: [
+				{ title: 'Awakening', startLessonSlug: 'preparation' },
+				{ title: 'Unblocking', startLessonSlug: 'exploration' }
+			]
+		});
+
+		const dividers = container.querySelectorAll('[data-testid="act-divider"]');
+		expect(dividers).toHaveLength(2);
+		expect(dividers[0].textContent).toContain('Awakening');
+		expect(dividers[1].textContent).toContain('Unblocking');
+	});
+
+	it('renders no dividers when acts prop is omitted', () => {
+		const { container } = render(DotPath, { lessons, lessonProgress });
+
+		expect(container.querySelectorAll('[data-testid="act-divider"]')).toHaveLength(0);
+	});
+
+	it('places each divider directly before its start lesson in DOM order', () => {
+		const { container } = render(DotPath, {
+			lessons,
+			lessonProgress,
+			acts: [{ title: 'Awakening', startLessonSlug: 'exploration' }]
+		});
+
+		const divider = container.querySelector('[data-testid="act-divider"]') as HTMLElement;
+		const nextEl = divider.nextElementSibling as HTMLElement;
+		expect(nextEl.querySelector('.dot-label')!.textContent).toBe('Exploration');
+	});
 });
