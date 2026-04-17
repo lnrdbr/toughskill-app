@@ -16,17 +16,16 @@
 	let progressColEl: HTMLDivElement | undefined = $state();
 	let courseHeaderEl: HTMLDivElement | undefined = $state();
 
-	// Sticky offset for the progress panel — its initial distance from the top of
-	// the scroll container, so it pins right below the course header (which now
-	// sits above the panel in the right-hand column).
+	// Sticky offset for the progress panel — pins right below the course header,
+	// which also sticks at the top of the right-hand column so both move as one
+	// sticky block.
+	const BASE_STICKY_TOP_PX = 24; // 1.5rem, matches .course-header top
 	let panelStickyTop = $state('1.5rem');
 	$effect(() => {
 		if (!courseHeaderEl) return;
 		const update = () => {
 			if (!courseHeaderEl) return;
-			// .main has padding-top: 3rem (48px); the course header sits immediately
-			// below that padding. The panel should pin where the header ends.
-			panelStickyTop = `${48 + courseHeaderEl.offsetHeight}px`;
+			panelStickyTop = `${BASE_STICKY_TOP_PX + courseHeaderEl.offsetHeight}px`;
 		};
 		update();
 		const ro = new ResizeObserver(update);
@@ -34,8 +33,7 @@
 		return () => ro.disconnect();
 	});
 
-	// The DotPath no longer has the course header above it, so its sticky act
-	// headings pin near the top of the scroll container.
+	// The DotPath's sticky act headings pin near the top of the scroll container.
 	const pathStickyTop = '1.5rem';
 
 	function startLesson(lesson: Lesson) {
@@ -252,6 +250,10 @@
 	.course-header {
 		min-width: 0;
 		width: 100%;
+		position: sticky;
+		top: 1.5rem;
+		z-index: 6;
+		background: var(--color-background);
 	}
 
 	@media (max-width: 1200px) {
