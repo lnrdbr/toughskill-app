@@ -30,7 +30,18 @@
 	let percent = $derived(
 		totals.total === 0 ? 0 : Math.round((totals.completed / totals.total) * 100)
 	);
-	let dashOffset = $derived(100 - percent);
+
+	// Animate the progress-ring from empty (dashOffset 100) to the target on mount.
+	let animatedPercent = $state(0);
+	$effect(() => {
+		const target = percent;
+		animatedPercent = 0;
+		const id = requestAnimationFrame(() => {
+			animatedPercent = target;
+		});
+		return () => cancelAnimationFrame(id);
+	});
+	let dashOffset = $derived(100 - animatedPercent);
 
 	// Selected-lesson progress
 	let lessonProgressEntry = $derived(
@@ -50,6 +61,21 @@
 				? 'completed'
 				: 'in-progress'
 	);
+
+	// Animate the lesson progress bar from 0 on mount / lesson change.
+	let animatedLessonPercent = $state(0);
+	$effect(() => {
+		if (!selectedLesson) {
+			animatedLessonPercent = 0;
+			return;
+		}
+		const target = lessonPercent;
+		animatedLessonPercent = 0;
+		const id = requestAnimationFrame(() => {
+			animatedLessonPercent = target;
+		});
+		return () => cancelAnimationFrame(id);
+	});
 
 	// Scroll-driven rotation of the cloud.
 	let scrollRotation = $state(0);
@@ -78,7 +104,7 @@
 				aria-valuemax="100"
 				aria-label="Lesson progress"
 			>
-				<div class="progress-fill" style="width: {lessonPercent}%"></div>
+				<div class="progress-fill" style="width: {animatedLessonPercent}%"></div>
 			</div>
 			<div class="progress-meta">
 				{lessonCompleted} / {lessonTotal} modules · {lessonPercent}%
@@ -104,9 +130,9 @@
 		</div>
 	{:else}
 		<div class="idle-view" data-testid="idle-view">
-			<div class="ring-wrap">
-				<div class="ring">
-					<svg class="ring-svg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+			<div class="progress-ring-wrap">
+				<div class="progress-ring">
+					<svg class="progress-ring-svg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
 						<circle cx="18" cy="18" r="16" fill="none" class="track" stroke-width="2"></circle>
 						<circle
 							cx="18"
@@ -154,24 +180,23 @@
 		gap: 1rem;
 	}
 
-	.ring-wrap {
+	.progress-ring-wrap {
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
 	}
 
-	.ring {
+	.progress-ring {
 		position: relative;
 		width: 9rem;
 		height: 9rem;
 		flex-shrink: 0;
 	}
 
-	.ring-svg {
+	.progress-ring-svg {
 		width: 100%;
 		height: 100%;
 		transform: rotate(-90deg);
-		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.15));
 	}
 
 	.track {
@@ -181,6 +206,7 @@
 
 	.progress {
 		stroke: var(--color-primary-500);
+		transition: stroke-dashoffset 1.1s cubic-bezier(0.22, 1, 0.36, 1);
 	}
 
 	.percent {
@@ -230,7 +256,9 @@
 	.progress-bar {
 		width: 100%;
 		height: 0.75rem;
-		background: color-mix(in srgb, var(--color-foreground) 10%, transparent);
+		background: color-mix(in srgb, var(--color-foreground) 8%, transparent);
+		border: none;
+		outline: none;
 		border-radius: 999px;
 		overflow: hidden;
 	}
@@ -239,7 +267,7 @@
 		height: 100%;
 		background: var(--color-primary-500);
 		border-radius: 999px;
-		transition: width 0.3s ease;
+		transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 	}
 
 	.progress-meta {

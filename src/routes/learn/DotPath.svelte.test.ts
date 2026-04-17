@@ -73,33 +73,48 @@ describe('DotPath', () => {
 		expect(onSelect).toHaveBeenCalledWith(lessons[0]);
 	});
 
-	it('fires onSelect with null when the same dot is clicked twice', async () => {
+	it('does not fire onSelect again when clicking the already-selected dot', async () => {
 		const onSelect = vi.fn();
-		render(DotPath, { lessons, lessonProgress, onSelect });
+		render(DotPath, {
+			lessons,
+			lessonProgress,
+			selectedSlug: 'preparation',
+			onSelect
+		});
 
 		await page.getByRole('button').first().click();
-		await page.getByRole('button').first().click();
-
-		expect(onSelect).toHaveBeenNthCalledWith(1, lessons[0]);
-		expect(onSelect).toHaveBeenNthCalledWith(2, null);
+		expect(onSelect).not.toHaveBeenCalled();
 	});
 
-	it('fires onSelect with the new lesson when switching dots', async () => {
+	it('fires onSelect when switching dots', async () => {
 		const onSelect = vi.fn();
-		render(DotPath, { lessons, lessonProgress, onSelect });
+		const { container } = render(DotPath, {
+			lessons,
+			lessonProgress,
+			selectedSlug: 'preparation',
+			onSelect
+		});
 
-		const buttons = await page.getByRole('button').all();
-		await buttons[0].click();
-		await buttons[1].click();
+		const buttons = container.querySelectorAll('button');
+		buttons[1].click();
+		expect(onSelect).toHaveBeenCalledWith(lessons[1]);
+	});
 
-		expect(onSelect).toHaveBeenNthCalledWith(2, lessons[1]);
+	it('fires onStart on double-click', async () => {
+		const onStart = vi.fn();
+		const { container } = render(DotPath, { lessons, lessonProgress, onStart });
+
+		// Dispatch a native dblclick on the dot-step wrapper to exercise the handler.
+		const step = container.querySelector('.dot-step') as HTMLElement;
+		step.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+
+		expect(onStart).toHaveBeenCalledWith(lessons[0]);
 	});
 
 	it('does not render an inline lesson detail card', async () => {
 		const { container } = render(DotPath, { lessons, lessonProgress });
 
 		await page.getByRole('button').first().click();
-		// LessonDetailCard used to render a heading + description inline — it should no longer exist.
 		expect(container.querySelector('.detail-card')).toBeNull();
 	});
 });

@@ -195,25 +195,45 @@
 		grid-column: 2;
 		grid-row: 1;
 		display: grid;
-		grid-template-columns: minmax(0, 28rem) minmax(0, 24rem);
+		/* Mirror column widths so the path column (center) sits dead-centered
+		   in the viewport and the progress panel sits right next to it. */
+		grid-template-columns: minmax(0, 14rem) minmax(0, 28rem) minmax(0, 24rem);
 		justify-content: center;
 		gap: 3rem;
 		padding: 3rem 2rem 3rem 4rem; /* extra left padding to clear toggle when closed */
 	}
 
 	.path-col {
+		grid-column: 2;
 		min-width: 0;
 		width: 100%;
 	}
 
 	.progress-col {
+		grid-column: 3;
 		min-width: 0;
+	}
+
+	@media (max-width: 1200px) {
+		.main {
+			grid-template-columns: minmax(0, 28rem) minmax(0, 24rem);
+		}
+		.path-col {
+			grid-column: 1;
+		}
+		.progress-col {
+			grid-column: 2;
+		}
 	}
 
 	@media (max-width: 960px) {
 		.main {
 			grid-template-columns: minmax(0, 28rem);
 			padding-left: 4rem;
+		}
+		.path-col,
+		.progress-col {
+			grid-column: 1;
 		}
 	}
 </style>

@@ -118,7 +118,8 @@ describe('ProgressPanel (lesson view)', () => {
 		const bar = container.querySelector('[role="progressbar"]') as HTMLElement;
 		expect(bar.getAttribute('aria-valuenow')).toBe('50');
 		const fill = container.querySelector('.progress-fill') as HTMLElement;
-		expect(fill.style.width).toBe('50%');
+		// Fill animates from 0% to the target on mount.
+		await expect.poll(() => fill.style.width).toBe('50%');
 	});
 
 	it('renders "Start lesson" for not-started and includes form fields', async () => {

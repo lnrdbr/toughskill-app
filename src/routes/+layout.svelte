@@ -1,7 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import '$lib/icons';
-	import favicon from '$lib/assets/LogoCloudy.png';
+	import favicon from '$lib/assets/CloudyFavicon.png';
 	import { invalidateAll } from '$app/navigation';
 	import { authClient } from '$lib/auth-client';
 	import Navbar from '$lib/components/Navbar.svelte';
