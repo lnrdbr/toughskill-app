@@ -14,6 +14,7 @@ WORKDIR /app
 RUN mkdir -p /data && chown node:node /data
 COPY --from=build --chown=node:node /app/build ./build
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/drizzle ./drizzle
 COPY --from=build --chown=node:node /app/package.json ./
 USER node
 ENV NODE_ENV=production
