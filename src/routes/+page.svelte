@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
+	import { resolve } from '$app/paths';
 	import cloudy from '$lib/assets/cloudy.png';
 </script>
 
@@ -12,7 +13,7 @@
 		self-determination theory, not streaks and leaderboards.
 	</p>
 
-	<a href="/courses" class="cta">
+	<a href={resolve('/courses')} class="cta">
 		<Button variant="primary">Start Course</Button>
 	</a>
 

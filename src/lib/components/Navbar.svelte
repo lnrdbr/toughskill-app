@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from './Button.svelte';
 	import Icon from '@iconify/svelte';
+	import { resolve } from '$app/paths';
 	import logo from '$lib/assets/LogoCloudy.png';
 
 	type NavUser = {
@@ -20,14 +21,14 @@
 </script>
 
 <nav class="navbar" aria-label="Primary">
-	<a href="/" class="brand" aria-label="TOUGHSKILL home">
+	<a href={resolve('/')} class="brand" aria-label="TOUGHSKILL home">
 		<img src={logo} alt="" class="brand-logo" />
 		<span class="brand-text">TOUGHSKILL</span>
 	</a>
 
 	<div class="nav-links">
 		{#if !isLoggedIn}
-			<a href="/" class="nav-link">
+			<a href={resolve('/')} class="nav-link">
 				<Button rounded="default" silent>
 					<span class="row">
 						<Icon icon="mdi:home-outline" width="18" height="18" />
@@ -35,7 +36,7 @@
 					</span>
 				</Button>
 			</a>
-			<a href="/auth/login" class="nav-link">
+			<a href={resolve('/auth/login')} class="nav-link">
 				<Button variant="primary" rounded="default" silent>
 					<span class="row">
 						<Icon icon="mdi:login" width="18" height="18" />
@@ -44,7 +45,7 @@
 				</Button>
 			</a>
 		{:else}
-			<a href="/learn" class="nav-link">
+			<a href={resolve('/learn')} class="nav-link">
 				<Button rounded="default" silent>
 					<span class="row">
 						<Icon icon="mdi:book-open-variant" width="18" height="18" />
@@ -54,7 +55,7 @@
 			</a>
 
 			{#if isAnonymous}
-				<a href="/auth/login" class="nav-link" data-testid="signup-cta">
+				<a href={resolve('/auth/login')} class="nav-link" data-testid="signup-cta">
 					<Button variant="primary" rounded="default" silent>
 						<span class="row">
 							<Icon icon="mdi:content-save-outline" width="18" height="18" />
@@ -63,7 +64,12 @@
 					</Button>
 				</a>
 			{:else}
-				<a href="/auth" class="avatar-link" aria-label="Profile" data-testid="profile-link">
+				<a
+					href={resolve('/auth')}
+					class="avatar-link"
+					aria-label="Profile"
+					data-testid="profile-link"
+				>
 					<span class="avatar">{initial}</span>
 				</a>
 			{/if}

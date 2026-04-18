@@ -92,11 +92,7 @@
 	{#each sections as section, sIdx (section.actTitle ?? `no-act-${sIdx}`)}
 		<section class="act-section" data-testid="act-section">
 			{#if section.actTitle}
-				<h2
-					class="act-heading"
-					data-testid="act-heading"
-					style="top: {stickyTop};"
-				>
+				<h2 class="act-heading" data-testid="act-heading" style="top: {stickyTop};">
 					{section.actTitle}
 				</h2>
 			{/if}

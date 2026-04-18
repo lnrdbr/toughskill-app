@@ -48,7 +48,7 @@
 		<div class="suggestions">
 			<h4 class="suggestions-title">Angles you could explore</h4>
 			<ul class="suggestions-list">
-				{#each evaluation.suggestions as suggestion}
+				{#each evaluation.suggestions as suggestion (suggestion)}
 					<li>{suggestion}</li>
 				{/each}
 			</ul>

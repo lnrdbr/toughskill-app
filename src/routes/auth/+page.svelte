@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { resolve } from '$app/paths';
 	import Button from '$lib/components/Button.svelte';
 	import Icon from '@iconify/svelte';
 	import type { PageServerData } from './$types';
@@ -49,7 +50,7 @@
 		</div>
 
 		<div class="actions">
-			<a href="/learn" class="link">
+			<a href={resolve('/learn')} class="link">
 				<Button rounded="default">
 					<span class="row">
 						<Icon icon="mdi:book-open-variant" width="18" height="18" />
