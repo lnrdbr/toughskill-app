@@ -35,9 +35,7 @@ describe('ReflectionPrompt', () => {
 		expect(container.querySelector('.prompt')!.textContent).toBe(
 			'What does creativity mean to you?'
 		);
-		const area = container.querySelector(
-			'[data-testid="reflection-input"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="reflection-input"]') as HTMLTextAreaElement;
 		expect(area.value).toBe('');
 	});
 
@@ -47,9 +45,7 @@ describe('ReflectionPrompt', () => {
 			prompt: 'Write something'
 		});
 
-		const btn = container.querySelector(
-			'[data-testid="reflection-submit"]'
-		) as HTMLButtonElement;
+		const btn = container.querySelector('[data-testid="reflection-submit"]') as HTMLButtonElement;
 		expect(btn.disabled).toBe(true);
 	});
 
@@ -60,15 +56,11 @@ describe('ReflectionPrompt', () => {
 			minLength: 10
 		});
 
-		const area = container.querySelector(
-			'[data-testid="reflection-input"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="reflection-input"]') as HTMLTextAreaElement;
 		area.value = 'too short';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const btn = container.querySelector(
-			'[data-testid="reflection-submit"]'
-		) as HTMLButtonElement;
+		const btn = container.querySelector('[data-testid="reflection-submit"]') as HTMLButtonElement;
 		await expect.poll(() => btn.disabled).toBe(true);
 
 		area.value = 'long enough text here';
@@ -89,15 +81,11 @@ describe('ReflectionPrompt', () => {
 			oncomplete
 		});
 
-		const area = container.querySelector(
-			'[data-testid="reflection-input"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="reflection-input"]') as HTMLTextAreaElement;
 		area.value = '  this is my reflection  ';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const btn = container.querySelector(
-			'[data-testid="reflection-submit"]'
-		) as HTMLButtonElement;
+		const btn = container.querySelector('[data-testid="reflection-submit"]') as HTMLButtonElement;
 		await expect.poll(() => btn.disabled).toBe(false);
 		btn.click();
 
@@ -129,15 +117,11 @@ describe('ReflectionPrompt', () => {
 			oncomplete
 		});
 
-		const area = container.querySelector(
-			'[data-testid="reflection-input"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="reflection-input"]') as HTMLTextAreaElement;
 		area.value = 'hello';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const btn = container.querySelector(
-			'[data-testid="reflection-submit"]'
-		) as HTMLButtonElement;
+		const btn = container.querySelector('[data-testid="reflection-submit"]') as HTMLButtonElement;
 		await expect.poll(() => btn.disabled).toBe(false);
 		btn.click();
 
@@ -156,15 +140,11 @@ describe('ReflectionPrompt', () => {
 			oncomplete
 		});
 
-		const area = container.querySelector(
-			'[data-testid="reflection-input"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="reflection-input"]') as HTMLTextAreaElement;
 		area.value = 'some reflection';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const btn = container.querySelector(
-			'[data-testid="reflection-submit"]'
-		) as HTMLButtonElement;
+		const btn = container.querySelector('[data-testid="reflection-submit"]') as HTMLButtonElement;
 		await expect.poll(() => btn.disabled).toBe(false);
 		btn.click();
 
@@ -185,9 +165,7 @@ describe('ReflectionPrompt', () => {
 			lessonSlug: 'preparation'
 		});
 
-		const area = container.querySelector(
-			'[data-testid="reflection-input"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="reflection-input"]') as HTMLTextAreaElement;
 		expect(area.value).toBe('saved draft text');
 	});
 
@@ -202,18 +180,14 @@ describe('ReflectionPrompt', () => {
 			oncomplete
 		});
 
-		const area = container.querySelector(
-			'[data-testid="reflection-input"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="reflection-input"]') as HTMLTextAreaElement;
 		area.value = 'final text';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
 		// The effect writes to the draft on change.
 		await expect.poll(() => window.sessionStorage.getItem(key)).not.toBeNull();
 
-		const btn = container.querySelector(
-			'[data-testid="reflection-submit"]'
-		) as HTMLButtonElement;
+		const btn = container.querySelector('[data-testid="reflection-submit"]') as HTMLButtonElement;
 		await expect.poll(() => btn.disabled).toBe(false);
 		btn.click();
 

@@ -48,9 +48,7 @@ describe('RealLifeTask', () => {
 
 		(container.querySelector('[data-testid="task-start"]') as HTMLButtonElement).click();
 
-		await expect
-			.poll(() => container.querySelector('[data-testid="task-done"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="task-done"]')).not.toBeNull();
 
 		expect(fetchSpy).toHaveBeenCalledTimes(1);
 		const body = JSON.parse((fetchSpy.mock.calls[0][1] as RequestInit).body as string);
@@ -101,9 +99,7 @@ describe('RealLifeTask', () => {
 			lessonSlug: 'take-a-new-path'
 		});
 
-		const doneBtn = container.querySelector(
-			'[data-testid="task-done"]'
-		) as HTMLButtonElement;
+		const doneBtn = container.querySelector('[data-testid="task-done"]') as HTMLButtonElement;
 		expect(doneBtn).not.toBeNull();
 		// Start button should not be visible.
 		expect(container.querySelector('[data-testid="task-start"]')).toBeNull();
@@ -134,10 +130,7 @@ describe('RealLifeTask', () => {
 
 	it('submits completed + feedback, clears the draft, and fires oncomplete', async () => {
 		const key = 'ts:real_life_task:creativity:take-a-new-path:mod-t';
-		window.sessionStorage.setItem(
-			key,
-			JSON.stringify({ startedAt: Date.now() - 30_000 })
-		);
+		window.sessionStorage.setItem(key, JSON.stringify({ startedAt: Date.now() - 30_000 }));
 		const oncomplete = vi.fn();
 
 		const { container } = render(RealLifeTask, {
@@ -154,15 +147,11 @@ describe('RealLifeTask', () => {
 			.poll(() => container.querySelector('[data-testid="task-feedback"]'))
 			.not.toBeNull();
 
-		const area = container.querySelector(
-			'[data-testid="task-feedback"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="task-feedback"]') as HTMLTextAreaElement;
 		area.value = '  it was refreshing  ';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="task-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="task-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -202,18 +191,12 @@ describe('RealLifeTask', () => {
 		});
 
 		(container.querySelector('[data-testid="task-done"]') as HTMLButtonElement).click();
-		await expect
-			.poll(() => container.querySelector('[data-testid="task-submit"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="task-submit"]')).not.toBeNull();
 
-		const submit = container.querySelector(
-			'[data-testid="task-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="task-submit"]') as HTMLButtonElement;
 		expect(submit.disabled).toBe(true);
 
-		const area = container.querySelector(
-			'[data-testid="task-feedback"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="task-feedback"]') as HTMLTextAreaElement;
 		area.value = '   '; // only whitespace
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 		await expect.poll(() => submit.disabled).toBe(true);
@@ -233,23 +216,17 @@ describe('RealLifeTask', () => {
 		});
 
 		(container.querySelector('[data-testid="task-start"]') as HTMLButtonElement).click();
-		await expect
-			.poll(() => container.querySelector('[data-testid="task-done"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="task-done"]')).not.toBeNull();
 		(container.querySelector('[data-testid="task-done"]') as HTMLButtonElement).click();
 		await expect
 			.poll(() => container.querySelector('[data-testid="task-feedback"]'))
 			.not.toBeNull();
 
-		const area = container.querySelector(
-			'[data-testid="task-feedback"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="task-feedback"]') as HTMLTextAreaElement;
 		area.value = 'preview feedback';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="task-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="task-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -271,9 +248,7 @@ describe('RealLifeTask', () => {
 
 		(container.querySelector('[data-testid="task-cancel"]') as HTMLButtonElement).click();
 
-		await expect
-			.poll(() => container.querySelector('[data-testid="task-start"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="task-start"]')).not.toBeNull();
 		expect(window.sessionStorage.getItem(key)).toBeNull();
 		// No POST should have been sent for a cancellation.
 		expect(fetchSpy).not.toHaveBeenCalled();
@@ -301,15 +276,11 @@ describe('RealLifeTask', () => {
 			.poll(() => container.querySelector('[data-testid="task-feedback"]'))
 			.not.toBeNull();
 
-		const area = container.querySelector(
-			'[data-testid="task-feedback"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="task-feedback"]') as HTMLTextAreaElement;
 		area.value = 'attempt feedback';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="task-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="task-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 

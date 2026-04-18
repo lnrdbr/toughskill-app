@@ -9,7 +9,7 @@ export const workEthic: Course = {
 	title: 'Work Ethic',
 	slug: 'work-ethic',
 	description:
-		'Show up when it matters, even when it doesn\'t feel like it. Small, consistent reps over willpower.',
+		"Show up when it matters, even when it doesn't feel like it. Small, consistent reps over willpower.",
 	icon: 'mdi:hammer-wrench',
 	color: 'primary',
 	lessons: []

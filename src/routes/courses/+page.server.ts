@@ -32,9 +32,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			const rows = await db
 				.select({ moduleId: moduleCompletion.moduleId })
 				.from(moduleCompletion)
-				.where(
-					and(eq(moduleCompletion.userId, userId), eq(moduleCompletion.courseId, course.id))
-				);
+				.where(and(eq(moduleCompletion.userId, userId), eq(moduleCompletion.courseId, course.id)));
 
 			return {
 				id: course.id,

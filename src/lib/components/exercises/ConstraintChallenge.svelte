@@ -23,9 +23,7 @@
 	};
 
 	const storageKey = moduleId ? draftKey(moduleId) : '';
-	const initial: Draft | null = storageKey
-		? readDraft<Draft | null>(storageKey, null)
-		: null;
+	const initial: Draft | null = storageKey ? readDraft<Draft | null>(storageKey, null) : null;
 
 	let currentRound = $state(initial?.currentRound ?? 0);
 	let phase: 'rounds' | 'reflecting' | 'submitted' = $state(initial?.phase ?? 'rounds');

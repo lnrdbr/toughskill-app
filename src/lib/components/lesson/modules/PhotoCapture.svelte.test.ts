@@ -87,18 +87,12 @@ describe('PhotoCapture', () => {
 		});
 
 		await pickFile(container as HTMLElement, await makeTestFile());
-		await expect
-			.poll(() => container.querySelector('[data-testid="photo-submit"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="photo-submit"]')).not.toBeNull();
 
-		const submit = container.querySelector(
-			'[data-testid="photo-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="photo-submit"]') as HTMLButtonElement;
 		expect(submit.disabled).toBe(true);
 
-		const area = container.querySelector(
-			'[data-testid="photo-caption"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="photo-caption"]') as HTMLTextAreaElement;
 		area.value = 'a caption';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 		await expect.poll(() => submit.disabled).toBe(false);
@@ -115,19 +109,13 @@ describe('PhotoCapture', () => {
 		});
 
 		await pickFile(container as HTMLElement, await makeTestFile());
-		await expect
-			.poll(() => container.querySelector('[data-testid="photo-submit"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="photo-submit"]')).not.toBeNull();
 
-		const area = container.querySelector(
-			'[data-testid="photo-caption"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="photo-caption"]') as HTMLTextAreaElement;
 		area.value = '  the corner of my desk  ';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="photo-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="photo-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -163,19 +151,13 @@ describe('PhotoCapture', () => {
 		});
 
 		await pickFile(container as HTMLElement, await makeTestFile());
-		await expect
-			.poll(() => container.querySelector('[data-testid="photo-submit"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="photo-submit"]')).not.toBeNull();
 
-		const area = container.querySelector(
-			'[data-testid="photo-caption"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="photo-caption"]') as HTMLTextAreaElement;
 		area.value = 'nice shot';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="photo-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="photo-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -195,15 +177,11 @@ describe('PhotoCapture', () => {
 		});
 
 		await pickFile(container as HTMLElement, await makeTestFile());
-		await expect
-			.poll(() => container.querySelector('[data-testid="photo-retake"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="photo-retake"]')).not.toBeNull();
 
 		(container.querySelector('[data-testid="photo-retake"]') as HTMLButtonElement).click();
 
-		await expect
-			.poll(() => container.querySelector('[data-testid="photo-pick"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="photo-pick"]')).not.toBeNull();
 		expect(container.querySelector('[data-testid="photo-preview"]')).toBeNull();
 		expect(
 			window.sessionStorage.getItem('ts:photo:creativity:the-hidden-detail:mod-ph')
@@ -229,14 +207,10 @@ describe('PhotoCapture', () => {
 			lessonSlug: 'the-hidden-detail'
 		});
 
-		const img = container.querySelector(
-			'[data-testid="photo-preview"]'
-		) as HTMLImageElement;
+		const img = container.querySelector('[data-testid="photo-preview"]') as HTMLImageElement;
 		expect(img).not.toBeNull();
 		expect(img.src).toBe(draft.photoDataUrl);
-		const area = container.querySelector(
-			'[data-testid="photo-caption"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="photo-caption"]') as HTMLTextAreaElement;
 		expect(area.value).toBe('saved caption');
 	});
 
@@ -256,18 +230,14 @@ describe('PhotoCapture', () => {
 			.poll(() => container.querySelector('[data-testid="photo-caption"]'))
 			.not.toBeNull();
 
-		const area = container.querySelector(
-			'[data-testid="photo-caption"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="photo-caption"]') as HTMLTextAreaElement;
 		area.value = 'a clean caption';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
 		// Draft should exist now.
 		await expect.poll(() => window.sessionStorage.getItem(key)).not.toBeNull();
 
-		const submit = container.querySelector(
-			'[data-testid="photo-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="photo-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -296,15 +266,11 @@ describe('PhotoCapture', () => {
 			.poll(() => container.querySelector('[data-testid="photo-caption"]'))
 			.not.toBeNull();
 
-		const area = container.querySelector(
-			'[data-testid="photo-caption"]'
-		) as HTMLTextAreaElement;
+		const area = container.querySelector('[data-testid="photo-caption"]') as HTMLTextAreaElement;
 		area.value = 'caption';
 		area.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="photo-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="photo-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 

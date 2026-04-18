@@ -15,6 +15,7 @@ Label: **"Client (Browser)"**
 Three groups inside this tier:
 
 **Pages / Routes:**
+
 - `/` (Landing)
 - `/learn` (Course Hub — dot-path progress view)
 - `/lesson` (Lesson Player)
@@ -22,6 +23,7 @@ Three groups inside this tier:
 - `/demo/better-auth` (Auth Demo)
 
 **UI Components** (grouped):
+
 - Core: `Button`, `ListItem`, `CourseCard`, `LessonItem`, `ReadingBlock`
 - Exercise: `DivergentThinking`, `Scamper`, `StoryBuilder`, `ConstraintChallenge`, `AnalogySprint`
 - Feedback: `ExerciseResults`, `GuilfordCard`, `BubbleCloud`
@@ -38,13 +40,16 @@ Label: **"Application Server (SvelteKit / Node.js)"**
 Three groups:
 
 **Middleware:**
+
 - `hooks.server.ts` — session injection via Better Auth
 
 **Page Handlers:**
+
 - Load functions: read course config + query DB for progress
 - Form actions: start lessons, sign out
 
 **API Endpoints:**
+
 - `POST /api/exercises/divergent-thinking`
 - `POST /api/exercises/scamper`
 - `POST /api/exercises/story-builder`
@@ -61,12 +66,14 @@ Label: **"Data (SQLite + Drizzle ORM)"**
 Two table groups:
 
 **Auth Tables** (managed by Better Auth):
+
 - `user` (id, name, email, isAnonymous)
 - `session` (token, expiresAt, userId)
 - `account` (providerId, accessToken, userId)
 - `verification` (identifier, value, expiresAt)
 
 **Application Tables:**
+
 - `exerciseSubmission` (userId, exerciseType, prompt, ideas, evaluation, timeSpentSeconds)
 - `moduleCompletion` (userId, moduleId, courseId, lessonSlug, timeSpentSeconds)
 

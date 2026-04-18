@@ -24,7 +24,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		systemRole: `You respond to real-world creative tasks the user carried out offline. The user was given an instruction, did the task in their actual life, then came back and wrote what happened. Acknowledge that they actually went and did it, reflect one concrete detail from their account, and connect it briefly to the wider practice of creativity.`,
 		userContent: `Task they were given: "${instruction}"${feedbackPrompt ? `\nQuestion back: "${feedbackPrompt}"` : ''}\n\nWhat they report:\n${feedbackText}`,
 		fallback:
-			'You actually went and did it — that\'s the part most people skip. The detail you brought back is more valuable than any answer you could give sitting still.'
+			"You actually went and did it — that's the part most people skip. The detail you brought back is more valuable than any answer you could give sitting still."
 	});
 
 	return json({ evaluation: { feedback } });

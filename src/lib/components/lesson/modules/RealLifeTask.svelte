@@ -144,7 +144,10 @@
 			<h2 id="task-title" class="title">Your assignment</h2>
 			<p class="instruction" data-testid="task-instruction">{instruction}</p>
 			{#if typeof returnAfterMinutes === 'number' && returnAfterMinutes > 0}
-				<p class="hint">Come back in about {returnAfterMinutes} minute{returnAfterMinutes === 1 ? '' : 's'} to share how it went.</p>
+				<p class="hint">
+					Come back in about {returnAfterMinutes} minute{returnAfterMinutes === 1 ? '' : 's'} to share
+					how it went.
+				</p>
 			{:else}
 				<p class="hint">Come back when you've done it to share how it went.</p>
 			{/if}
@@ -167,20 +170,10 @@
 			<h2 id="task-title" class="title">You're on it.</h2>
 			<p class="instruction" data-testid="task-instruction">{instruction}</p>
 			<p class="hint">When you're done, come back here and tell us how it went.</p>
-			<Button
-				variant="primary"
-				rounded="default"
-				onclick={openFeedback}
-				data-testid="task-done"
-			>
+			<Button variant="primary" rounded="default" onclick={openFeedback} data-testid="task-done">
 				I've done it
 			</Button>
-			<button
-				type="button"
-				class="cancel-link"
-				onclick={cancelAssigned}
-				data-testid="task-cancel"
-			>
+			<button type="button" class="cancel-link" onclick={cancelAssigned} data-testid="task-cancel">
 				Actually, cancel this task
 			</button>
 		</div>

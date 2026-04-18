@@ -84,9 +84,7 @@
 	};
 
 	const storageKey = moduleId ? draftKey(moduleId) : '';
-	const initial: Draft | null = storageKey
-		? readDraft<Draft | null>(storageKey, null)
-		: null;
+	const initial: Draft | null = storageKey ? readDraft<Draft | null>(storageKey, null) : null;
 
 	let phase: 'intro' | 'lensing' | 'reflecting' | 'submitted' = $state(
 		initial?.phase ?? (showIntro ? 'intro' : 'lensing')
@@ -253,7 +251,11 @@
 				{#each currentBubbles as bubble (bubble.id)}
 					<div class="idea-item">
 						<span class="idea-text">{bubble.text}</span>
-						<button class="idea-remove" onclick={() => removeIdea(bubble.id)} aria-label="Remove idea">&times;</button>
+						<button
+							class="idea-remove"
+							onclick={() => removeIdea(bubble.id)}
+							aria-label="Remove idea">&times;</button
+						>
 					</div>
 				{/each}
 			{/if}

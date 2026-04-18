@@ -82,9 +82,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 	const lessonIdx = course.lessons.findIndex((l) => l.slug === lessonSlug);
 	const next =
-		lessonIdx >= 0 && lessonIdx < course.lessons.length - 1
-			? course.lessons[lessonIdx + 1]
-			: null;
+		lessonIdx >= 0 && lessonIdx < course.lessons.length - 1 ? course.lessons[lessonIdx + 1] : null;
 
 	return {
 		...session,
@@ -102,12 +100,7 @@ async function injectStoryBuilderPhoto(
 	const [photo] = await db
 		.select({ payload: moduleSubmission.payload })
 		.from(moduleSubmission)
-		.where(
-			and(
-				eq(moduleSubmission.userId, userId),
-				eq(moduleSubmission.moduleId, 'mod-10-photo')
-			)
-		)
+		.where(and(eq(moduleSubmission.userId, userId), eq(moduleSubmission.moduleId, 'mod-10-photo')))
 		.orderBy(desc(moduleSubmission.createdAt))
 		.limit(1);
 

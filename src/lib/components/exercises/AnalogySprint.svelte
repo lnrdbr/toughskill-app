@@ -24,9 +24,7 @@
 	};
 
 	const storageKey = moduleId ? draftKey(moduleId) : '';
-	const initial: Draft | null = storageKey
-		? readDraft<Draft | null>(storageKey, null)
-		: null;
+	const initial: Draft | null = storageKey ? readDraft<Draft | null>(storageKey, null) : null;
 
 	let phase: 'input' | 'reflecting' | 'submitted' = $state(initial?.phase ?? 'input');
 	let startTime = $state(Date.now());

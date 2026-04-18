@@ -57,9 +57,7 @@ describe('Learn page sidebar toggle', () => {
 		expect(layout).not.toBeNull();
 		expect(layout!.classList.contains('open')).toBe(false);
 
-		const toggle = container.querySelector(
-			'[data-testid="sidebar-toggle"]'
-		) as HTMLButtonElement;
+		const toggle = container.querySelector('[data-testid="sidebar-toggle"]') as HTMLButtonElement;
 		expect(toggle.getAttribute('aria-expanded')).toBe('false');
 
 		const sidebar = container.querySelector('[data-testid="sidebar"]') as HTMLElement;
@@ -70,9 +68,7 @@ describe('Learn page sidebar toggle', () => {
 	it('opens when the toggle is clicked and closes again on second click', async () => {
 		const { container } = render(Page, { data });
 
-		const toggle = container.querySelector(
-			'[data-testid="sidebar-toggle"]'
-		) as HTMLButtonElement;
+		const toggle = container.querySelector('[data-testid="sidebar-toggle"]') as HTMLButtonElement;
 		const layout = container.querySelector('.learn-layout') as HTMLElement;
 		const sidebar = container.querySelector('[data-testid="sidebar"]') as HTMLElement;
 
@@ -90,9 +86,7 @@ describe('Learn page sidebar toggle', () => {
 	it('toggle button label flips based on open state', async () => {
 		const { container } = render(Page, { data });
 
-		const toggle = container.querySelector(
-			'[data-testid="sidebar-toggle"]'
-		) as HTMLButtonElement;
+		const toggle = container.querySelector('[data-testid="sidebar-toggle"]') as HTMLButtonElement;
 		expect(toggle.getAttribute('aria-label')).toBe('Open sidebar');
 
 		toggle.click();
@@ -110,9 +104,7 @@ describe('Learn page lesson selection', () => {
 		const dot = container.querySelector('.dot-path button') as HTMLButtonElement;
 		dot.click();
 
-		await expect
-			.poll(() => container.querySelector('[data-testid="lesson-view"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="lesson-view"]')).not.toBeNull();
 		expect(container.querySelector('[data-testid="idle-view"]')).toBeNull();
 		expect(container.querySelector('.lesson-title')!.textContent).toBe('Preparation');
 	});
@@ -122,19 +114,13 @@ describe('Learn page lesson selection', () => {
 
 		const dot = container.querySelector('.dot-path button') as HTMLButtonElement;
 		dot.click();
-		await expect
-			.poll(() => container.querySelector('[data-testid="lesson-view"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="lesson-view"]')).not.toBeNull();
 
 		// Click the sidebar toggle — it's outside both the path and progress columns.
-		const toggle = container.querySelector(
-			'[data-testid="sidebar-toggle"]'
-		) as HTMLButtonElement;
+		const toggle = container.querySelector('[data-testid="sidebar-toggle"]') as HTMLButtonElement;
 		toggle.click();
 
-		await expect
-			.poll(() => container.querySelector('[data-testid="lesson-view"]'))
-			.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="lesson-view"]')).toBeNull();
 		expect(container.querySelector('[data-testid="idle-view"]')).not.toBeNull();
 	});
 
@@ -143,9 +129,7 @@ describe('Learn page lesson selection', () => {
 
 		const dot = container.querySelector('.dot-path button') as HTMLButtonElement;
 		dot.click();
-		await expect
-			.poll(() => container.querySelector('[data-testid="lesson-view"]'))
-			.not.toBeNull();
+		await expect.poll(() => container.querySelector('[data-testid="lesson-view"]')).not.toBeNull();
 
 		const title = container.querySelector('.lesson-title') as HTMLElement;
 		title.click();
@@ -155,9 +139,7 @@ describe('Learn page lesson selection', () => {
 	});
 
 	it('submits the /lesson form on dot double-click', async () => {
-		const submitSpy = vi
-			.spyOn(HTMLFormElement.prototype, 'submit')
-			.mockImplementation(() => {});
+		const submitSpy = vi.spyOn(HTMLFormElement.prototype, 'submit').mockImplementation(() => {});
 
 		try {
 			const { container } = render(Page, { data });

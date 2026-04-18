@@ -56,13 +56,7 @@
 
 			<label class="field">
 				<span class="label">Email</span>
-				<input
-					class="input"
-					name="email"
-					type="email"
-					autocomplete="email"
-					required
-				/>
+				<input class="input" name="email" type="email" autocomplete="email" required />
 			</label>
 
 			<label class="field">

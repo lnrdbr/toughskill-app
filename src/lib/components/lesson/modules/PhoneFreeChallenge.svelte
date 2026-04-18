@@ -157,12 +157,7 @@
 				Place your phone face-down. We'll start a {Math.round(durationSeconds / 60) || 1}-minute
 				timer. Try not to touch it.
 			</p>
-			<Button
-				variant="primary"
-				rounded="default"
-				onclick={start}
-				data-testid="phone-free-start"
-			>
+			<Button variant="primary" rounded="default" onclick={start} data-testid="phone-free-start">
 				Begin
 			</Button>
 		</div>
@@ -177,12 +172,7 @@
 			<div class="track" aria-hidden="true">
 				<div class="track-fill" style="width: {progressPct}%"></div>
 			</div>
-			<button
-				type="button"
-				class="stop-link"
-				onclick={stopEarly}
-				data-testid="phone-free-stop"
-			>
+			<button type="button" class="stop-link" onclick={stopEarly} data-testid="phone-free-stop">
 				Stop early
 			</button>
 		</div>

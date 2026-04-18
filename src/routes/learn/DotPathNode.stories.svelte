@@ -36,10 +36,7 @@
 	}}
 />
 
-<Story
-	name="Completed"
-	args={{ status: 'completed', icon: 'mdi:atom', onclick: () => {} }}
-/>
+<Story name="Completed" args={{ status: 'completed', icon: 'mdi:atom', onclick: () => {} }} />
 
 <Story
 	name="Selected"

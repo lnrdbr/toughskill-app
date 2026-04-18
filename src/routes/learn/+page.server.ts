@@ -22,10 +22,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!course) {
 		return {
 			course: null,
-			lessonProgress: {} as Record<
-				string,
-				{ completed: number; total: number; started: boolean }
-			>,
+			lessonProgress: {} as Record<string, { completed: number; total: number; started: boolean }>,
 			journeyStats: null as JourneyStats | null
 		};
 	}
@@ -52,10 +49,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	const viewedLessonSlugs = new Set(views.map((v) => v.lessonSlug));
 
-	const lessonProgress: Record<
-		string,
-		{ completed: number; total: number; started: boolean }
-	> = {};
+	const lessonProgress: Record<string, { completed: number; total: number; started: boolean }> = {};
 	let completedLessons = 0;
 
 	for (const lesson of course.lessons) {

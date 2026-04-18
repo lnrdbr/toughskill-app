@@ -28,7 +28,6 @@
 	function startCourse(id: string) {
 		window.location.assign(`${resolve('/learn')}?course=${encodeURIComponent(id)}`);
 	}
-
 </script>
 
 <svelte:head>

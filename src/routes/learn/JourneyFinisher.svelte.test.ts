@@ -51,8 +51,8 @@ describe('JourneyFinisher', () => {
 			courseTitle: 'Creativity'
 		});
 
-		const values = Array.from(container.querySelectorAll('.stat-value')).map(
-			(el) => el.textContent?.trim()
+		const values = Array.from(container.querySelectorAll('.stat-value')).map((el) =>
+			el.textContent?.trim()
 		);
 		expect(values).toEqual(['12 / 30', '2 min', '3']);
 	});

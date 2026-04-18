@@ -46,9 +46,7 @@ describe('PhoneFreeChallenge', () => {
 			durationSeconds: 60
 		});
 
-		(
-			container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement).click();
 
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-remaining"]'))
@@ -65,16 +63,12 @@ describe('PhoneFreeChallenge', () => {
 			durationSeconds: 60
 		});
 
-		(
-			container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement).click();
 
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-stop"]'))
 			.not.toBeNull();
-		(
-			container.querySelector('[data-testid="phone-free-stop"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-stop"]') as HTMLButtonElement).click();
 
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-continue"]'))
@@ -90,9 +84,7 @@ describe('PhoneFreeChallenge', () => {
 			durationSeconds: 2
 		});
 
-		(
-			container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement).click();
 
 		await vi.advanceTimersByTimeAsync(2500);
 		vi.useRealTimers();
@@ -110,9 +102,7 @@ describe('PhoneFreeChallenge', () => {
 			durationSeconds: 60
 		});
 
-		(
-			container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement).click();
 
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-stop"]'))
@@ -127,9 +117,7 @@ describe('PhoneFreeChallenge', () => {
 		document.dispatchEvent(new Event('visibilitychange'));
 		if (hiddenDesc) Object.defineProperty(Document.prototype, 'hidden', hiddenDesc);
 
-		(
-			container.querySelector('[data-testid="phone-free-stop"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-stop"]') as HTMLButtonElement).click();
 
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-continue"]'))
@@ -150,18 +138,14 @@ describe('PhoneFreeChallenge', () => {
 			oncomplete
 		});
 
-		(
-			container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement).click();
 		await vi.advanceTimersByTimeAsync(2500);
 		vi.useRealTimers();
 
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-continue"]'))
 			.not.toBeNull();
-		(
-			container.querySelector('[data-testid="phone-free-continue"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-continue"]') as HTMLButtonElement).click();
 
 		await expect.poll(() => oncomplete).toHaveBeenCalled();
 
@@ -190,9 +174,7 @@ describe('PhoneFreeChallenge', () => {
 			oncomplete
 		});
 
-		(
-			container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement).click();
 
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-stop"]'))
@@ -204,16 +186,12 @@ describe('PhoneFreeChallenge', () => {
 		document.dispatchEvent(new Event('visibilitychange'));
 		if (hiddenDesc) Object.defineProperty(Document.prototype, 'hidden', hiddenDesc);
 
-		(
-			container.querySelector('[data-testid="phone-free-stop"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-stop"]') as HTMLButtonElement).click();
 
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-continue"]'))
 			.not.toBeNull();
-		(
-			container.querySelector('[data-testid="phone-free-continue"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-continue"]') as HTMLButtonElement).click();
 
 		await expect.poll(() => oncomplete).toHaveBeenCalled();
 
@@ -231,22 +209,16 @@ describe('PhoneFreeChallenge', () => {
 			oncomplete
 		});
 
-		(
-			container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement).click();
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-stop"]'))
 			.not.toBeNull();
-		(
-			container.querySelector('[data-testid="phone-free-stop"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-stop"]') as HTMLButtonElement).click();
 
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-continue"]'))
 			.not.toBeNull();
-		(
-			container.querySelector('[data-testid="phone-free-continue"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-continue"]') as HTMLButtonElement).click();
 
 		await expect.poll(() => oncomplete).toHaveBeenCalled();
 		expect(fetchSpy).not.toHaveBeenCalled();
@@ -263,22 +235,16 @@ describe('PhoneFreeChallenge', () => {
 			oncomplete
 		});
 
-		(
-			container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-start"]') as HTMLButtonElement).click();
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-stop"]'))
 			.not.toBeNull();
-		(
-			container.querySelector('[data-testid="phone-free-stop"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-stop"]') as HTMLButtonElement).click();
 
 		await expect
 			.poll(() => container.querySelector('[data-testid="phone-free-continue"]'))
 			.not.toBeNull();
-		(
-			container.querySelector('[data-testid="phone-free-continue"]') as HTMLButtonElement
-		).click();
+		(container.querySelector('[data-testid="phone-free-continue"]') as HTMLButtonElement).click();
 
 		await expect.poll(() => container.querySelector('[role="alert"]')).not.toBeNull();
 		expect(oncomplete).not.toHaveBeenCalled();

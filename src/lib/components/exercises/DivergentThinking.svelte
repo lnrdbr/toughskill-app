@@ -28,9 +28,7 @@
 	};
 
 	const storageKey = moduleId ? draftKey(moduleId) : '';
-	const initial: Draft | null = storageKey
-		? readDraft<Draft | null>(storageKey, null)
-		: null;
+	const initial: Draft | null = storageKey ? readDraft<Draft | null>(storageKey, null) : null;
 
 	const COLORS = [
 		'var(--color-primary-100)',

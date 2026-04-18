@@ -25,9 +25,7 @@
 	};
 
 	const storageKey = moduleId ? draftKey(moduleId) : '';
-	const initial: Draft | null = storageKey
-		? readDraft<Draft | null>(storageKey, null)
-		: null;
+	const initial: Draft | null = storageKey ? readDraft<Draft | null>(storageKey, null) : null;
 
 	let phase: 'input' | 'reflecting' | 'submitted' = $state(initial?.phase ?? 'input');
 	let story = $state(initial?.story ?? '');
@@ -102,11 +100,7 @@
 		<p class="instruction">{instruction}</p>
 
 		<div class="editor">
-			<textarea
-				class="story-input"
-				bind:value={story}
-				rows="8"
-				placeholder="Start writing..."
+			<textarea class="story-input" bind:value={story} rows="8" placeholder="Start writing..."
 			></textarea>
 			<div class="word-count" class:valid={withinRange} class:over={overLimit}>
 				{wordCount} / {effectiveMinWords}–{effectiveMaxWords} words

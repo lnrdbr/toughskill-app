@@ -54,8 +54,7 @@ async function evaluateWithLLM(
 ): Promise<ConstraintEvaluation> {
 	const roundsText = responses
 		.map(
-			(response, i) =>
-				`Round ${i + 1} (constraint: "${constraints[i] ?? 'none'}"):\n${response}`
+			(response, i) => `Round ${i + 1} (constraint: "${constraints[i] ?? 'none'}"):\n${response}`
 		)
 		.join('\n\n');
 

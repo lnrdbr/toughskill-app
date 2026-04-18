@@ -33,16 +33,13 @@
 
 	const initialCourseId = (session as { courseId?: string }).courseId ?? '';
 	const initialLessonSlug = (session as { lessonSlug?: string }).lessonSlug ?? '';
-	const initialModuleCount =
-		((session as { modules?: Module[] }).modules ?? []).length;
+	const initialModuleCount = ((session as { modules?: Module[] }).modules ?? []).length;
 	const savedIndex =
 		initialCourseId && initialLessonSlug
 			? readDraft<number>(lessonIndexKey(initialCourseId, initialLessonSlug), 0)
 			: 0;
 
-	let currentIndex = $state(
-		Math.min(Math.max(savedIndex, 0), Math.max(initialModuleCount - 1, 0))
-	);
+	let currentIndex = $state(Math.min(Math.max(savedIndex, 0), Math.max(initialModuleCount - 1, 0)));
 	let completionResults: ModuleCompletionResult[] = $state([]);
 
 	// Only update session when form actually changes (new POST), not on load re-runs
@@ -221,8 +218,7 @@
 {:else}
 	{#key sessionKey}
 		{#if sessionDone}
-			{@const nextLesson = (session as { nextLesson?: { slug: string; title: string } })
-				.nextLesson}
+			{@const nextLesson = (session as { nextLesson?: { slug: string; title: string } }).nextLesson}
 			<div class="lesson-container lesson-container--complete">
 				<div class="module-area module-area--complete">
 					<LessonComplete {completionResults} {courseTitle} {lessonTitle} />
@@ -266,11 +262,11 @@
 				<div class="module-area">
 					{#key modules[currentIndex].id}
 						<ModuleRunner
-						module={modules[currentIndex]}
-						{courseId}
-						{lessonSlug}
-						oncomplete={handleModuleComplete}
-					/>
+							module={modules[currentIndex]}
+							{courseId}
+							{lessonSlug}
+							oncomplete={handleModuleComplete}
+						/>
 					{/key}
 				</div>
 

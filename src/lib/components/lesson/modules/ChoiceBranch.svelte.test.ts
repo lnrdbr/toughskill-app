@@ -51,9 +51,7 @@ describe('ChoiceBranch', () => {
 			allowMultiple: true
 		});
 
-		const submit = container.querySelector(
-			'[data-testid="choice-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="choice-submit"]') as HTMLButtonElement;
 		expect(submit.disabled).toBe(true);
 
 		(container.querySelector('[data-testid="choice-option-b"]') as HTMLButtonElement).click();
@@ -177,9 +175,7 @@ describe('ChoiceBranch', () => {
 		(container.querySelector('[data-testid="choice-option-a"]') as HTMLButtonElement).click();
 		(container.querySelector('[data-testid="choice-option-c"]') as HTMLButtonElement).click();
 
-		const submit = container.querySelector(
-			'[data-testid="choice-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="choice-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 

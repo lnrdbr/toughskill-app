@@ -82,11 +82,7 @@
 		submitError = null;
 		const timeSpentSeconds = Math.max(
 			0,
-			Math.round(
-				stoppedEarly
-					? (Date.now() - startedAt) / 1000
-					: durationSeconds
-			)
+			Math.round(stoppedEarly ? (Date.now() - startedAt) / 1000 : durationSeconds)
 		);
 		const completedFull = !stoppedEarly;
 		try {
@@ -152,12 +148,7 @@
 					Just sit with it. No task, no phone, no pressure. You can stop any time.
 				{/if}
 			</p>
-			<Button
-				variant="primary"
-				rounded="default"
-				onclick={start}
-				data-testid="meditation-start"
-			>
+			<Button variant="primary" rounded="default" onclick={start} data-testid="meditation-start">
 				Begin
 			</Button>
 		</div>
@@ -176,12 +167,7 @@
 			<div class="track" aria-hidden="true">
 				<div class="track-fill" style="width: {progressPct}%"></div>
 			</div>
-			<button
-				type="button"
-				class="stop-link"
-				onclick={stopEarly}
-				data-testid="meditation-stop"
-			>
+			<button type="button" class="stop-link" onclick={stopEarly} data-testid="meditation-stop">
 				Stop early
 			</button>
 		</div>

@@ -4,7 +4,9 @@ import { auth } from '$lib/server/auth';
 import { APIError } from 'better-auth';
 
 export const load: PageServerLoad = async (event) => {
-	const user = event.locals.user as (typeof event.locals.user & { isAnonymous?: boolean }) | undefined;
+	const user = event.locals.user as
+		| (typeof event.locals.user & { isAnonymous?: boolean })
+		| undefined;
 	if (user && !user.isAnonymous) {
 		return redirect(302, '/auth');
 	}

@@ -43,10 +43,6 @@
 
 <Story name="Compact (no reflection)">
 	{#snippet template()}
-		<DivergentThinking
-			prompt="Paperclip"
-			instruction="How many uses can you think of?"
-			compact
-		/>
+		<DivergentThinking prompt="Paperclip" instruction="How many uses can you think of?" compact />
 	{/snippet}
 </Story>

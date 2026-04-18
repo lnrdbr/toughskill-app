@@ -36,15 +36,11 @@ describe('RecallPrompt', () => {
 			oncomplete
 		});
 
-		const input = container.querySelector(
-			'[data-testid="recall-input"]'
-		) as HTMLInputElement;
+		const input = container.querySelector('[data-testid="recall-input"]') as HTMLInputElement;
 		input.value = '  For  EVERYONE!  ';
 		input.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="recall-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -75,15 +71,11 @@ describe('RecallPrompt', () => {
 			oncomplete
 		});
 
-		const input = container.querySelector(
-			'[data-testid="recall-input"]'
-		) as HTMLInputElement;
+		const input = container.querySelector('[data-testid="recall-input"]') as HTMLInputElement;
 		input.value = 'something else entirely';
 		input.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="recall-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -107,15 +99,11 @@ describe('RecallPrompt', () => {
 			oncomplete
 		});
 
-		const input = container.querySelector(
-			'[data-testid="recall-input"]'
-		) as HTMLTextAreaElement;
+		const input = container.querySelector('[data-testid="recall-input"]') as HTMLTextAreaElement;
 		input.value = 'something about seeing things differently';
 		input.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="recall-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -147,9 +135,7 @@ describe('RecallPrompt', () => {
 		buttons[0].click();
 		buttons[2].click();
 
-		const submit = container.querySelector(
-			'[data-testid="recall-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -168,18 +154,18 @@ describe('RecallPrompt', () => {
 			mode: 'finish-quote',
 			expected: 'hi'
 		});
-		expect(
-			(c1.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement).disabled
-		).toBe(true);
+		expect((c1.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement).disabled).toBe(
+			true
+		);
 
 		const { container: c2 } = render(RecallPrompt, {
 			moduleId: 'mod-or',
 			prompt: 'q',
 			mode: 'open-recall'
 		});
-		expect(
-			(c2.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement).disabled
-		).toBe(true);
+		expect((c2.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement).disabled).toBe(
+			true
+		);
 
 		const { container: c3 } = render(RecallPrompt, {
 			moduleId: 'mod-mc',
@@ -187,9 +173,9 @@ describe('RecallPrompt', () => {
 			mode: 'multi-check',
 			options: ['a', 'b']
 		});
-		expect(
-			(c3.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement).disabled
-		).toBe(true);
+		expect((c3.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement).disabled).toBe(
+			true
+		);
 	});
 
 	it('does not POST when courseId/lessonSlug are missing (preview mode)', async () => {
@@ -202,15 +188,11 @@ describe('RecallPrompt', () => {
 			oncomplete
 		});
 
-		const input = container.querySelector(
-			'[data-testid="recall-input"]'
-		) as HTMLInputElement;
+		const input = container.querySelector('[data-testid="recall-input"]') as HTMLInputElement;
 		input.value = 'hi';
 		input.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="recall-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -231,15 +213,11 @@ describe('RecallPrompt', () => {
 			oncomplete
 		});
 
-		const input = container.querySelector(
-			'[data-testid="recall-input"]'
-		) as HTMLInputElement;
+		const input = container.querySelector('[data-testid="recall-input"]') as HTMLInputElement;
 		input.value = 'hi';
 		input.dispatchEvent(new Event('input', { bubbles: true }));
 
-		const submit = container.querySelector(
-			'[data-testid="recall-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 
@@ -262,9 +240,7 @@ describe('RecallPrompt', () => {
 			lessonSlug: 'finish-the-quote'
 		});
 
-		const input = container.querySelector(
-			'[data-testid="recall-input"]'
-		) as HTMLInputElement;
+		const input = container.querySelector('[data-testid="recall-input"]') as HTMLInputElement;
 		expect(input.value).toBe('saved answer');
 	});
 
@@ -304,17 +280,13 @@ describe('RecallPrompt', () => {
 			oncomplete
 		});
 
-		const input = container.querySelector(
-			'[data-testid="recall-input"]'
-		) as HTMLInputElement;
+		const input = container.querySelector('[data-testid="recall-input"]') as HTMLInputElement;
 		input.value = 'hi';
 		input.dispatchEvent(new Event('input', { bubbles: true }));
 
 		await expect.poll(() => window.sessionStorage.getItem(key)).not.toBeNull();
 
-		const submit = container.querySelector(
-			'[data-testid="recall-submit"]'
-		) as HTMLButtonElement;
+		const submit = container.querySelector('[data-testid="recall-submit"]') as HTMLButtonElement;
 		await expect.poll(() => submit.disabled).toBe(false);
 		submit.click();
 

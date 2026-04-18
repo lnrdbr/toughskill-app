@@ -15,9 +15,17 @@
 			moduleId="story-choice-1"
 			prompt="Creativity is…"
 			options={[
-				{ id: 'artists', label: 'For artists only', body: 'A common myth — we\'re about to bust it.' },
+				{
+					id: 'artists',
+					label: 'For artists only',
+					body: "A common myth — we're about to bust it."
+				},
 				{ id: 'everyone', label: 'For everyone', body: 'This is the premise of the course.' },
-				{ id: 'kids', label: 'Only for kids', body: 'Nope — though kids are unreasonably good at it.' }
+				{
+					id: 'kids',
+					label: 'Only for kids',
+					body: 'Nope — though kids are unreasonably good at it.'
+				}
 			]}
 			oncomplete={(data) => console.log('Choice:', data)}
 		/>

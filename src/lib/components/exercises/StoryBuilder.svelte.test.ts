@@ -30,9 +30,7 @@ describe('StoryBuilder', () => {
 	it('renders the scenario seed', async () => {
 		render(StoryBuilder, defaultProps);
 
-		await expect
-			.element(page.getByText('A city where everyone can hear thoughts.'))
-			.toBeVisible();
+		await expect.element(page.getByText('A city where everyone can hear thoughts.')).toBeVisible();
 	});
 
 	it('renders the instruction', async () => {

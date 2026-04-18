@@ -63,7 +63,9 @@ async function evaluateWithLLM(
 	);
 
 	const analogyText = filledDomains
-		.map(([domain, { like, because }]) => `${domain}: "${concept} is like ${like} because ${because}"`)
+		.map(
+			([domain, { like, because }]) => `${domain}: "${concept} is like ${like} because ${because}"`
+		)
 		.join('\n');
 
 	const response = await mistral.chat.complete({
