@@ -5,7 +5,7 @@ import DotPathNode from './DotPathNode.svelte';
 
 describe('DotPathNode', () => {
 	it('renders a button with not-started status', async () => {
-		render(DotPathNode, { status: 'not-started', onclick: () => {} });
+		render(DotPathNode, { status: 'not-started', label: 'Test lesson', onclick: () => {} });
 
 		const button = page.getByRole('button');
 		await expect.element(button).toBeVisible();
@@ -13,21 +13,21 @@ describe('DotPathNode', () => {
 	});
 
 	it('renders a button with completed status', async () => {
-		render(DotPathNode, { status: 'completed', onclick: () => {} });
+		render(DotPathNode, { status: 'completed', label: 'Test lesson', onclick: () => {} });
 
 		const button = page.getByRole('button');
 		await expect.element(button).toHaveClass('completed');
 	});
 
 	it('renders a button with in-progress status', async () => {
-		render(DotPathNode, { status: 'in-progress', onclick: () => {} });
+		render(DotPathNode, { status: 'in-progress', label: 'Test lesson', onclick: () => {} });
 
 		const button = page.getByRole('button');
 		await expect.element(button).toHaveClass('in-progress');
 	});
 
 	it('applies selected class when selected', async () => {
-		render(DotPathNode, { status: 'not-started', selected: true, onclick: () => {} });
+		render(DotPathNode, { status: 'not-started', label: 'Test lesson', selected: true, onclick: () => {} });
 
 		const button = page.getByRole('button');
 		await expect.element(button).toHaveClass('selected');
@@ -35,7 +35,7 @@ describe('DotPathNode', () => {
 
 	it('calls onclick when clicked', async () => {
 		const handler = vi.fn();
-		render(DotPathNode, { status: 'not-started', onclick: handler });
+		render(DotPathNode, { status: 'not-started', label: 'Test lesson', onclick: handler });
 
 		await page.getByRole('button').click();
 		expect(handler).toHaveBeenCalledOnce();
@@ -44,6 +44,7 @@ describe('DotPathNode', () => {
 	it('renders a progress ring when in-progress', async () => {
 		const { container } = render(DotPathNode, {
 			status: 'in-progress',
+			label: 'Test lesson',
 			icon: 'mdi:shape-outline',
 			completed: 3,
 			total: 6,
@@ -65,6 +66,7 @@ describe('DotPathNode', () => {
 	it('does not render a progress ring when not in-progress', async () => {
 		const { container } = render(DotPathNode, {
 			status: 'completed',
+			label: 'Test lesson',
 			icon: 'mdi:atom',
 			onclick: () => {}
 		});
@@ -75,6 +77,7 @@ describe('DotPathNode', () => {
 	it('renders a module-type badge when typeIcon is provided', async () => {
 		const { container } = render(DotPathNode, {
 			status: 'not-started',
+			label: 'Test lesson',
 			icon: 'mdi:camera-outline',
 			typeIcon: 'mdi:pencil-outline',
 			onclick: () => {}
@@ -86,6 +89,7 @@ describe('DotPathNode', () => {
 	it('hides the module-type badge for completed lessons', async () => {
 		const { container } = render(DotPathNode, {
 			status: 'completed',
+			label: 'Test lesson',
 			icon: 'mdi:camera-outline',
 			typeIcon: 'mdi:pencil-outline',
 			onclick: () => {}

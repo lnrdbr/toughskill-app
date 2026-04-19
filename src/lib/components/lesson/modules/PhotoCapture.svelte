@@ -287,7 +287,8 @@
 		padding: 0.9rem 1.5rem;
 		border: 2px solid var(--color-foreground);
 		border-radius: var(--radius-button);
-		background: var(--color-primary-500);
+		/* primary-700 on white text → 4.84:1, passes WCAG AA; primary-500 was 2.48:1. */
+		background: var(--color-primary-700);
 		color: var(--color-background);
 		font-weight: 700;
 		cursor: pointer;

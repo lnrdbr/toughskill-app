@@ -112,6 +112,7 @@
 					>
 						<DotPathNode
 							{status}
+							label={lesson.title}
 							icon={lesson.icon}
 							typeIcon={getTypeIcon(lesson)}
 							completed={progress?.completed ?? 0}

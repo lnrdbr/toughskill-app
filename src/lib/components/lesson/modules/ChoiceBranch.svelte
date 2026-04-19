@@ -96,28 +96,30 @@
 <section class="choice" aria-labelledby="choice-prompt">
 	<p id="choice-prompt" class="prompt">{prompt}</p>
 
-	<ul class="options" role={allowMultiple ? 'group' : 'radiogroup'} aria-labelledby="choice-prompt">
+	<div
+		class="options"
+		role={allowMultiple ? 'group' : 'radiogroup'}
+		aria-labelledby="choice-prompt"
+	>
 		{#each options as option (option.id)}
 			{@const picked = isSelected(option.id)}
-			<li>
-				<button
-					type="button"
-					class="option"
-					class:picked
-					onclick={() => toggle(option.id)}
-					role={allowMultiple ? 'checkbox' : 'radio'}
-					aria-checked={picked}
-					data-testid="choice-option-{option.id}"
-					disabled={submitting}
-				>
-					<span class="label">{option.label}</span>
-					{#if option.body && picked}
-						<span class="body" data-testid="choice-body-{option.id}">{option.body}</span>
-					{/if}
-				</button>
-			</li>
+			<button
+				type="button"
+				class="option"
+				class:picked
+				onclick={() => toggle(option.id)}
+				role={allowMultiple ? 'checkbox' : 'radio'}
+				aria-checked={picked}
+				data-testid="choice-option-{option.id}"
+				disabled={submitting}
+			>
+				<span class="label">{option.label}</span>
+				{#if option.body && picked}
+					<span class="body" data-testid="choice-body-{option.id}">{option.body}</span>
+				{/if}
+			</button>
 		{/each}
-	</ul>
+	</div>
 
 	{#if submitError}
 		<p class="error" role="alert">{submitError}</p>
@@ -156,9 +158,6 @@
 	}
 
 	.options {
-		list-style: none;
-		padding: 0;
-		margin: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;

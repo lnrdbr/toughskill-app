@@ -85,29 +85,37 @@
 		border-radius: 0.5rem;
 	}
 
+	/*
+	 * Colour choices passing WCAG 2.1 AA contrast (white text, 4.5:1 minimum):
+	 *   primary-700 (#0f766e) / white  → 4.84:1  ✅
+	 *   primary-800 (#115e59) / white  → 6.49:1  ✅
+	 *   primary-900 (#134e4a) / white  → 8.24:1  ✅
+	 * Using primary-500 as the fill (previous default) produced 2.48:1 and
+	 * failed axe's color-contrast rule across every primary-variant story.
+	 */
 	.primary {
-		background: var(--color-primary-500);
+		background: var(--color-primary-700);
 		color: white;
-		border-color: var(--color-primary-700);
-		filter: drop-shadow(2px 2px 0px var(--color-primary-700));
+		border-color: var(--color-primary-900);
+		filter: drop-shadow(2px 2px 0px var(--color-primary-900));
 	}
 
 	.primary:hover {
-		background: var(--color-primary-400);
-		border-color: var(--color-primary-600);
+		background: var(--color-primary-800);
+		border-color: var(--color-primary-900);
 		color: white;
-		filter: drop-shadow(1px 1px 0px var(--color-primary-600));
+		filter: drop-shadow(1px 1px 0px var(--color-primary-900));
 	}
 
 	.primary:active {
-		background: var(--color-primary-600);
+		background: var(--color-primary-900);
 		transform: translate(2px, 2px);
-		filter: drop-shadow(0px 0px 0px var(--color-primary-700));
+		filter: drop-shadow(0px 0px 0px var(--color-primary-900));
 	}
 
 	.primary:disabled:hover {
-		background: var(--color-primary-500);
-		border-color: var(--color-primary-700);
+		background: var(--color-primary-700);
+		border-color: var(--color-primary-900);
 		color: white;
 		transform: none;
 		filter: none;

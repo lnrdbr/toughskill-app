@@ -3,6 +3,7 @@
 
 	let {
 		status,
+		label,
 		icon = 'mdi:lightbulb',
 		typeIcon = null,
 		completed = 0,
@@ -11,6 +12,8 @@
 		onclick
 	}: {
 		status: 'completed' | 'in-progress' | 'not-started';
+		/** Lesson title — used to build the button's accessible name. */
+		label: string;
 		icon?: string;
 		/** Optional secondary glyph indicating the lesson's module type. */
 		typeIcon?: string | null;
@@ -25,6 +28,13 @@
 
 	let fraction = $derived(total > 0 ? Math.min(Math.max(completed / total, 0), 1) : 0);
 	let dashOffset = $derived(CIRCUMFERENCE * (1 - fraction));
+
+	const STATUS_TEXT: Record<'completed' | 'in-progress' | 'not-started', string> = {
+		completed: 'completed',
+		'in-progress': 'in progress',
+		'not-started': 'not started'
+	};
+	let ariaLabel = $derived(`${label} — ${STATUS_TEXT[status]}`);
 </script>
 
 <button
@@ -33,6 +43,8 @@
 	class:in-progress={status === 'in-progress'}
 	class:not-started={status === 'not-started'}
 	class:selected
+	aria-label={ariaLabel}
+	aria-pressed={selected}
 	{onclick}
 >
 	{#if status === 'in-progress'}
