@@ -8,6 +8,16 @@ const preview: Preview = {
 				color: /(background|color)$/i,
 				date: /Date$/i
 			}
+		},
+		a11y: {
+			// 'error' fails Vitest runs on violations; 'todo' surfaces them without failing.
+			test: 'error',
+			options: {
+				runOnly: {
+					type: 'tag',
+					values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice']
+				}
+			}
 		}
 	}
 };
