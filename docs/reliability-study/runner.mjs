@@ -49,7 +49,9 @@ function buildUserContent(exerciseType, submission) {
 			.replace('{count}', submission.ideas.length)
 			.replace('{numbered_ideas}', numbered);
 	}
-	return cfg.P1_rubric.user_template.replace('{prompt}', sharedPrompt).replace('{text}', submission.text);
+	return cfg.P1_rubric.user_template
+		.replace('{prompt}', sharedPrompt)
+		.replace('{text}', submission.text);
 }
 
 function extractScores(exerciseType, parsed) {
@@ -168,7 +170,9 @@ async function runOne(exerciseType, submission, promptVariant, runIndex) {
 	const { scores, missing } = extractScores(exerciseType, parsed);
 	row.scores = scores;
 	row.missingFields = missing;
-	row.extraFields = Object.keys(parsed).filter((k) => !prompts[exerciseType].schema_fields.includes(k));
+	row.extraFields = Object.keys(parsed).filter(
+		(k) => !prompts[exerciseType].schema_fields.includes(k)
+	);
 	if (missing.length > 0) {
 		row.parseStatus = 'schema_incomplete';
 	} else {

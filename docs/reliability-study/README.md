@@ -8,17 +8,17 @@ Pre-registered empirical study of the LLM-based evaluator used in the TOUGHSKILL
 
 ## Files
 
-| File | Purpose |
-| --- | --- |
+| File               | Purpose                                                                          |
+| ------------------ | -------------------------------------------------------------------------------- |
 | `submissions.json` | Pre-registered submissions with tier assignments (committed before any API call) |
-| `prompts.json` | P1 rubric-referenced and P2 naive prompt pairs, one per exercise type |
-| `runner.mjs` | Node script that issues 144 Mistral calls and writes `results.jsonl` |
-| `results.jsonl` | One JSON row per API call: raw response, scores, parse status, latency |
-| `analyze.mjs` | Computes MAD, Spearman ρ, Kruskal–Wallis H, emits `metrics.json` and three SVGs |
-| `metrics.json` | Machine-readable metrics output |
-| `report.md` | Dissertation-ready subsection (§5.3.2) with numbers and touch-point updates |
-| `figures/` | SVG figures referenced from `report.md` |
-| `runner.log` | Console output from the Mistral run, retained for audit |
+| `prompts.json`     | P1 rubric-referenced and P2 naive prompt pairs, one per exercise type            |
+| `runner.mjs`       | Node script that issues 144 Mistral calls and writes `results.jsonl`             |
+| `results.jsonl`    | One JSON row per API call: raw response, scores, parse status, latency           |
+| `analyze.mjs`      | Computes MAD, Spearman ρ, Kruskal–Wallis H, emits `metrics.json` and three SVGs  |
+| `metrics.json`     | Machine-readable metrics output                                                  |
+| `report.md`        | Dissertation-ready subsection (§5.3.2) with numbers and touch-point updates      |
+| `figures/`         | SVG figures referenced from `report.md`                                          |
+| `runner.log`       | Console output from the Mistral run, retained for audit                          |
 
 ## Reproduce
 

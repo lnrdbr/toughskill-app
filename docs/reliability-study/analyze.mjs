@@ -83,7 +83,12 @@ function spearman(xs, ys) {
 function kruskalWallis(groups) {
 	const all = [];
 	const groupOf = [];
-	groups.forEach((g, gi) => g.forEach((v) => { all.push(v); groupOf.push(gi); }));
+	groups.forEach((g, gi) =>
+		g.forEach((v) => {
+			all.push(v);
+			groupOf.push(gi);
+		})
+	);
 	const rs = ranks(all);
 	const N = all.length;
 	const sums = new Array(groups.length).fill(0);
@@ -368,8 +373,10 @@ function circle(cx, cy, r, fill, opts = {}) {
 
 // Card frame in the TOUGHSKILL house style: bg fill, off-white card, 2px ink border, 5px hard shadow.
 function cardFrame(w, h, pad = 20) {
-	const cx = pad, cy = pad;
-	const cw = w - pad * 2, ch = h - pad * 2;
+	const cx = pad,
+		cy = pad;
+	const cw = w - pad * 2,
+		ch = h - pad * 2;
 	let out = rect(0, 0, w, h, T.bg);
 	out += rect(cx, cy, cw, ch, T.card, { stroke: T.ink, sw: 2, rx: 20, filter: 'hardShadow' });
 	return out;
@@ -395,8 +402,12 @@ const EX_SHORT = { divergent_thinking: 'DT', reflection: 'REF' };
 
 // Figure 1 — Reliability: median MAD per (exercise, dimension, prompt), with p95 caps.
 function figReliability() {
-	const w = 860, h = 520;
-	const ml = 96, mr = 44, mt = 110, mb = 120;
+	const w = 860,
+		h = 520;
+	const ml = 96,
+		mr = 44,
+		mt = 110,
+		mb = 120;
 	const plotW = w - ml - mr;
 	const plotH = h - mt - mb;
 	// Group reliability rows into bars per (ex, dim). Two sub-bars per group (P1, P2).
@@ -404,7 +415,10 @@ function figReliability() {
 	for (const r of reliability) {
 		const key = `${r.exerciseType}/${r.dimension}`;
 		let g = groups.find((x) => x.key === key);
-		if (!g) g = { key, ex: r.exerciseType, dim: r.dimension, items: [] }, groups.push(g);
+		if (!g) {
+			g = { key, ex: r.exerciseType, dim: r.dimension, items: [] };
+			groups.push(g);
+		}
 		g.items.push(r);
 	}
 	const maxY = 2.0;
@@ -417,23 +431,45 @@ function figReliability() {
 
 	// Title block
 	svg += text(w / 2, 60, 'Test–retest reliability', {
-		anchor: 'middle', cls: 'title', size: 34, fill: T.ink
+		anchor: 'middle',
+		cls: 'title',
+		size: 34,
+		fill: T.ink
 	});
 	svg += text(w / 2, 86, 'Mean absolute deviation across three runs · lower is better', {
-		anchor: 'middle', size: 13, fill: T.inkSoft
+		anchor: 'middle',
+		size: 13,
+		fill: T.inkSoft
 	});
 
 	// Acceptance bands as subtle background shading
 	const bandAccept = yOf(0.5);
 	const bandBorderline = yOf(1.5);
 	svg += rect(ml, bandAccept, plotW, mt + plotH - bandAccept, T.successSoft, { opacity: 0.45 });
-	svg += rect(ml, bandBorderline, plotW, bandAccept - bandBorderline, T.warningSoft, { opacity: 0.4 });
+	svg += rect(ml, bandBorderline, plotW, bandAccept - bandBorderline, T.warningSoft, {
+		opacity: 0.4
+	});
 	svg += rect(ml, mt, plotW, bandBorderline - mt, T.errorSoft, { opacity: 0.35 });
 
 	// Inline threshold labels at the right of each band
-	svg += text(ml + plotW - 8, bandAccept - 6, '≤ 0.5  acceptable', { anchor: 'end', size: 10, fill: '#166534', weight: 600 });
-	svg += text(ml + plotW - 8, bandBorderline - 6, '0.5–1.5  borderline', { anchor: 'end', size: 10, fill: '#92400e', weight: 600 });
-	svg += text(ml + plotW - 8, mt + 14, '> 1.5  poor', { anchor: 'end', size: 10, fill: '#991b1b', weight: 600 });
+	svg += text(ml + plotW - 8, bandAccept - 6, '≤ 0.5  acceptable', {
+		anchor: 'end',
+		size: 10,
+		fill: '#166534',
+		weight: 600
+	});
+	svg += text(ml + plotW - 8, bandBorderline - 6, '0.5–1.5  borderline', {
+		anchor: 'end',
+		size: 10,
+		fill: '#92400e',
+		weight: 600
+	});
+	svg += text(ml + plotW - 8, mt + 14, '> 1.5  poor', {
+		anchor: 'end',
+		size: 10,
+		fill: '#991b1b',
+		weight: 600
+	});
 
 	// Grid
 	for (let v = 0; v <= 2; v += 0.5) {
@@ -446,7 +482,10 @@ function figReliability() {
 	svg += line(ml, mt, ml, mt + plotH, T.inkMute, 1.5);
 	svg += line(ml, mt + plotH, ml + plotW, mt + plotH, T.inkMute, 1.5);
 	svg += text(ml - 58, mt + plotH / 2, 'MAD  (0–10 scale)', {
-		anchor: 'middle', size: 12, weight: 600, fill: T.inkMute,
+		anchor: 'middle',
+		size: 12,
+		weight: 600,
+		fill: T.inkMute,
 		transform: `rotate(-90, ${ml - 58}, ${mt + plotH / 2})`
 	});
 
@@ -468,7 +507,10 @@ function figReliability() {
 			svg += circle(x + barW / 2, yP95, 3.5, T.card, { stroke: T.ink, sw: 1.5 });
 			// Median value label
 			svg += text(x + barW / 2, yTop - 12, metric.medianMAD.toFixed(2), {
-				anchor: 'middle', size: 11, weight: 700, fill: T.ink
+				anchor: 'middle',
+				size: 11,
+				weight: 700,
+				fill: T.ink
 			});
 		};
 		drawBar(p1, -barW * 0.75, T.p1);
@@ -476,10 +518,17 @@ function figReliability() {
 
 		// X labels: exercise short + dimension, spaced generously
 		svg += text(cx, mt + plotH + 26, EX_SHORT[g.ex], {
-			anchor: 'middle', size: 10, weight: 700, fill: T.inkSoft, letterSpacing: 1.5
+			anchor: 'middle',
+			size: 10,
+			weight: 700,
+			fill: T.inkSoft,
+			letterSpacing: 1.5
 		});
 		svg += text(cx, mt + plotH + 46, g.dim, {
-			anchor: 'middle', size: 13, weight: 600, fill: T.ink
+			anchor: 'middle',
+			size: 13,
+			weight: 600,
+			fill: T.ink
 		});
 	});
 
@@ -500,8 +549,11 @@ function figReliability() {
 	svg += text(capX + 18, legY + 5, 'p95 MAD', { size: 12, weight: 600, fill: T.ink });
 
 	// Footer note
-	svg += text(ml, h - 44, 'n = 12 submissions per bar · 3 runs each',
-		{ size: 11, fill: T.inkSoft, anchor: 'start' });
+	svg += text(ml, h - 44, 'n = 12 submissions per bar · 3 runs each', {
+		size: 11,
+		fill: T.inkSoft,
+		anchor: 'start'
+	});
 
 	svg += '</svg>';
 	return svg;
@@ -509,7 +561,8 @@ function figReliability() {
 
 // Figure 2 — Tier separation: strip plot of LLM mean score vs tier, two panels.
 function figTierSeparation() {
-	const w = 980, h = 560;
+	const w = 980,
+		h = 560;
 	const panels = [
 		{ ex: 'divergent_thinking', dim: 'originality', sub: 'rubric dimension: originality' },
 		{ ex: 'reflection', dim: 'depth', sub: 'rubric dimension: depth' }
@@ -518,10 +571,15 @@ function figTierSeparation() {
 	svg += cardFrame(w, h);
 
 	svg += text(w / 2, 60, 'Tier separation', {
-		anchor: 'middle', cls: 'title', size: 34, fill: T.ink
+		anchor: 'middle',
+		cls: 'title',
+		size: 34,
+		fill: T.ink
 	});
 	svg += text(w / 2, 86, 'Each dot is one submission (mean of 3 runs) · 12 submissions per panel', {
-		anchor: 'middle', size: 13, fill: T.inkSoft
+		anchor: 'middle',
+		size: 13,
+		fill: T.inkSoft
 	});
 
 	const panelPadL = 48;
@@ -536,11 +594,18 @@ function figTierSeparation() {
 		const pt = panelTop;
 
 		// Panel card
-		svg += rect(pl, pt, panelOuterW, panelH, T.card, { stroke: T.ink, sw: 2, rx: 16, filter: 'softShadow' });
+		svg += rect(pl, pt, panelOuterW, panelH, T.card, {
+			stroke: T.ink,
+			sw: 2,
+			rx: 16,
+			filter: 'softShadow'
+		});
 
 		// Panel header
 		svg += text(pl + 20, pt + 30, EX_LABEL[p.ex], {
-			size: 16, weight: 700, fill: T.ink
+			size: 16,
+			weight: 700,
+			fill: T.ink
 		});
 		svg += text(pl + 20, pt + 50, p.sub, { size: 12, fill: T.inkSoft });
 
@@ -561,7 +626,10 @@ function figTierSeparation() {
 		svg += line(ml, mt, ml, mt + ph, T.inkMute, 1.5);
 		svg += line(ml, mt + ph, ml + pw, mt + ph, T.inkMute, 1.5);
 		svg += text(ml - 34, mt + ph / 2, 'mean score', {
-			anchor: 'middle', size: 11, weight: 600, fill: T.inkMute,
+			anchor: 'middle',
+			size: 11,
+			weight: 600,
+			fill: T.inkMute,
 			transform: `rotate(-90, ${ml - 34}, ${mt + ph / 2})`
 		});
 
@@ -580,7 +648,11 @@ function figTierSeparation() {
 			const lblW = 92;
 			svg += chip(xc - lblW / 2, mt + ph + 14, lblW, 26, tierTint[tier]);
 			svg += text(xc, mt + ph + 32, tier.toUpperCase(), {
-				anchor: 'middle', size: 11, weight: 700, fill: tierInk[tier], letterSpacing: 1.2
+				anchor: 'middle',
+				size: 11,
+				weight: 700,
+				fill: tierInk[tier],
+				letterSpacing: 1.2
 			});
 
 			// Two mini-columns: P1 left, P2 right
@@ -598,7 +670,11 @@ function figTierSeparation() {
 				here.forEach((d, di) => {
 					const jitter = (di - (here.length - 1) / 2) * 4;
 					const y = mt + ph - (d.mean / 10) * ph;
-					svg += circle(mx + jitter, y, 5.5, colour, { stroke: T.ink, sw: 1.5, filter: 'dotShadow' });
+					svg += circle(mx + jitter, y, 5.5, colour, {
+						stroke: T.ink,
+						sw: 1.5,
+						filter: 'dotShadow'
+					});
 				});
 			});
 		});
@@ -621,13 +697,23 @@ function figTierSeparation() {
 
 // Figure 3 — Criterion validity: Spearman ρ per (exercise, dimension, prompt).
 function figAblation() {
-	const w = 860, h = 520;
-	const ml = 96, mr = 44, mt = 110, mb = 120;
+	const w = 860,
+		h = 520;
+	const ml = 96,
+		mr = 44,
+		mt = 110,
+		mb = 120;
 	const plotW = w - ml - mr;
 	const plotH = h - mt - mb;
-	const minY = 0.0, maxY = 1.0;
+	const minY = 0.0,
+		maxY = 1.0;
 	const yOf = (v) => mt + plotH - ((v - minY) / (maxY - minY)) * plotH;
-	const groups = ablation.map((a) => ({ ex: a.exerciseType, dim: a.dimension, p1: a.p1Rho, p2: a.p2Rho }));
+	const groups = ablation.map((a) => ({
+		ex: a.exerciseType,
+		dim: a.dimension,
+		p1: a.p1Rho,
+		p2: a.p2Rho
+	}));
 	const groupW = plotW / groups.length;
 	const barW = Math.min(44, groupW * 0.32);
 
@@ -635,11 +721,21 @@ function figAblation() {
 	svg += cardFrame(w, h);
 
 	svg += text(w / 2, 60, 'Criterion validity', {
-		anchor: 'middle', cls: 'title', size: 34, fill: T.ink
+		anchor: 'middle',
+		cls: 'title',
+		size: 34,
+		fill: T.ink
 	});
-	svg += text(w / 2, 86, 'Spearman ρ between LLM mean score and pre-registered tier rank · higher is better', {
-		anchor: 'middle', size: 13, fill: T.inkSoft
-	});
+	svg += text(
+		w / 2,
+		86,
+		'Spearman ρ between LLM mean score and pre-registered tier rank · higher is better',
+		{
+			anchor: 'middle',
+			size: 13,
+			fill: T.inkSoft
+		}
+	);
 
 	// Interpretation bands
 	const yStrong = yOf(0.7);
@@ -648,9 +744,24 @@ function figAblation() {
 	svg += rect(ml, yStrong, plotW, yMod - yStrong, T.warningSoft, { opacity: 0.4 });
 	svg += rect(ml, yMod, plotW, mt + plotH - yMod, T.errorSoft, { opacity: 0.35 });
 
-	svg += text(ml + plotW - 8, yStrong + 14, 'ρ ≥ 0.7  strong', { anchor: 'end', size: 10, fill: '#166534', weight: 600 });
-	svg += text(ml + plotW - 8, yMod + 14, '0.4–0.7  moderate', { anchor: 'end', size: 10, fill: '#92400e', weight: 600 });
-	svg += text(ml + plotW - 8, mt + plotH - 6, '< 0.4  concerning', { anchor: 'end', size: 10, fill: '#991b1b', weight: 600 });
+	svg += text(ml + plotW - 8, yStrong + 14, 'ρ ≥ 0.7  strong', {
+		anchor: 'end',
+		size: 10,
+		fill: '#166534',
+		weight: 600
+	});
+	svg += text(ml + plotW - 8, yMod + 14, '0.4–0.7  moderate', {
+		anchor: 'end',
+		size: 10,
+		fill: '#92400e',
+		weight: 600
+	});
+	svg += text(ml + plotW - 8, mt + plotH - 6, '< 0.4  concerning', {
+		anchor: 'end',
+		size: 10,
+		fill: '#991b1b',
+		weight: 600
+	});
 
 	// Grid
 	for (let v = 0; v <= 1; v += 0.2) {
@@ -661,7 +772,10 @@ function figAblation() {
 	svg += line(ml, mt, ml, mt + plotH, T.inkMute, 1.5);
 	svg += line(ml, mt + plotH, ml + plotW, mt + plotH, T.inkMute, 1.5);
 	svg += text(ml - 58, mt + plotH / 2, 'Spearman  ρ', {
-		anchor: 'middle', size: 12, weight: 600, fill: T.inkMute,
+		anchor: 'middle',
+		size: 12,
+		weight: 600,
+		fill: T.inkMute,
 		transform: `rotate(-90, ${ml - 58}, ${mt + plotH / 2})`
 	});
 
@@ -674,17 +788,27 @@ function figAblation() {
 			const x = cx + offset - barW / 2;
 			svg += bar(x, yTop, barW, vh, colour);
 			svg += text(x + barW / 2, yTop - 10, v.toFixed(2), {
-				anchor: 'middle', size: 11, weight: 700, fill: T.ink
+				anchor: 'middle',
+				size: 11,
+				weight: 700,
+				fill: T.ink
 			});
 		};
 		drawBar(g.p1, -barW * 0.75, T.p1);
 		drawBar(g.p2, barW * 0.75, T.p2);
 
 		svg += text(cx, mt + plotH + 26, EX_SHORT[g.ex], {
-			anchor: 'middle', size: 10, weight: 700, fill: T.inkSoft, letterSpacing: 1.5
+			anchor: 'middle',
+			size: 10,
+			weight: 700,
+			fill: T.inkSoft,
+			letterSpacing: 1.5
 		});
 		svg += text(cx, mt + plotH + 46, g.dim, {
-			anchor: 'middle', size: 13, weight: 600, fill: T.ink
+			anchor: 'middle',
+			size: 13,
+			weight: 600,
+			fill: T.ink
 		});
 	});
 
@@ -698,8 +822,11 @@ function figAblation() {
 		svg += chip(it.x, legY - 10, 20, 20, it.fill);
 		svg += text(it.x + 28, legY + 5, it.label, { size: 12, weight: 600, fill: T.ink });
 	});
-	svg += text(ml, h - 44, 'all p < 0.001 · n = 12 submissions per correlation',
-		{ size: 11, fill: T.inkSoft, anchor: 'start' });
+	svg += text(ml, h - 44, 'all p < 0.001 · n = 12 submissions per correlation', {
+		size: 11,
+		fill: T.inkSoft,
+		anchor: 'start'
+	});
 
 	svg += '</svg>';
 	return svg;

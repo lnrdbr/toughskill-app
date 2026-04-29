@@ -1,55 +1,223 @@
 {
-  "_meta": {
-    "pre_registered_at": "2026-04-19",
-    "author": "Leonard Bauer (sole author, single rater on ground truth)",
-    "rationale": "Author-generated submissions spanning three quality tiers. Tiers are pre-registered before any Mistral call is made. Tier assignment is a single-rater judgement based on explicit criteria below. This is disclosed as a limitation.",
-    "divergent_tier_criteria": {
-      "poor": "<= 5 ideas; all within a single category (e.g. paper-clipping variants); no detail or elaboration.",
-      "mid": "6-8 ideas; 3-4 distinct categories; mostly mundane; little or no elaboration.",
-      "excellent": ">= 10 ideas; 5+ distinct categories spanning physical/metaphorical/cross-domain uses; elaboration on at least some ideas."
-    },
-    "reflection_tier_criteria": {
-      "poor": "1-2 sentences; generic nouns/adjectives; no sensory specificity; no personal insight.",
-      "mid": "3-5 sentences; at least one specific sensory detail; gestures toward insight but does not develop it.",
-      "excellent": ">= 6 sentences; multiple specific sensory details; explicit movement from observation to meaning; personal connection articulated."
-    }
-  },
-  "divergent_thinking": {
-    "shared_prompt": "Come up with creative uses for a paperclip.",
-    "submissions": [
-      { "id": "dt_poor_1", "tier": "poor", "ideas": ["clip papers together", "hold papers", "keep documents in order"] },
-      { "id": "dt_poor_2", "tier": "poor", "ideas": ["attach papers", "paper fastener", "hold receipts", "clip notes"] },
-      { "id": "dt_poor_3", "tier": "poor", "ideas": ["clip papers", "hold a stack of paper", "bookmark", "attach two sheets", "keep documents together"] },
-      { "id": "dt_poor_4", "tier": "poor", "ideas": ["paperclip", "hold papers", "clip receipts"] },
+	"_meta": {
+		"pre_registered_at": "2026-04-19",
+		"author": "Leonard Bauer (sole author, single rater on ground truth)",
+		"rationale": "Author-generated submissions spanning three quality tiers. Tiers are pre-registered before any Mistral call is made. Tier assignment is a single-rater judgement based on explicit criteria below. This is disclosed as a limitation.",
+		"divergent_tier_criteria": {
+			"poor": "<= 5 ideas; all within a single category (e.g. paper-clipping variants); no detail or elaboration.",
+			"mid": "6-8 ideas; 3-4 distinct categories; mostly mundane; little or no elaboration.",
+			"excellent": ">= 10 ideas; 5+ distinct categories spanning physical/metaphorical/cross-domain uses; elaboration on at least some ideas."
+		},
+		"reflection_tier_criteria": {
+			"poor": "1-2 sentences; generic nouns/adjectives; no sensory specificity; no personal insight.",
+			"mid": "3-5 sentences; at least one specific sensory detail; gestures toward insight but does not develop it.",
+			"excellent": ">= 6 sentences; multiple specific sensory details; explicit movement from observation to meaning; personal connection articulated."
+		}
+	},
+	"divergent_thinking": {
+		"shared_prompt": "Come up with creative uses for a paperclip.",
+		"submissions": [
+			{
+				"id": "dt_poor_1",
+				"tier": "poor",
+				"ideas": ["clip papers together", "hold papers", "keep documents in order"]
+			},
+			{
+				"id": "dt_poor_2",
+				"tier": "poor",
+				"ideas": ["attach papers", "paper fastener", "hold receipts", "clip notes"]
+			},
+			{
+				"id": "dt_poor_3",
+				"tier": "poor",
+				"ideas": [
+					"clip papers",
+					"hold a stack of paper",
+					"bookmark",
+					"attach two sheets",
+					"keep documents together"
+				]
+			},
+			{ "id": "dt_poor_4", "tier": "poor", "ideas": ["paperclip", "hold papers", "clip receipts"] },
 
-      { "id": "dt_mid_1", "tier": "mid", "ideas": ["clip papers", "bookmark", "hold earphones coiled", "mark a page in a book", "tie a small bag shut", "decorate a greeting card", "keep cables tidy"] },
-      { "id": "dt_mid_2", "tier": "mid", "ideas": ["clip papers", "reset button poker", "replacement zipper pull", "SIM card ejector tool", "bookmark", "hold a chip bag closed"] },
-      { "id": "dt_mid_3", "tier": "mid", "ideas": ["clip papers", "makeshift zipper pull", "clean a nozzle", "bookmark", "hold a key on a loop", "bend into letters for decoration", "mini hook on a corkboard"] },
-      { "id": "dt_mid_4", "tier": "mid", "ideas": ["hold papers", "bookmark", "zipper pull replacement", "cable organiser", "reset a router", "hold a tube rolled up", "loop for thread"] },
+			{
+				"id": "dt_mid_1",
+				"tier": "mid",
+				"ideas": [
+					"clip papers",
+					"bookmark",
+					"hold earphones coiled",
+					"mark a page in a book",
+					"tie a small bag shut",
+					"decorate a greeting card",
+					"keep cables tidy"
+				]
+			},
+			{
+				"id": "dt_mid_2",
+				"tier": "mid",
+				"ideas": [
+					"clip papers",
+					"reset button poker",
+					"replacement zipper pull",
+					"SIM card ejector tool",
+					"bookmark",
+					"hold a chip bag closed"
+				]
+			},
+			{
+				"id": "dt_mid_3",
+				"tier": "mid",
+				"ideas": [
+					"clip papers",
+					"makeshift zipper pull",
+					"clean a nozzle",
+					"bookmark",
+					"hold a key on a loop",
+					"bend into letters for decoration",
+					"mini hook on a corkboard"
+				]
+			},
+			{
+				"id": "dt_mid_4",
+				"tier": "mid",
+				"ideas": [
+					"hold papers",
+					"bookmark",
+					"zipper pull replacement",
+					"cable organiser",
+					"reset a router",
+					"hold a tube rolled up",
+					"loop for thread"
+				]
+			},
 
-      { "id": "dt_exc_1", "tier": "excellent", "ideas": ["SIM card ejector", "reset button poker for routers and phones", "bent into an earring or small pendant", "bent into a miniature wire sculpture for an art piece", "mini screwdriver for tiny eyeglass screws when filed down", "improvised lock pick for simple pin tumbler locks", "replacement zipper pull", "hold a plastic bag closed like a twist tie", "unclog a glue bottle or toothpaste nozzle", "extract a splinter when bent open", "electrode in a potato-and-lemon battery demonstration", "clean crumbs from between keyboard keys"] },
-      { "id": "dt_exc_2", "tier": "excellent", "ideas": ["low-voltage conductor to bridge a circuit on a breadboard", "emergency fishing hook when bent and barbed", "stake to mark the position of a seedling", "pin to track progress on a string-and-corkboard map", "hair clip when straightened and bent", "repair clip for a snapped clothesline", "bent into a wire letter for a handmade card", "solder holder by clipping component leads in place", "loop around a tea bag tag to stop it falling into the cup", "mini trellis stake for a single pea shoot", "curtain ring replacement on a small rod"] },
-      { "id": "dt_exc_3", "tier": "excellent", "ideas": ["emergency guitar pick when flattened and trimmed", "shim to stop a drawer rattling", "toothpick alternative when straightened and filed", "needle for sewing leather when heated and pushed through", "marker stuck into a cake to mark portion boundaries", "magnetised and floated on water as a makeshift compass needle", "jewellery clasp replacement", "mini plant-pot label holder", "fidget toy bent and straightened repeatedly", "bookbinding replacement for a lost cover clip", "bicycle brake cable end cap replacement", "ornament hook for a Christmas tree bauble", "cotter-pin substitute in a small model"] },
-      { "id": "dt_exc_4", "tier": "excellent", "ideas": ["wrapped in cloth as an improvised ring", "teaching aid for demonstrating paramagnetism near a magnet", "link in a handmade chain necklace", "miniature hinge for a small wooden box", "tiny tent peg for a doll-house diorama", "flagstaff for a miniature wargame figure", "twist-tie substitute on a bread bag", "fruit pick to test ripeness of a cake by inserting and withdrawing", "battery tab bridge in a dead smoke detector (temporary)", "replacement prong on a broken watch-strap buckle", "ice-pick scratcher to defrost a freezer cube"] }
-    ]
-  },
-  "reflection": {
-    "shared_prompt": "When was the last time you noticed something small but beautiful? What did you notice?",
-    "submissions": [
-      { "id": "ref_poor_1", "tier": "poor", "text": "A flower in my garden. It was nice." },
-      { "id": "ref_poor_2", "tier": "poor", "text": "The sunset yesterday. It was orange." },
-      { "id": "ref_poor_3", "tier": "poor", "text": "I saw a bird outside. It looked cute." },
-      { "id": "ref_poor_4", "tier": "poor", "text": "There was a rainbow after it rained. I liked it." },
+			{
+				"id": "dt_exc_1",
+				"tier": "excellent",
+				"ideas": [
+					"SIM card ejector",
+					"reset button poker for routers and phones",
+					"bent into an earring or small pendant",
+					"bent into a miniature wire sculpture for an art piece",
+					"mini screwdriver for tiny eyeglass screws when filed down",
+					"improvised lock pick for simple pin tumbler locks",
+					"replacement zipper pull",
+					"hold a plastic bag closed like a twist tie",
+					"unclog a glue bottle or toothpaste nozzle",
+					"extract a splinter when bent open",
+					"electrode in a potato-and-lemon battery demonstration",
+					"clean crumbs from between keyboard keys"
+				]
+			},
+			{
+				"id": "dt_exc_2",
+				"tier": "excellent",
+				"ideas": [
+					"low-voltage conductor to bridge a circuit on a breadboard",
+					"emergency fishing hook when bent and barbed",
+					"stake to mark the position of a seedling",
+					"pin to track progress on a string-and-corkboard map",
+					"hair clip when straightened and bent",
+					"repair clip for a snapped clothesline",
+					"bent into a wire letter for a handmade card",
+					"solder holder by clipping component leads in place",
+					"loop around a tea bag tag to stop it falling into the cup",
+					"mini trellis stake for a single pea shoot",
+					"curtain ring replacement on a small rod"
+				]
+			},
+			{
+				"id": "dt_exc_3",
+				"tier": "excellent",
+				"ideas": [
+					"emergency guitar pick when flattened and trimmed",
+					"shim to stop a drawer rattling",
+					"toothpick alternative when straightened and filed",
+					"needle for sewing leather when heated and pushed through",
+					"marker stuck into a cake to mark portion boundaries",
+					"magnetised and floated on water as a makeshift compass needle",
+					"jewellery clasp replacement",
+					"mini plant-pot label holder",
+					"fidget toy bent and straightened repeatedly",
+					"bookbinding replacement for a lost cover clip",
+					"bicycle brake cable end cap replacement",
+					"ornament hook for a Christmas tree bauble",
+					"cotter-pin substitute in a small model"
+				]
+			},
+			{
+				"id": "dt_exc_4",
+				"tier": "excellent",
+				"ideas": [
+					"wrapped in cloth as an improvised ring",
+					"teaching aid for demonstrating paramagnetism near a magnet",
+					"link in a handmade chain necklace",
+					"miniature hinge for a small wooden box",
+					"tiny tent peg for a doll-house diorama",
+					"flagstaff for a miniature wargame figure",
+					"twist-tie substitute on a bread bag",
+					"fruit pick to test ripeness of a cake by inserting and withdrawing",
+					"battery tab bridge in a dead smoke detector (temporary)",
+					"replacement prong on a broken watch-strap buckle",
+					"ice-pick scratcher to defrost a freezer cube"
+				]
+			}
+		]
+	},
+	"reflection": {
+		"shared_prompt": "When was the last time you noticed something small but beautiful? What did you notice?",
+		"submissions": [
+			{ "id": "ref_poor_1", "tier": "poor", "text": "A flower in my garden. It was nice." },
+			{ "id": "ref_poor_2", "tier": "poor", "text": "The sunset yesterday. It was orange." },
+			{ "id": "ref_poor_3", "tier": "poor", "text": "I saw a bird outside. It looked cute." },
+			{
+				"id": "ref_poor_4",
+				"tier": "poor",
+				"text": "There was a rainbow after it rained. I liked it."
+			},
 
-      { "id": "ref_mid_1", "tier": "mid", "text": "Yesterday I noticed the way the morning light hit the kitchen counter at around seven. It made the grain of the wood look warm. I usually don't pay attention to that part of the room. It felt nice to just stand there for a second." },
-      { "id": "ref_mid_2", "tier": "mid", "text": "On my walk home the street lamps were turning on one by one down the road. I could almost see them come on in sequence. It made me think how many small engineered things around us we take for granted. I slowed down and watched the rest of the row flick on." },
-      { "id": "ref_mid_3", "tier": "mid", "text": "A spiderweb on the hedge was covered in morning dew. Each droplet acted like a tiny lens. I stopped for a minute to look at it properly. It reminded me of a nature documentary I watched years ago." },
-      { "id": "ref_mid_4", "tier": "mid", "text": "My niece laughed at something on the TV, completely unselfconsciously. It made me realise I don't laugh like that any more. I've been thinking about why since then." },
+			{
+				"id": "ref_mid_1",
+				"tier": "mid",
+				"text": "Yesterday I noticed the way the morning light hit the kitchen counter at around seven. It made the grain of the wood look warm. I usually don't pay attention to that part of the room. It felt nice to just stand there for a second."
+			},
+			{
+				"id": "ref_mid_2",
+				"tier": "mid",
+				"text": "On my walk home the street lamps were turning on one by one down the road. I could almost see them come on in sequence. It made me think how many small engineered things around us we take for granted. I slowed down and watched the rest of the row flick on."
+			},
+			{
+				"id": "ref_mid_3",
+				"tier": "mid",
+				"text": "A spiderweb on the hedge was covered in morning dew. Each droplet acted like a tiny lens. I stopped for a minute to look at it properly. It reminded me of a nature documentary I watched years ago."
+			},
+			{
+				"id": "ref_mid_4",
+				"tier": "mid",
+				"text": "My niece laughed at something on the TV, completely unselfconsciously. It made me realise I don't laugh like that any more. I've been thinking about why since then."
+			},
 
-      { "id": "ref_exc_1", "tier": "excellent", "text": "Walking to the shop this morning I noticed a single leaf skating sideways across the tarmac, pushed by a gust I could barely feel on my own face. It caught the curb, spun once, and settled into a puddle. For a second the puddle went completely still and I could see a reflected slice of sky in it, bluer than the sky looked overhead. I stood there long enough that a woman walking her dog looked at me. It struck me that the leaf had probably fallen weeks ago and had been moving around the neighbourhood the whole time, catching and releasing, and I'd just happened to witness one small arc of its journey. I don't usually slow down on that street. The thing that stayed with me wasn't the leaf itself but the idea that this sort of tiny, unobserved movement is happening everywhere, all the time, and I walk past most of it. It made me feel less like I was running late and more like I was just a person on a street in the morning." },
-      { "id": "ref_exc_2", "tier": "excellent", "text": "Last night I was doing the washing up and I noticed the bubbles in the sink were catching the overhead light and reflecting tiny rainbow shimmers onto the splashback tiles. Each bubble had its own pattern, and when one popped the rainbow on the wall behind it disappeared too. I stopped scrubbing and just watched for probably a full minute. What got me wasn't the colours exactly but how completely ordinary the scene was — a sink full of dishes at nine in the evening — and how you can find yourself somewhere beautiful without having gone anywhere. I thought about how my mother used to let the plates soak instead of scrubbing, and wondered if she ever noticed this too. It felt like a small inheritance I hadn't known I had." },
-      { "id": "ref_exc_3", "tier": "excellent", "text": "On the train last week I noticed the woman opposite me folding a receipt into smaller and smaller squares while she talked on the phone. She wasn't looking at her hands, but every fold was perfectly aligned, like she had done it a thousand times before. When she finished the call she smoothed the tiny square flat on her knee with her thumb, looked at it for a moment, and put it in her pocket. The whole thing took maybe thirty seconds. I couldn't stop thinking about the gesture afterwards — the way something so small could look so deliberate. It made me think about all the private rituals people carry around with them, things they do without thinking that would be impossible to explain to anyone else. I don't know what the receipt was for. I'm not sure it mattered to her either. The folding was the point." },
-      { "id": "ref_exc_4", "tier": "excellent", "text": "Early this morning, before the house was awake, I noticed the way the steam from my coffee drifted sideways into a rectangle of sunlight coming through the window. Inside that rectangle the steam was suddenly visible, silver and slow, and outside it the steam was just air again. It was like a doorway the coffee was walking through. I watched two or three curls of it move across and vanish. The thought that landed on me was that most of the interesting things in my life are like this — there all along, but only visible when the light falls right. I didn't drink the coffee for another couple of minutes, which is unusual for me. Then the angle shifted and the doorway closed." }
-    ]
-  }
+			{
+				"id": "ref_exc_1",
+				"tier": "excellent",
+				"text": "Walking to the shop this morning I noticed a single leaf skating sideways across the tarmac, pushed by a gust I could barely feel on my own face. It caught the curb, spun once, and settled into a puddle. For a second the puddle went completely still and I could see a reflected slice of sky in it, bluer than the sky looked overhead. I stood there long enough that a woman walking her dog looked at me. It struck me that the leaf had probably fallen weeks ago and had been moving around the neighbourhood the whole time, catching and releasing, and I'd just happened to witness one small arc of its journey. I don't usually slow down on that street. The thing that stayed with me wasn't the leaf itself but the idea that this sort of tiny, unobserved movement is happening everywhere, all the time, and I walk past most of it. It made me feel less like I was running late and more like I was just a person on a street in the morning."
+			},
+			{
+				"id": "ref_exc_2",
+				"tier": "excellent",
+				"text": "Last night I was doing the washing up and I noticed the bubbles in the sink were catching the overhead light and reflecting tiny rainbow shimmers onto the splashback tiles. Each bubble had its own pattern, and when one popped the rainbow on the wall behind it disappeared too. I stopped scrubbing and just watched for probably a full minute. What got me wasn't the colours exactly but how completely ordinary the scene was — a sink full of dishes at nine in the evening — and how you can find yourself somewhere beautiful without having gone anywhere. I thought about how my mother used to let the plates soak instead of scrubbing, and wondered if she ever noticed this too. It felt like a small inheritance I hadn't known I had."
+			},
+			{
+				"id": "ref_exc_3",
+				"tier": "excellent",
+				"text": "On the train last week I noticed the woman opposite me folding a receipt into smaller and smaller squares while she talked on the phone. She wasn't looking at her hands, but every fold was perfectly aligned, like she had done it a thousand times before. When she finished the call she smoothed the tiny square flat on her knee with her thumb, looked at it for a moment, and put it in her pocket. The whole thing took maybe thirty seconds. I couldn't stop thinking about the gesture afterwards — the way something so small could look so deliberate. It made me think about all the private rituals people carry around with them, things they do without thinking that would be impossible to explain to anyone else. I don't know what the receipt was for. I'm not sure it mattered to her either. The folding was the point."
+			},
+			{
+				"id": "ref_exc_4",
+				"tier": "excellent",
+				"text": "Early this morning, before the house was awake, I noticed the way the steam from my coffee drifted sideways into a rectangle of sunlight coming through the window. Inside that rectangle the steam was suddenly visible, silver and slow, and outside it the steam was just air again. It was like a doorway the coffee was walking through. I watched two or three curls of it move across and vanish. The thought that landed on me was that most of the interesting things in my life are like this — there all along, but only visible when the light falls right. I didn't drink the coffee for another couple of minutes, which is unusual for me. Then the angle shifted and the doorway closed."
+			}
+		]
+	}
 }

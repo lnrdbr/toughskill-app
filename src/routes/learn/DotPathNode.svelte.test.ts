@@ -27,7 +27,12 @@ describe('DotPathNode', () => {
 	});
 
 	it('applies selected class when selected', async () => {
-		render(DotPathNode, { status: 'not-started', label: 'Test lesson', selected: true, onclick: () => {} });
+		render(DotPathNode, {
+			status: 'not-started',
+			label: 'Test lesson',
+			selected: true,
+			onclick: () => {}
+		});
 
 		const button = page.getByRole('button');
 		await expect.element(button).toHaveClass('selected');

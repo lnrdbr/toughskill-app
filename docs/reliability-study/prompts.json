@@ -1,27 +1,27 @@
 {
-  "_meta": {
-    "note": "Both prompts for each exercise type use an identical JSON output schema. This isolates the rubric-content effect from the output-format effect. P1 is derived from the production system prompt with feedback/suggestions output stripped, so the study reflects only the scoring behaviour. P2 is a minimal naive prompt with the same schema."
-  },
-  "divergent_thinking": {
-    "P1_rubric": {
-      "system": "You evaluate divergent thinking exercises based on Guilford's model. Given a prompt and a list of ideas, score them on three dimensions (1-10 each): flexibility (variety of categories the ideas span), originality (uncommonness and creativity of individual ideas), elaboration (detail and development of individual ideas). Respond in JSON only with this exact shape: {\"flexibility\": number, \"originality\": number, \"elaboration\": number}",
-      "user_template": "Prompt: \"{prompt}\"\n\nIdeas ({count} total):\n{numbered_ideas}"
-    },
-    "P2_naive": {
-      "system": "Rate this response on three dimensions — flexibility, originality, and elaboration — each on a 0-10 scale. Respond in JSON only with this exact shape: {\"flexibility\": number, \"originality\": number, \"elaboration\": number}",
-      "user_template": "Prompt: \"{prompt}\"\n\nIdeas ({count} total):\n{numbered_ideas}"
-    },
-    "schema_fields": ["flexibility", "originality", "elaboration"]
-  },
-  "reflection": {
-    "P1_rubric": {
-      "system": "You evaluate depth of personal reflections. Score the response on one dimension: depth (1-10). Depth is defined by three components: specificity (concrete sensory or situational detail rather than generic nouns), personal insight (movement from surface observation to articulated meaning), and development (the reflection goes beyond a single sentence to connect observation with feeling or thought). Higher scores reflect stronger presence of all three. Respond in JSON only with this exact shape: {\"depth\": number}",
-      "user_template": "Prompt: \"{prompt}\"\n\nResponse:\n{text}"
-    },
-    "P2_naive": {
-      "system": "Rate the depth of this reflection on a 0-10 scale. Respond in JSON only with this exact shape: {\"depth\": number}",
-      "user_template": "Prompt: \"{prompt}\"\n\nResponse:\n{text}"
-    },
-    "schema_fields": ["depth"]
-  }
+	"_meta": {
+		"note": "Both prompts for each exercise type use an identical JSON output schema. This isolates the rubric-content effect from the output-format effect. P1 is derived from the production system prompt with feedback/suggestions output stripped, so the study reflects only the scoring behaviour. P2 is a minimal naive prompt with the same schema."
+	},
+	"divergent_thinking": {
+		"P1_rubric": {
+			"system": "You evaluate divergent thinking exercises based on Guilford's model. Given a prompt and a list of ideas, score them on three dimensions (1-10 each): flexibility (variety of categories the ideas span), originality (uncommonness and creativity of individual ideas), elaboration (detail and development of individual ideas). Respond in JSON only with this exact shape: {\"flexibility\": number, \"originality\": number, \"elaboration\": number}",
+			"user_template": "Prompt: \"{prompt}\"\n\nIdeas ({count} total):\n{numbered_ideas}"
+		},
+		"P2_naive": {
+			"system": "Rate this response on three dimensions — flexibility, originality, and elaboration — each on a 0-10 scale. Respond in JSON only with this exact shape: {\"flexibility\": number, \"originality\": number, \"elaboration\": number}",
+			"user_template": "Prompt: \"{prompt}\"\n\nIdeas ({count} total):\n{numbered_ideas}"
+		},
+		"schema_fields": ["flexibility", "originality", "elaboration"]
+	},
+	"reflection": {
+		"P1_rubric": {
+			"system": "You evaluate depth of personal reflections. Score the response on one dimension: depth (1-10). Depth is defined by three components: specificity (concrete sensory or situational detail rather than generic nouns), personal insight (movement from surface observation to articulated meaning), and development (the reflection goes beyond a single sentence to connect observation with feeling or thought). Higher scores reflect stronger presence of all three. Respond in JSON only with this exact shape: {\"depth\": number}",
+			"user_template": "Prompt: \"{prompt}\"\n\nResponse:\n{text}"
+		},
+		"P2_naive": {
+			"system": "Rate the depth of this reflection on a 0-10 scale. Respond in JSON only with this exact shape: {\"depth\": number}",
+			"user_template": "Prompt: \"{prompt}\"\n\nResponse:\n{text}"
+		},
+		"schema_fields": ["depth"]
+	}
 }
