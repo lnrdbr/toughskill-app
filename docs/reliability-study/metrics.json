@@ -1,0 +1,319 @@
+{
+  "generatedAt": "2026-04-19T17:24:28.340Z",
+  "nSubmissions": 24,
+  "nExerciseTypes": 2,
+  "nPromptVariants": 2,
+  "nRunsPerPair": 3,
+  "nTotalCalls": 144,
+  "failureTaxonomy": {
+    "ok": 144,
+    "http_error": 0,
+    "json_parse_error": 0,
+    "schema_incomplete": 0
+  },
+  "extraFieldCounts": {},
+  "reliability": [
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P1_rubric",
+      "dimension": "flexibility",
+      "medianMAD": 0,
+      "meanMAD": 0.204,
+      "p95MAD": 0.667,
+      "maxMAD": 0.667,
+      "n": 12
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P1_rubric",
+      "dimension": "originality",
+      "medianMAD": 0.222,
+      "meanMAD": 0.278,
+      "p95MAD": 0.889,
+      "maxMAD": 0.889,
+      "n": 12
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P1_rubric",
+      "dimension": "elaboration",
+      "medianMAD": 0.444,
+      "meanMAD": 0.426,
+      "p95MAD": 1.333,
+      "maxMAD": 1.333,
+      "n": 12
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P2_naive",
+      "dimension": "flexibility",
+      "medianMAD": 0,
+      "meanMAD": 0.111,
+      "p95MAD": 0.444,
+      "maxMAD": 0.444,
+      "n": 12
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P2_naive",
+      "dimension": "originality",
+      "medianMAD": 0.444,
+      "meanMAD": 0.296,
+      "p95MAD": 0.889,
+      "maxMAD": 0.889,
+      "n": 12
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P2_naive",
+      "dimension": "elaboration",
+      "medianMAD": 0.444,
+      "meanMAD": 0.278,
+      "p95MAD": 0.667,
+      "maxMAD": 0.667,
+      "n": 12
+    },
+    {
+      "exerciseType": "reflection",
+      "promptVariant": "P1_rubric",
+      "dimension": "depth",
+      "medianMAD": 0.222,
+      "meanMAD": 0.278,
+      "p95MAD": 1.111,
+      "maxMAD": 1.111,
+      "n": 12
+    },
+    {
+      "exerciseType": "reflection",
+      "promptVariant": "P2_naive",
+      "dimension": "depth",
+      "medianMAD": 0.222,
+      "meanMAD": 0.222,
+      "p95MAD": 0.444,
+      "maxMAD": 0.444,
+      "n": 12
+    }
+  ],
+  "validity": [
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P1_rubric",
+      "dimension": "flexibility",
+      "spearmanRho": 0.953,
+      "n": 12,
+      "tStat": 9.923,
+      "pApprox": "< 0.001"
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P1_rubric",
+      "dimension": "originality",
+      "spearmanRho": 0.953,
+      "n": 12,
+      "tStat": 9.923,
+      "pApprox": "< 0.001"
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P1_rubric",
+      "dimension": "elaboration",
+      "spearmanRho": 0.918,
+      "n": 12,
+      "tStat": 7.327,
+      "pApprox": "< 0.001"
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P2_naive",
+      "dimension": "flexibility",
+      "spearmanRho": 0.967,
+      "n": 12,
+      "tStat": 11.926,
+      "pApprox": "< 0.001"
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P2_naive",
+      "dimension": "originality",
+      "spearmanRho": 0.956,
+      "n": 12,
+      "tStat": 10.328,
+      "pApprox": "< 0.001"
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P2_naive",
+      "dimension": "elaboration",
+      "spearmanRho": 0.835,
+      "n": 12,
+      "tStat": 4.802,
+      "pApprox": "< 0.001"
+    },
+    {
+      "exerciseType": "reflection",
+      "promptVariant": "P1_rubric",
+      "dimension": "depth",
+      "spearmanRho": 0.967,
+      "n": 12,
+      "tStat": 11.926,
+      "pApprox": "< 0.001"
+    },
+    {
+      "exerciseType": "reflection",
+      "promptVariant": "P2_naive",
+      "dimension": "depth",
+      "spearmanRho": 0.956,
+      "n": 12,
+      "tStat": 10.328,
+      "pApprox": "< 0.001"
+    }
+  ],
+  "tierSeparation": [
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P1_rubric",
+      "dimension": "flexibility",
+      "kruskalWallisH": 9.846,
+      "df": 2,
+      "pApprox": "< 0.01",
+      "groupMeans": {
+        "poor": 2.5,
+        "mid": 6.75,
+        "excellent": 8
+      }
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P1_rubric",
+      "dimension": "originality",
+      "kruskalWallisH": 9.846,
+      "df": 2,
+      "pApprox": "< 0.01",
+      "groupMeans": {
+        "poor": 2.42,
+        "mid": 5.75,
+        "excellent": 7
+      }
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P1_rubric",
+      "dimension": "elaboration",
+      "kruskalWallisH": 9.269,
+      "df": 2,
+      "pApprox": "< 0.01",
+      "groupMeans": {
+        "poor": 2.5,
+        "mid": 4.5,
+        "excellent": 6
+      }
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P2_naive",
+      "dimension": "flexibility",
+      "kruskalWallisH": 9.846,
+      "df": 2,
+      "pApprox": "< 0.01",
+      "groupMeans": {
+        "poor": 5.5,
+        "mid": 7.92,
+        "excellent": 9
+      }
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P2_naive",
+      "dimension": "originality",
+      "kruskalWallisH": 9.846,
+      "df": 2,
+      "pApprox": "< 0.01",
+      "groupMeans": {
+        "poor": 3.42,
+        "mid": 6,
+        "excellent": 7.75
+      }
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "promptVariant": "P2_naive",
+      "dimension": "elaboration",
+      "kruskalWallisH": 8,
+      "df": 2,
+      "pApprox": "< 0.05",
+      "groupMeans": {
+        "poor": 4.08,
+        "mid": 5.75,
+        "excellent": 7.25
+      }
+    },
+    {
+      "exerciseType": "reflection",
+      "promptVariant": "P1_rubric",
+      "dimension": "depth",
+      "kruskalWallisH": 9.846,
+      "df": 2,
+      "pApprox": "< 0.01",
+      "groupMeans": {
+        "poor": 1.92,
+        "mid": 5.92,
+        "excellent": 9
+      }
+    },
+    {
+      "exerciseType": "reflection",
+      "promptVariant": "P2_naive",
+      "dimension": "depth",
+      "kruskalWallisH": 9.846,
+      "df": 2,
+      "pApprox": "< 0.01",
+      "groupMeans": {
+        "poor": 1.92,
+        "mid": 5.75,
+        "excellent": 8.42
+      }
+    }
+  ],
+  "ablation": [
+    {
+      "exerciseType": "divergent_thinking",
+      "dimension": "flexibility",
+      "p1MedianMAD": 0,
+      "p2MedianMAD": 0,
+      "madDelta": 0,
+      "p1Rho": 0.953,
+      "p2Rho": 0.967,
+      "rhoDelta": -0.014
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "dimension": "originality",
+      "p1MedianMAD": 0.222,
+      "p2MedianMAD": 0.444,
+      "madDelta": -0.222,
+      "p1Rho": 0.953,
+      "p2Rho": 0.956,
+      "rhoDelta": -0.003
+    },
+    {
+      "exerciseType": "divergent_thinking",
+      "dimension": "elaboration",
+      "p1MedianMAD": 0.444,
+      "p2MedianMAD": 0.444,
+      "madDelta": 0,
+      "p1Rho": 0.918,
+      "p2Rho": 0.835,
+      "rhoDelta": 0.083
+    },
+    {
+      "exerciseType": "reflection",
+      "dimension": "depth",
+      "p1MedianMAD": 0.222,
+      "p2MedianMAD": 0.222,
+      "madDelta": 0,
+      "p1Rho": 0.967,
+      "p2Rho": 0.956,
+      "rhoDelta": 0.011
+    }
+  ]
+}

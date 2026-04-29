@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reliability study — figures preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gurajada&display=swap" rel="stylesheet">
+<style>
+	body {
+		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		background: #fafaf9;
+		color: #18181b;
+		margin: 0;
+		padding: 48px 24px 72px;
+	}
+	.wrap { max-width: 1040px; margin: 0 auto; }
+	h1 {
+		font-family: 'Gurajada', Georgia, serif;
+		font-weight: 400;
+		font-size: 56px;
+		margin: 0 0 8px;
+	}
+	p.sub { color: #78716c; margin: 0 0 32px; }
+	figure { margin: 40px 0; }
+	figcaption {
+		font-size: 13px;
+		color: #57534e;
+		margin-top: 10px;
+	}
+	figure img { max-width: 100%; display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+	<h1>Reliability study figures</h1>
+	<p class="sub">Three figures for §5.3.2. Styling matches the TOUGHSKILL theme (teal primary, warm secondary, hard drop shadow).</p>
+
+	<figure>
+		<img src="fig_reliability.svg" alt="Figure 5.6 — test-retest reliability bars">
+		<figcaption><strong>Figure 5.6</strong> · Test-retest reliability. Median mean absolute deviation across three runs per (exercise × dimension × prompt), with p95 as the small capped line.</figcaption>
+	</figure>
+
+	<figure>
+		<img src="fig_tier_separation.svg" alt="Figure 5.7 — tier separation dot plot">
+		<figcaption><strong>Figure 5.7</strong> · Tier separation. Each dot is one submission (mean of three runs). Horizontal line within each cell marks the cell mean.</figcaption>
+	</figure>
+
+	<figure>
+		<img src="fig_validity.svg" alt="Figure 5.8 — Spearman rho bars">
+		<figcaption><strong>Figure 5.8</strong> · Criterion validity. Spearman ρ between LLM mean score and pre-registered tier rank. Background shading shows strength bands.</figcaption>
+	</figure>
+</div>
+</body>
+</html>
